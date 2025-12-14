@@ -2,6 +2,7 @@ package com.zen.alchan.data.network.apollo
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
+import com.zen.alchan.BuildConfig
 import com.zen.alchan.data.network.apollo.adapter.CountryCodeAdapter
 import com.zen.alchan.data.network.apollo.adapter.JsonAdapter
 import com.zen.alchan.data.network.interceptor.HeaderInterceptor
@@ -16,8 +17,12 @@ class AniListApolloHandler(
     private val baseUrl: String
 ) : ApolloHandler {
 
+    // HTTP logging is disabled in production builds to prevent info leakage
     private val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        setLevel(HttpLoggingInterceptor.Level.BODY)
+        setLevel(
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY 
+            else HttpLoggingInterceptor.Level.NONE
+        )
         redactHeader("Authorization")
         redactHeader("Cookie")
     }

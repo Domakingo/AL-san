@@ -25,14 +25,15 @@ import com.zen.overlapimagelistview.OverlapImageListView
 object ImageUtil {
 
     fun init(context: Context) {
+        // Coil 2.x uses components {} builder instead of componentRegistry {}
         val imageLoader = ImageLoader.Builder(context)
-            .componentRegistry {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                    add(ImageDecoderDecoder(context))
-                else
-                    add(GifDecoder())
-
-                add(SvgDecoder(context))
+            .components {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+                add(SvgDecoder.Factory())
             }
             .build()
 

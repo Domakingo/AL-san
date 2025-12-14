@@ -33,4 +33,3 @@
 - Wait for my confirmation. Only start working after I approve it, for both our sake. 
 - Branch out from `master`.
 - For example, assuming the latest version is `v2.0.0`, target your Pull Request to `version/2.1.0`. Check Releases page to find the latest version.
-

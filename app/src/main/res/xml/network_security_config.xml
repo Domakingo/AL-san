@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration for AL-san
+    - Blocks cleartext HTTP traffic
+    - Enforces HTTPS for all connections
+    - Optional: Certificate pinning can be added for AniList API
+-->
+<network-security-config>
+    <!-- Block cleartext (HTTP) traffic everywhere by default -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Domain-specific configuration for AniList API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">anilist.co</domain>
+        <domain includeSubdomains="true">graphql.anilist.co</domain>
+        <!-- Trust system certificates for these domains -->
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Domain configuration for Spotify API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">spotify.com</domain>
+        <domain includeSubdomains="true">api.spotify.com</domain>
+        <domain includeSubdomains="true">accounts.spotify.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Domain configuration for YouTube API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">googleapis.com</domain>
+        <domain includeSubdomains="true">youtube.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Domain configuration for other APIs -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.jikan.moe</domain>
+        <domain includeSubdomains="true">animethemes.moe</domain>
+        <domain includeSubdomains="true">github.com</domain>
+        <domain includeSubdomains="true">raw.githubusercontent.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

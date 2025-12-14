@@ -1,5 +1,6 @@
 package com.zen.alchan.data.network.retrofit
 
+import com.zen.alchan.BuildConfig
 import com.zen.alchan.data.network.interceptor.HeaderInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -21,8 +22,12 @@ class DefaultRetrofitHandler(
     private val spotifyHeaderInterceptor: HeaderInterceptor
 ) : RetrofitHandler {
 
+    // HTTP logging is disabled in production builds to prevent info leakage
     private val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        setLevel(HttpLoggingInterceptor.Level.BODY)
+        setLevel(
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY 
+            else HttpLoggingInterceptor.Level.NONE
+        )
         redactHeader("Authorization")
         redactHeader("Cookie")
     }

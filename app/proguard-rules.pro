@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# =============================================================================
+# AL-san Data Models (required for Gson serialization)
+# =============================================================================
 -keep public class com.zen.alchan.data.entity.**{
     *;
 }
@@ -33,8 +36,15 @@
     public *;
 }
 
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
+# =============================================================================
+# Security - EncryptedSharedPreferences
+# =============================================================================
+-keep class androidx.security.crypto.** { *; }
+-keep class com.google.crypto.tink.** { *; }
+
+# =============================================================================
+# Suppress warnings for optional dependencies
+# =============================================================================
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket
 -dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
@@ -45,13 +55,22 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
 
- # Keep generic signature of RxJava3 (R8 full mode strips signatures from non-kept items).
- -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Flowable
- -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Maybe
- -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Observable
- -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Single
+# =============================================================================
+# RxJava3 (R8 full mode strips signatures from non-kept items)
+# =============================================================================
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Flowable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Maybe
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Observable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Single
 
-
+# =============================================================================
+# Gson TypeToken (required for generic type preservation)
+# =============================================================================
 -keep class com.google.gson.reflect.TypeToken
 -keep class * extends com.google.gson.reflect.TypeToken
 -keep public class * implements java.lang.reflect.Type
+
+# =============================================================================
+# Coil (Image loading library)
+# =============================================================================
+-dontwarn coil.network.CacheStrategy$Companion

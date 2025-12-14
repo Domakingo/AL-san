@@ -9,11 +9,15 @@ import com.zen.alchan.data.entity.ListStyle
 import com.zen.alchan.data.response.SpotifyAccessToken
 import com.zen.alchan.helper.enums.ListType
 
+/**
+ * Default implementation of SharedPreferencesHandler using encrypted storage.
+ * All sensitive data including bearer tokens are encrypted at rest using AES-256-GCM.
+ */
 class DefaultSharedPreferencesHandler(
     context: Context,
     sharedPreferencesName: String,
     private val gson: Gson
-) : SharedPreferencesHandler, BaseSharedPreferencesHandler(context, sharedPreferencesName) {
+) : SharedPreferencesHandler, SecureSharedPreferencesHandler(context, sharedPreferencesName) {
 
     override var bearerToken: String?
         get() = getData(BEARER_TOKEN)

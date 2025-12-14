@@ -85,8 +85,17 @@ class RootActivity : BaseActivity<ActivityRootBinding>() {
             }
             navigationManager.isAtPreLoginScreen() -> {
                 if (deepLink.isLogin()) {
-                    val fullDeepLink = deepLink.uri?.encodedFragment
-                    val accessToken = fullDeepLink?.substring("access_token=".length, fullDeepLink.indexOf("&"))
+                    // Safely parse OAuth access token with proper validation
+                    val accessToken = deepLink.uri?.encodedFragment?.let { fragment ->
+                        val tokenPrefix = "access_token="
+                        val startIndex = fragment.indexOf(tokenPrefix)
+                        if (startIndex == -1) return@let null
+                        
+                        val tokenStart = startIndex + tokenPrefix.length
+                        val endIndex = fragment.indexOf("&", tokenStart).takeIf { it != -1 } ?: fragment.length
+                        
+                        fragment.substring(tokenStart, endIndex).takeIf { it.isNotBlank() }
+                    }
                     navigationManager.navigateToLogin(accessToken, true)
                 } else {
                     navigationManager.navigateToMain(deepLink)
