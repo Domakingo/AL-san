@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'v2.2.0'
+        description: ''
         required: false
         default: ''
 
@@ -36,6 +36,15 @@ jobs:
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+      
+      - name: Resolve Dependencies
+        run: |
+          # Retry logic for flaky JitPack
+          for i in 1 2 3; do
+            ./gradlew dependencies --refresh-dependencies && break
+            echo "Retry $i..."
+            sleep 30
+          done
       
       - name: Build Release APK
         env:
