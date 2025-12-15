@@ -29,10 +29,10 @@
     <dimen name="marginFar">56dp</dimen>
 
     <!-- Corner Radius - Context-Aware Rounded Shapes -->
-    <dimen name="cornerFlat">4dp</dimen>      <!-- For flat/low elements: badges, small labels -->
-    <dimen name="cornerSmall">8dp</dimen>     <!-- Standard small components: chips, list items -->
-    <dimen name="cornerNormal">12dp</dimen>   <!-- Medium components: cards, dialogs -->
-    <dimen name="cornerMedium">16dp</dimen>   <!-- Large components: modal sheets -->
+    <dimen name="cornerFlat">2dp</dimen>      <!-- For flat/low elements: badges, small labels -->
+    <dimen name="cornerSmall">6dp</dimen>     <!-- Standard small components: chips, list items -->
+    <dimen name="cornerNormal">8dp</dimen>    <!-- Medium components: cards, dialogs -->
+    <dimen name="cornerMedium">10dp</dimen>   <!-- Large components: modal sheets -->
     <dimen name="cornerLarge">24dp</dimen>    <!-- Extra large: search bars, big cards -->
     <dimen name="cornerExtraLarge">28dp</dimen>
     <dimen name="cornerFull">50dp</dimen>     <!-- Full pill: FABs, icon buttons only -->

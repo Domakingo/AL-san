@@ -22,7 +22,7 @@ class AppSettingsViewModel(
     private val pushNotificationService: PushNotificationService
 ) : BaseViewModel<Unit>() {
 
-    private val _appTheme = BehaviorSubject.createDefault(AppTheme.DEFAULT_THEME_YELLOW)
+    private val _appTheme = BehaviorSubject.createDefault(AppTheme.ANILIST_DARK_BLUE)
     val appTheme: Observable<AppTheme>
         get() = _appTheme
 
@@ -262,21 +262,23 @@ class AppSettingsViewModel(
 
     fun loadAppThemeItems() {
         val items = ArrayList<AppThemeItem>()
-        var currentHeader = ""
-        AppTheme.values().forEach {
-            val splitAppThemeName = it.name.split("_")
-            val appThemeName = splitAppThemeName
-                .take(splitAppThemeName.size - 1)
-                .joinToString(" ") {
-                    it.lowercase()
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                }
-            if (currentHeader != appThemeName) {
-                currentHeader = appThemeName
-                items.add(AppThemeItem(header = currentHeader))
-            }
-            items.add(AppThemeItem(appTheme = it))
+        
+        // Group themes by color (Light and Dark variants together)
+        val themeGroups = mapOf(
+            "AniList" to Pair(AppTheme.ANILIST_LIGHT_BLUE, AppTheme.ANILIST_DARK_BLUE),
+            "Purple" to Pair(AppTheme.LIGHT_PURPLE, AppTheme.DARK_PURPLE),
+            "Green" to Pair(AppTheme.LIGHT_GREEN, AppTheme.DARK_GREEN),
+            "Pink" to Pair(AppTheme.LIGHT_PINK, AppTheme.DARK_PINK)
+        )
+        
+        themeGroups.forEach { (name, themes) ->
+            items.add(AppThemeItem(
+                themeName = name,
+                lightTheme = themes.first,
+                darkTheme = themes.second
+            ))
         }
+        
         _appThemeItems.onNext(items)
     }
 

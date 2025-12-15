@@ -131,6 +131,12 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
                 }
             )
 
+            sharedDisposables.add(
+                sharedViewModel.viewPagerSwipeEnabled.subscribe { enabled ->
+                    binding.mainViewPager.isUserInputEnabled = enabled
+                }
+            )
+
             sharedDisposablesAdded = true
         }
 

@@ -21,15 +21,15 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/profileAppBarLayout"
                 android:backgroundTint="@android:color/transparent"
+                app:elevation="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/profileCollapsingToolbar"
                     app:toolbarId="@id/profileToolbar"
-                    app:layout_scrollFlags="scroll|snap"
-                    app:contentScrim="@android:color/transparent"
-                    app:scrimAnimationDuration="200"
+                    app:layout_scrollFlags="scroll"
+                    app:titleEnabled="false"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -166,6 +166,7 @@
                                 app:cardBackgroundColor="?themeCardColor"
                                 app:cardCornerRadius="@dimen/cornerMedium"
                                 app:cardElevation="@dimen/elevationNormal"
+                                app:strokeWidth="0dp"
                                 android:layout_marginTop="@dimen/marginMedium"
                                 android:layout_marginHorizontal="@dimen/marginBig"
                                 android:layout_width="match_parent"

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/themeGroupCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/marginPageNormal"
+    android:layout_marginVertical="@dimen/marginSmall"
+    app:cardBackgroundColor="?themeCardColor"
+    app:cardCornerRadius="@dimen/cornerMedium"
+    app:cardElevation="0dp"
+    app:strokeColor="?themeDividerColor"
+    app:strokeWidth="@dimen/dividerWidth">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/themeNameText"
+            style="?themeRegularBoldFont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/marginNormal"
+            android:paddingTop="@dimen/marginNormal"
+            android:paddingBottom="@dimen/marginSmall" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/marginSmall"
+            android:paddingBottom="@dimen/marginNormal">
+
+            <!-- Dark Theme Option -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/darkThemeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/marginSmall"
+                android:foreground="?selectableItemBackground"
+                app:cardBackgroundColor="?themeBackgroundColor"
+                app:cardCornerRadius="@dimen/cornerSmall"
+                app:cardElevation="0dp"
+                app:strokeColor="?themeDividerColor"
+                app:strokeWidth="@dimen/lineWidth">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/marginNormal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/darkThemeIcon"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:src="@drawable/ic_dark_mode"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?themeContentColor" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/darkThemeText"
+                        style="?themeSmallFont"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/marginSmall"
+                        android:text="@string/dark"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/darkThemeColors"
+                        app:layout_constraintStart_toEndOf="@id/darkThemeIcon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/darkThemeColors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/darkPrimaryColor"
+                            android:layout_width="@dimen/iconSize"
+                            android:layout_height="@dimen/iconSize"
+                            android:layout_marginEnd="@dimen/marginClose"
+                            app:cardCornerRadius="@dimen/cornerSmall"
+                            app:cardElevation="0dp"
+                            app:strokeColor="?themeContentColor"
+                            app:strokeWidth="@dimen/lineWidth" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/darkSecondaryColor"
+                            android:layout_width="@dimen/iconSize"
+                            android:layout_height="@dimen/iconSize"
+                            app:cardCornerRadius="@dimen/cornerSmall"
+                            app:cardElevation="0dp"
+                            app:strokeColor="?themeContentColor"
+                            app:strokeWidth="@dimen/lineWidth" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Light Theme Option -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/lightThemeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/marginSmall"
+                android:foreground="?selectableItemBackground"
+                app:cardBackgroundColor="?themeBackgroundColor"
+                app:cardCornerRadius="@dimen/cornerSmall"
+                app:cardElevation="0dp"
+                app:strokeColor="?themeDividerColor"
+                app:strokeWidth="@dimen/lineWidth">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/marginNormal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/lightThemeIcon"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:src="@drawable/ic_light_mode"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?themeContentColor" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/lightThemeText"
+                        style="?themeSmallFont"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/marginSmall"
+                        android:text="@string/light"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/lightThemeColors"
+                        app:layout_constraintStart_toEndOf="@id/lightThemeIcon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/lightThemeColors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/lightPrimaryColor"
+                            android:layout_width="@dimen/iconSize"
+                            android:layout_height="@dimen/iconSize"
+                            android:layout_marginEnd="@dimen/marginClose"
+                            app:cardCornerRadius="@dimen/cornerSmall"
+                            app:cardElevation="0dp"
+                            app:strokeColor="?themeContentColor"
+                            app:strokeWidth="@dimen/lineWidth" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/lightSecondaryColor"
+                            android:layout_width="@dimen/iconSize"
+                            android:layout_height="@dimen/iconSize"
+                            app:cardCornerRadius="@dimen/cornerSmall"
+                            app:cardElevation="0dp"
+                            app:strokeColor="?themeContentColor"
+                            app:strokeWidth="@dimen/lineWidth" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

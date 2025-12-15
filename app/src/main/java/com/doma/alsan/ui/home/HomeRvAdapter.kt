@@ -81,6 +81,8 @@ class HomeRvAdapter(
                         ImageUtil.loadCircleImage(context, it.avatar.getImageUrl(appSetting), homeHeaderAvatar)
                     else
                         ImageUtil.loadRectangleImage(context, it.avatar.getImageUrl(appSetting), homeHeaderAvatar)
+                    
+                    homeHeaderAvatar.clicks { listener.headerListener.navigateToProfile(it.id) }
                 } ?: homeHeaderAvatar.show(false)
 
                 searchLayout.clicks { listener.headerListener.showSearchDialog() }

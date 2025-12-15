@@ -33,24 +33,13 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
 
             aboutSettingsAppVersionText.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
-            aboutSettingsAniListLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALSAN_FORUM_THREAD)
-            }
+            // AniList link - commented out
+            // aboutSettingsAniListLink.clicks {
+            //     navigation.openWebView(NavigationManager.Url.ALSAN_FORUM_THREAD)
+            // }
 
             aboutSettingsGitHubLink.clicks {
                 navigation.openWebView(NavigationManager.Url.ALSAN_GITHUB)
-            }
-
-            aboutSettingsGmailLink.clicks {
-                navigation.openEmailClient()
-            }
-
-            aboutSettingsPlayStoreLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALSAN_PLAY_STORE)
-            }
-
-            aboutSettingsTwitterLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALSAN_TWITTER)
             }
 
             aboutSettingsPrivacyPolicyText.clicks {

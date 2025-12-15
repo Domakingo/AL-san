@@ -95,6 +95,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             override fun showSearchDialog() {
                 viewModel.loadSearchCategories()
             }
+
+            override fun navigateToProfile(userId: Int) {
+                sharedViewModel.navigateTo(SharedMainViewModel.Page.PROFILE)
+            }
         }
     }
 

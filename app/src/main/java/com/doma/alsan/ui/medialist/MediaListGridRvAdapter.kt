@@ -132,15 +132,16 @@ class MediaListGridRvAdapter(
                 }
 
                 // theme
-                val primaryColor = listStyle.getPrimaryColor(context)
-                mediaListTitleText.setTextColor(primaryColor)
-                mediaListScoreText.setTextColor(primaryColor)
-                mediaListScoreSmiley.imageTintList = ColorStateList.valueOf(primaryColor)
-                mediaListProgressText.setTextColor(primaryColor)
-                mediaListProgressVolumeText.setTextColor(primaryColor)
-
                 val secondaryColor = listStyle.getSecondaryColor(context)
-                mediaListAiringIndicator.imageTintList = ColorStateList.valueOf(secondaryColor)
+                val primaryColor = listStyle.getPrimaryColor(context)
+                
+                mediaListTitleText.setTextColor(secondaryColor)
+                mediaListScoreText.setTextColor(secondaryColor)
+                mediaListScoreSmiley.imageTintList = ColorStateList.valueOf(secondaryColor)
+                mediaListProgressText.setTextColor(secondaryColor)
+                mediaListProgressVolumeText.setTextColor(secondaryColor)
+
+                mediaListAiringIndicator.imageTintList = ColorStateList.valueOf(primaryColor)
 
                 val textColor = listStyle.getTextColor(context)
                 mediaListFormatText.setTextColor(textColor)
@@ -148,13 +149,18 @@ class MediaListGridRvAdapter(
 
                 val cardColor = listStyle.getCardColor(context)
                 mediaListCardBackground.setCardBackgroundColor(cardColor)
-                mediaListTitleLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListScoreLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListProgressLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListProgressVolumeLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListFormatLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListAiringLayout.setCardBackgroundColor(getTransparentCardColor())
-                mediaListNotesLayout.setCardBackgroundColor(getTransparentCardColor())
+
+                val transparentCardColor = getTransparentCardColor()
+                // Swap logic: Airing gets SecondaryTransparent50 (BG), Title gets Transparent
+                val secondaryTransparent50 = androidx.core.graphics.ColorUtils.setAlphaComponent(secondaryColor, 128)
+
+                mediaListTitleLayout.setCardBackgroundColor(transparentCardColor)
+                mediaListScoreLayout.setCardBackgroundColor(transparentCardColor)
+                mediaListProgressLayout.setCardBackgroundColor(transparentCardColor)
+                mediaListProgressVolumeLayout.setCardBackgroundColor(transparentCardColor)
+                mediaListFormatLayout.setCardBackgroundColor(transparentCardColor)
+                mediaListAiringLayout.setCardBackgroundColor(secondaryTransparent50)
+                mediaListNotesLayout.setCardBackgroundColor(transparentCardColor)
             }
         }
     }

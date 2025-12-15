@@ -89,18 +89,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             mediaAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 mediaSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (mediaBannerContentLayout.isVisible) {
-                        mediaBannerContentLayout.startAnimation(scaleDownAnimation)
-                        mediaBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (mediaBannerContentLayout.isInvisible) {
-                        mediaBannerContentLayout.startAnimation(scaleUpAnimation)
-                        mediaBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Banner content always stays visible - no scale animation
             })
 
             mediaCoverImage.clicks {
@@ -166,6 +155,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.mediaTitle.subscribe {
                 binding.mediaTitleText.text = it
+                // Show media title in toolbar when scrolled
+                binding.mediaCollapsingToolbar.title = it
             },
             viewModel.mediaYear.subscribe {
                 binding.mediaYearText.text = it

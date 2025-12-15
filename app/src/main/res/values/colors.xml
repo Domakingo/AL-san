@@ -16,52 +16,98 @@
     <!-- AniList Brand Colors -->
     <color name="anilistPaleWhite">#F3F4F6</color>
     <color name="anilistDarkBlue">#1F2937</color>
-    <color name="anilistDarkBlueTransparent36">#5C1F2937</color>
+    <color name="anilistDarkBlueTransparent36">#FA1F2937</color>
     <color name="anilistVeryDeepBlue">#111827</color>
-    <color name="anilistDarkWhite">#9CA3AF</color>
-    <color name="anilistDarkWhiteTransparent36">#5C9CA3AF</color>
+    <color name="anilistDarkWhite">#FFFFFF</color>
+    <color name="anilistDarkWhiteTransparent36">#FAFFFFFF</color>
 
     <!-- Transparency Variants - Black -->
     <color name="blackTransparent86">#DB1C1B1F</color>
     <color name="blackTransparent50">#801C1B1F</color>
-    <color name="blackTransparent36">#5C1C1B1F</color>
+    <color name="blackTransparent36">#FA1C1B1F</color>
 
     <!-- Transparency Variants - White -->
     <color name="whiteTransparent86">#DBFFFBFE</color>
     <color name="whiteTransparent50">#80FFFBFE</color>
-    <color name="whiteTransparent36">#5CFFFBFE</color>
+    <color name="whiteTransparent36">#FAFFFBFE</color>
 
     <!-- Transparency Variants - Pure Black -->
     <color name="pureBlackTransparent86">#DB000000</color>
     <color name="pureBlackTransparent50">#80000000</color>
-    <color name="pureBlackTransparent36">#5C000000</color>
+    <color name="pureBlackTransparent36">#FA000000</color>
 
     <!-- AniList Pale White Transparency -->
     <color name="anilistPaleWhiteTransparent86">#DBF3F4F6</color>
     <color name="anilistPaleWhiteTransparent50">#80F3F4F6</color>
-    <color name="anilistPaleWhiteTransparent36">#5CF3F4F6</color>
+    <color name="anilistPaleWhiteTransparent36">#FAF3F4F6</color>
 
     <!-- AniList Deep Blue Transparency -->
     <color name="anilistVeryDeepBlueTransparent86">#DB111827</color>
     <color name="anilistVeryDeepBlueTransparent50">#80111827</color>
-    <color name="anilistVeryDeepBlueTransparent36">#5C111827</color>
+    <color name="anilistVeryDeepBlueTransparent36">#FA111827</color>
 
     <!-- Semantic Colors -->
     <color name="brightYellow">#FBBF24</color>
     <color name="brightRed">#EF4444</color>
     <color name="brightGreen">#10B981</color>
+    
+    <!-- Danger Color - Always Red for destructive actions -->
+    <color name="dangerRed">#E53935</color>
+    <color name="dangerRedTransparent50">#80E53935</color>
+    
+    <!-- Pastel Colors for Dark Mode (Light/Soft colors) -->
+    <color name="pastelBlue">#A5D8FF</color>
+    <color name="pastelBlueSecondary">#74C0FC</color>
+    <color name="pastelBlueSecondaryTransparent50">#8074C0FC</color>
+    <color name="pastelBlueSecondaryTransparent20">#3374C0FC</color>
+    
+    <color name="pastelPurple">#D0BFFF</color>
+    <color name="pastelPurpleSecondary">#B197FC</color>
+    <color name="pastelPurpleSecondaryTransparent50">#80B197FC</color>
+    <color name="pastelPurpleSecondaryTransparent20">#33B197FC</color>
+    
+    <color name="pastelGreen">#B2F2BB</color>
+    <color name="pastelGreenSecondary">#8CE99A</color>
+    <color name="pastelGreenSecondaryTransparent50">#808CE99A</color>
+    <color name="pastelGreenSecondaryTransparent20">#338CE99A</color>
+    
+    <color name="pastelPink">#FCC2D7</color>
+    <color name="pastelPinkSecondary">#FAA2C1</color>
+    <color name="pastelPinkSecondaryTransparent50">#80FAA2C1</color>
+    <color name="pastelPinkSecondaryTransparent20">#33FAA2C1</color>
+    
+    <!-- Pastel Colors for Light Mode (Deeper/Muted colors) -->
+    <color name="deepBlue">#1971C2</color>
+    <color name="deepBlueSecondary">#339AF0</color>
+    <color name="deepBlueSecondaryTransparent50">#80339AF0</color>
+    <color name="deepBlueSecondaryTransparent20">#33339AF0</color>
+    
+    <color name="deepPurple">#7048E8</color>
+    <color name="deepPurpleSecondary">#9775FA</color>
+    <color name="deepPurpleSecondaryTransparent50">#809775FA</color>
+    <color name="deepPurpleSecondaryTransparent20">#339775FA</color>
+    
+    <color name="deepGreen">#2F9E44</color>
+    <color name="deepGreenSecondary">#51CF66</color>
+    <color name="deepGreenSecondaryTransparent50">#8051CF66</color>
+    <color name="deepGreenSecondaryTransparent20">#3351CF66</color>
+    
+    <color name="deepPink">#C2255C</color>
+    <color name="deepPinkSecondary">#F06595</color>
+    <color name="deepPinkSecondaryTransparent50">#80F06595</color>
+    <color name="deepPinkSecondaryTransparent20">#33F06595</color>
 
     <!-- Card Background - Modern Elevated Surfaces -->
     <color name="blackLight">#2B2930</color>
-    <color name="blackLightTransparent80">#CC2B2930</color>
+    <color name="blackLightTransparent80">#EB2B2930</color>
     <color name="whiteLight">#F3EDF7</color>
-    <color name="whiteLightTransparent80">#CCF3EDF7</color>
+    <color name="whiteLightTransparent80">#EBF3EDF7</color>
     <color name="pureBlackLight">#121212</color>
-    <color name="pureBlackLightTransparent80">#CC121212</color>
+    <color name="pureBlackLightTransparent80">#EB121212</color>
     <color name="anilistWhite">#F9FAFB</color>
-    <color name="anilistWhiteTransparent80">#CCF9FAFB</color>
+    <color name="anilistWhiteTransparent80">#EBF9FAFB</color>
     <color name="anilistDeepBlue">#1E293B</color>
-    <color name="anilistDeepBlueTransparent80">#CC1E293B</color>
+    <color name="anilistDeepBlueTransparent80">#EB1E293B</color>
 
     <!-- Navigation Bar -->
     <color name="whiteTransparent70">#B3FFFBFE</color>

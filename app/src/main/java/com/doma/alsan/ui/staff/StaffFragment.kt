@@ -76,18 +76,7 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
             staffAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 staffSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (staffBannerContentLayout.isVisible) {
-                        staffBannerContentLayout.startAnimation(scaleDownAnimation)
-                        staffBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (staffBannerContentLayout.isInvisible) {
-                        staffBannerContentLayout.startAnimation(scaleUpAnimation)
-                        staffBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Banner content always stays visible - no scale animation
             })
 
             staffImage.clicks {
@@ -142,6 +131,8 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
             },
             viewModel.staffName.subscribe {
                 binding.staffNameText.text = it
+                // Show staff name in toolbar when scrolled
+                binding.staffCollapsingToolbar.title = it
             },
             viewModel.mediaOrCharacterCount.subscribe {
                 binding.staffMediaText.text = it.getNumberFormatting()

@@ -5,7 +5,7 @@ import com.doma.alsan.helper.enums.MediaNaming
 import com.doma.alsan.helper.enums.StaffNaming
 
 data class AppSetting(
-    var appTheme: AppTheme = AppTheme.DEFAULT_THEME_YELLOW,
+    var appTheme: AppTheme = AppTheme.ANILIST_DARK_BLUE,
     var useCircularAvatarForProfile: Boolean = true,
     var showRecentReviewsAtHome: Boolean = true,
     var isAllAnimeListPositionAtTop: Boolean = true,

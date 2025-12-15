@@ -73,18 +73,7 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
             characterAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 characterSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (characterBannerContentLayout.isVisible) {
-                        characterBannerContentLayout.startAnimation(scaleDownAnimation)
-                        characterBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (characterBannerContentLayout.isInvisible) {
-                        characterBannerContentLayout.startAnimation(scaleUpAnimation)
-                        characterBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Banner content always stays visible - no scale animation
             })
 
             characterImage.clicks {
@@ -139,6 +128,8 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
             },
             viewModel.characterName.subscribe {
                 binding.characterNameText.text = it
+                // Show character name in toolbar when scrolled
+                binding.characterCollapsingToolbar.title = it
             },
             viewModel.characterNativeName.subscribe {
                 binding.characterNativeNameText.text = it
