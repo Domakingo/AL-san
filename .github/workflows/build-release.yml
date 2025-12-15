@@ -37,13 +37,6 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
       
-      - name: Verify Keystore
-        run: |
-          echo "Keystore file size: $(stat -c%s keystore.jks) bytes"
-          echo "Listing keystore aliases..."
-          keytool -list -keystore keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" || echo "Failed to list keystore"
-          echo "Expected alias: ${{ secrets.KEY_ALIAS }}"
-      
       - name: Resolve Dependencies
         run: |
           # Retry logic for flaky JitPack
@@ -72,8 +65,9 @@ jobs:
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: AL-san-release
           path: app/build/outputs/apk/release/*.apk
+          compression-level: 0
           retention-days: 30
 
       - name: Cleanup keystore
