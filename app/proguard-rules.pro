@@ -23,13 +23,13 @@
 # =============================================================================
 # AL-san Data Models (required for Gson serialization)
 # =============================================================================
--keep public class com.zen.alchan.data.entity.**{
+-keep public class com.doma.alsan.data.entity.**{
     *;
 }
--keep public class com.zen.alchan.data.response.**{
+-keep public class com.doma.alsan.data.response.**{
     *;
 }
--keep public class com.zen.alchan.helper.pojo.**{
+-keep public class com.doma.alsan.helper.pojo.**{
     *;
 }
 -keepclassmembers enum * {

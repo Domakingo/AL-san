@@ -26,7 +26,7 @@ android {
     }
     
     defaultConfig {
-        applicationId "com.zen.alchan"
+        applicationId "com.doma.alsan"
         minSdkVersion 23
         targetSdk 35
         versionCode 200005
@@ -78,7 +78,7 @@ android {
         viewBinding true
         buildConfig true
     }
-    namespace 'com.zen.alchan'
+    namespace 'com.doma.alsan'
 }
 
 dependencies {
@@ -183,7 +183,7 @@ dependencies {
 
 apollo {
     service("anilist") {
-        packageName.set("com.zen.alchan")
+        packageName.set("com.doma.alsan")
         mapScalar("Json", "java.lang.Object")
         mapScalar("CountryCode", "kotlin.String")
     }
