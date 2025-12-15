@@ -76,7 +76,7 @@ import org.koin.core.logger.Level
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-class ALchanApplication : Application() {
+class AlsanApplication : Application() {
 
     private val appModules = module {
         val gson = GsonBuilder()
@@ -87,7 +87,7 @@ class ALchanApplication : Application() {
         // local storage
         single<SharedPreferencesHandler> {
             DefaultSharedPreferencesHandler(
-                this@ALchanApplication.applicationContext,
+                this@AlsanApplication.applicationContext,
                 Constant.SHARED_PREFERENCES_NAME,
                 gson
             )
@@ -95,13 +95,13 @@ class ALchanApplication : Application() {
 
         single<JsonStorageHandler> {
             DefaultJsonStorageHandler(
-                this@ALchanApplication,
+                this@AlsanApplication,
                 gson
             )
         }
 
         single<FileStorageHandler> {
-            DefaultFileStorageHandler(this@ALchanApplication)
+            DefaultFileStorageHandler(this@AlsanApplication)
         }
 
         // local storage manager
@@ -219,7 +219,7 @@ class ALchanApplication : Application() {
         super.onCreate()
         startKoin {
             androidLogger(Level.ERROR)
-            androidContext(this@ALchanApplication)
+            androidContext(this@AlsanApplication)
             modules(appModules)
         }
     }

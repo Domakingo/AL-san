@@ -340,18 +340,18 @@ class DefaultNavigationManager(
                     NavigationManager.Url.ANILIST_IMPORT_LISTS -> Constant.ANILIST_IMPORT_LISTS_URL
                     NavigationManager.Url.ANILIST_CONNECT_WITH_TWITTER -> Constant.ANILIST_CONNECT_WITH_TWITTER_URL
                     NavigationManager.Url.ANLIST_ACTIVITY -> Constant.ANILIST_ACTIVITY + id
-                    NavigationManager.Url.ALCHAN_FORUM_THREAD -> Constant.ALCHAN_FORUM_THREAD_URL
-                    NavigationManager.Url.ALCHAN_GITHUB -> Constant.ALCHAN_GITHUB_URL
-                    NavigationManager.Url.ALCHAN_PLAY_STORE -> Constant.ALCHAN_PLAY_STORE_URL
-                    NavigationManager.Url.ALCHAN_TWITTER -> Constant.ALCHAN_TWITTER_URL
-                    NavigationManager.Url.ALCHAN_PRIVACY_POLICY -> Constant.ALCHAN_PRIVACY_POLICY_URL
+                    NavigationManager.Url.ALSAN_FORUM_THREAD -> Constant.ALSAN_FORUM_THREAD_URL
+                    NavigationManager.Url.ALSAN_GITHUB -> Constant.ALSAN_GITHUB_URL
+                    NavigationManager.Url.ALSAN_PLAY_STORE -> Constant.ALSAN_PLAY_STORE_URL
+                    NavigationManager.Url.ALSAN_TWITTER -> Constant.ALSAN_TWITTER_URL
+                    NavigationManager.Url.ALSAN_PRIVACY_POLICY -> Constant.ALSAN_PRIVACY_POLICY_URL
                 }
             )
         )
     }
 
     override fun openEmailClient() {
-        val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constant.ALCHAN_EMAIL_ADDRESS, null))
+        val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constant.ALSAN_EMAIL_ADDRESS, null))
         context.startActivity(intent)
     }
 

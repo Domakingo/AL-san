@@ -14,7 +14,7 @@
     </queries>
 
     <application
-        android:name=".ALchanApplication"
+        android:name=".AlsanApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -45,7 +45,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="alchan" />
+                <data android:scheme="alsan" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

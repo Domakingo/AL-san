@@ -52,7 +52,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
                         message,
                         R.string.ok
                     ) {
-                        navigation.openWebView(NavigationManager.Url.ALCHAN_PLAY_STORE)
+                        navigation.openWebView(NavigationManager.Url.ALSAN_PLAY_STORE)
                     }
                 } else {
                     dialog.showConfirmationDialog(
@@ -60,7 +60,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
                         message,
                         R.string.ok,
                         {
-                            navigation.openWebView(NavigationManager.Url.ALCHAN_PLAY_STORE)
+                            navigation.openWebView(NavigationManager.Url.ALSAN_PLAY_STORE)
                         },
                         R.string.later,
                         {

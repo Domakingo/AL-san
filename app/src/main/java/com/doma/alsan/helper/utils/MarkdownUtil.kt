@@ -114,7 +114,7 @@ object MarkdownUtil {
         return markdownText
             .replace(spoilerRegex) {
                 val spoilerText = it.value.substring(2, it.value.length - 2)
-                "[[Spoiler]](alchan://spoiler?data=${URLEncoder.encode(spoilerText, "utf-8")})"
+                "[[Spoiler]](alsan://spoiler?data=${URLEncoder.encode(spoilerText, "utf-8")})"
             }
             .replace("~~~", "+++")
             .replace(aniListImageUrlRegex) {
@@ -128,14 +128,14 @@ object MarkdownUtil {
                 val youtubeUrl = value.substring(value.indexOf("(") + 1, value.indexOf(")"))
                 val isIdOnly = !(youtubeUrl.contains("youtube.com") || youtubeUrl.contains("youtu.be"))
                 if (isIdOnly)
-                    "[<img alt=\"youtube\" src=\"${Constant.ALCHAN_YOUTUBE_THUMBNAIL_URL}\">](https://www.youtube.com/watch?v=$youtubeUrl)"
+                    "[<img alt=\"youtube\" src=\"${Constant.ALSAN_YOUTUBE_THUMBNAIL_URL}\">](https://www.youtube.com/watch?v=$youtubeUrl)"
                 else
-                    "[<img alt=\"youtube\" src=\"${Constant.ALCHAN_YOUTUBE_THUMBNAIL_URL}\">]($youtubeUrl)"
+                    "[<img alt=\"youtube\" src=\"${Constant.ALSAN_YOUTUBE_THUMBNAIL_URL}\">]($youtubeUrl)"
             }
             .replace(webmRegex) {
                 val value = it.value
                 val url = value.substring(value.indexOf("(") + 1, value.indexOf(")"))
-                "[<img alt=\"webm\" src=\"${Constant.ALCHAN_VIDEO_THUMBNAIL_URL}\">]($url)"
+                "[<img alt=\"webm\" src=\"${Constant.ALSAN_VIDEO_THUMBNAIL_URL}\">]($url)"
             }
             .replace(rogueUrlRegex) {
                 "<${it.value}>"

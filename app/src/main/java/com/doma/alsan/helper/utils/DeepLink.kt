@@ -25,18 +25,18 @@ class DeepLink(
         return uri?.getQueryParameter(key)
     }
 
-    private fun isAlChanScheme() = getScheme() == SCHEME
+    private fun isAlsanScheme() = getScheme() == SCHEME
 
-    fun isLogin() = isAlChanScheme() && getAuthority() == LOGIN
-    fun isHome() = isAlChanScheme() && getAuthority() == HOME
-    fun isAnimeList() = isAlChanScheme() && getAuthority() == ANIME_LIST
-    fun isMangaList() = isAlChanScheme() && getAuthority() == MANGA_LIST
-    fun isNotifications() = isAlChanScheme() && getAuthority() == NOTIFICATIONS
-    fun isProfile() = isAlChanScheme() && getAuthority() == PROFILE
-    fun isAppSettings() = isAlChanScheme() && getAuthority() == SETTINGS && getFirstPath() == APP_SETTINGS
-    fun isAniListSettings() = isAlChanScheme() && getAuthority() == SETTINGS && getFirstPath() == ANILIST_SETTINGS
-    fun isListSettings() = isAlChanScheme() && getAuthority() == SETTINGS && getFirstPath() == LIST_SETTINGS
-    fun isSpoiler() = isAlChanScheme() && getAuthority() == SPOILER
+    fun isLogin() = isAlsanScheme() && getAuthority() == LOGIN
+    fun isHome() = isAlsanScheme() && getAuthority() == HOME
+    fun isAnimeList() = isAlsanScheme() && getAuthority() == ANIME_LIST
+    fun isMangaList() = isAlsanScheme() && getAuthority() == MANGA_LIST
+    fun isNotifications() = isAlsanScheme() && getAuthority() == NOTIFICATIONS
+    fun isProfile() = isAlsanScheme() && getAuthority() == PROFILE
+    fun isAppSettings() = isAlsanScheme() && getAuthority() == SETTINGS && getFirstPath() == APP_SETTINGS
+    fun isAniListSettings() = isAlsanScheme() && getAuthority() == SETTINGS && getFirstPath() == ANILIST_SETTINGS
+    fun isListSettings() = isAlsanScheme() && getAuthority() == SETTINGS && getFirstPath() == LIST_SETTINGS
+    fun isSpoiler() = isAlsanScheme() && getAuthority() == SPOILER
 
     private fun isAniListAuthority() = getAuthority() == ANILIST_AUTHORITY
     fun getAniListPageId() = getSecondPath()
@@ -55,7 +55,7 @@ class DeepLink(
         }
 
         // region AL-chan
-        private const val SCHEME = "alchan"
+        private const val SCHEME = "alsan"
 
         private const val LOGIN = "login"
         private const val HOME = "home"

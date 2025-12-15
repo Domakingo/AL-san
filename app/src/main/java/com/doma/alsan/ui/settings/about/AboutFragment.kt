@@ -34,11 +34,11 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
             aboutSettingsAppVersionText.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
             aboutSettingsAniListLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALCHAN_FORUM_THREAD)
+                navigation.openWebView(NavigationManager.Url.ALSAN_FORUM_THREAD)
             }
 
             aboutSettingsGitHubLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALCHAN_GITHUB)
+                navigation.openWebView(NavigationManager.Url.ALSAN_GITHUB)
             }
 
             aboutSettingsGmailLink.clicks {
@@ -46,15 +46,15 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
             }
 
             aboutSettingsPlayStoreLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALCHAN_PLAY_STORE)
+                navigation.openWebView(NavigationManager.Url.ALSAN_PLAY_STORE)
             }
 
             aboutSettingsTwitterLink.clicks {
-                navigation.openWebView(NavigationManager.Url.ALCHAN_TWITTER)
+                navigation.openWebView(NavigationManager.Url.ALSAN_TWITTER)
             }
 
             aboutSettingsPrivacyPolicyText.clicks {
-                navigation.openWebView(NavigationManager.Url.ALCHAN_PRIVACY_POLICY)
+                navigation.openWebView(NavigationManager.Url.ALSAN_PRIVACY_POLICY)
             }
         }
     }
