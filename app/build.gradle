@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.apollographql.apollo3'
 
 android {
-    compileSdk 34
+    compileSdk 35
     
     // Signing configuration for release builds
     signingConfigs {
@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId "com.zen.alchan"
         minSdkVersion 23
-        targetSdk 34
+        targetSdk 35
         versionCode 200005
         versionName "2.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
