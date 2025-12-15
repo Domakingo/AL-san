@@ -74,3 +74,10 @@
 # Coil (Image loading library)
 # =============================================================================
 -dontwarn coil.network.CacheStrategy$Companion
+
+# =============================================================================
+# Google Tink - Optional dependencies (not used in this app)
+# =============================================================================
+-dontwarn com.google.api.client.http.**
+-dontwarn com.google.api.client.http.javanet.**
+-dontwarn org.joda.time.**
