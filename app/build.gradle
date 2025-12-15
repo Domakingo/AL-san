@@ -4,6 +4,27 @@ apply plugin: 'com.apollographql.apollo3'
 
 android {
     compileSdk 34
+    
+    // Signing configuration for release builds
+    signingConfigs {
+        release {
+            // Check for CI/CD environment variables first (GitHub Actions)
+            if (System.getenv("SIGNING_STORE_FILE") != null) {
+                storeFile file(System.getenv("SIGNING_STORE_FILE"))
+                storePassword System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+            } 
+            // Fallback to local.properties for local development
+            else if (project.hasProperty('KEYSTORE_PATH') && file(project.property('KEYSTORE_PATH')).exists()) {
+                storeFile file(project.property('KEYSTORE_PATH'))
+                storePassword project.property('KEYSTORE_PASSWORD')
+                keyAlias project.property('KEY_ALIAS')
+                keyPassword project.property('KEY_PASSWORD')
+            }
+        }
+    }
+    
     defaultConfig {
         applicationId "com.zen.alchan"
         minSdkVersion 23
@@ -40,6 +61,10 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Apply signing config if available (CI/CD or local)
+            if (signingConfigs.release.storeFile != null) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     compileOptions {
