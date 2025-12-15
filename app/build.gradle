@@ -29,8 +29,8 @@ android {
         applicationId "com.doma.alsan"
         minSdkVersion 23
         targetSdk 35
-        versionCode 200005
-        versionName "2.1.2"
+        versionCode 300000
+        versionName "3.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // API Keys configuration - use empty strings if apikey.properties doesn't exist
