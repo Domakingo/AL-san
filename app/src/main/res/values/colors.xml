@@ -1,180 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#212121</color>
-    <color name="white">#FFFFFF</color>
+    <!-- Base Colors - Material Design 3 Inspired -->
+    <color name="black">#1C1B1F</color>
+    <color name="white">#FFFBFE</color>
     <color name="pureBlack">#000000</color>
-    <color name="anilistPaleWhite">#EDF1F5</color>
-    <color name="anilistDarkBlue">#2B2D42</color>
-    <color name="anilistDarkBlueTransparent36">#5C2B2D42</color>
-    <color name="anilistVeryDeepBlue">#0B1622</color>
-    <color name="anilistDarkWhite">#9FADBD</color>
-    <color name="anilistDarkWhiteTransparent36">#5C9FADBD</color>
+    
+    <!-- Surface Colors -->
+    <color name="surfaceLight">#FEF7FF</color>
+    <color name="surfaceDark">#1C1B1F</color>
+    <color name="surfaceContainerLight">#F3EDF7</color>
+    <color name="surfaceContainerDark">#211F26</color>
+    <color name="surfaceContainerHighLight">#ECE6F0</color>
+    <color name="surfaceContainerHighDark">#2B2930</color>
+    
+    <!-- AniList Brand Colors -->
+    <color name="anilistPaleWhite">#F3F4F6</color>
+    <color name="anilistDarkBlue">#1F2937</color>
+    <color name="anilistDarkBlueTransparent36">#5C1F2937</color>
+    <color name="anilistVeryDeepBlue">#111827</color>
+    <color name="anilistDarkWhite">#9CA3AF</color>
+    <color name="anilistDarkWhiteTransparent36">#5C9CA3AF</color>
 
-    <color name="blackTransparent86">#DB212121</color>
-    <color name="blackTransparent50">#80212121</color>
-    <color name="blackTransparent36">#5C212121</color>
+    <!-- Transparency Variants - Black -->
+    <color name="blackTransparent86">#DB1C1B1F</color>
+    <color name="blackTransparent50">#801C1B1F</color>
+    <color name="blackTransparent36">#5C1C1B1F</color>
 
-    <color name="whiteTransparent86">#DBFFFFFF</color>
-    <color name="whiteTransparent50">#80FFFFFF</color>
-    <color name="whiteTransparent36">#5CFFFFFF</color>
+    <!-- Transparency Variants - White -->
+    <color name="whiteTransparent86">#DBFFFBFE</color>
+    <color name="whiteTransparent50">#80FFFBFE</color>
+    <color name="whiteTransparent36">#5CFFFBFE</color>
 
+    <!-- Transparency Variants - Pure Black -->
     <color name="pureBlackTransparent86">#DB000000</color>
     <color name="pureBlackTransparent50">#80000000</color>
     <color name="pureBlackTransparent36">#5C000000</color>
 
-    <color name="anilistPaleWhiteTransparent86">#DBEDF1F5</color>
-    <color name="anilistPaleWhiteTransparent50">#80EDF1F5</color>
-    <color name="anilistPaleWhiteTransparent36">#5CEDF1F5</color>
+    <!-- AniList Pale White Transparency -->
+    <color name="anilistPaleWhiteTransparent86">#DBF3F4F6</color>
+    <color name="anilistPaleWhiteTransparent50">#80F3F4F6</color>
+    <color name="anilistPaleWhiteTransparent36">#5CF3F4F6</color>
 
-    <color name="anilistVeryDeepBlueTransparent86">#DB0B1622</color>
-    <color name="anilistVeryDeepBlueTransparent50">#800B1622</color>
-    <color name="anilistVeryDeepBlueTransparent36">#5C0B1622</color>
+    <!-- AniList Deep Blue Transparency -->
+    <color name="anilistVeryDeepBlueTransparent86">#DB111827</color>
+    <color name="anilistVeryDeepBlueTransparent50">#80111827</color>
+    <color name="anilistVeryDeepBlueTransparent36">#5C111827</color>
 
-    <color name="brightYellow">#F1C40F</color>
-    <color name="brightRed">#E74C3C</color>
-    <color name="brightGreen">#2ECC71</color>
+    <!-- Semantic Colors -->
+    <color name="brightYellow">#FBBF24</color>
+    <color name="brightRed">#EF4444</color>
+    <color name="brightGreen">#10B981</color>
 
-    <!-- Card Background -->
-    <color name="blackLight">#2F2F2F</color>
-    <color name="blackLightTransparent80">#CC2F2F2F</color>
-    <color name="whiteLight">#F2F2F2</color>
-    <color name="whiteLightTransparent80">#CCF2F2F2</color>
-    <color name="pureBlackLight">#0F0F0F</color>
-    <color name="pureBlackLightTransparent80">#CC0F0F0F</color>
-    <color name="anilistWhite">#FAFAFA</color>
-    <color name="anilistWhiteTransparent80">#CCFAFAFA</color>
-    <color name="anilistDeepBlue">#151F2E</color>
-    <color name="anilistDeepBlueTransparent80">#CC151F2E</color>
+    <!-- Card Background - Modern Elevated Surfaces -->
+    <color name="blackLight">#2B2930</color>
+    <color name="blackLightTransparent80">#CC2B2930</color>
+    <color name="whiteLight">#F3EDF7</color>
+    <color name="whiteLightTransparent80">#CCF3EDF7</color>
+    <color name="pureBlackLight">#121212</color>
+    <color name="pureBlackLightTransparent80">#CC121212</color>
+    <color name="anilistWhite">#F9FAFB</color>
+    <color name="anilistWhiteTransparent80">#CCF9FAFB</color>
+    <color name="anilistDeepBlue">#1E293B</color>
+    <color name="anilistDeepBlueTransparent80">#CC1E293B</color>
 
-    <!-- For navigation bar -->
-    <color name="whiteTransparent70">#B3FFFFFF</color>
+    <!-- Navigation Bar -->
+    <color name="whiteTransparent70">#B3FFFBFE</color>
     <color name="pureBlackTransparent70">#B3000000</color>
 
     <!-- Divider -->
-    <color name="whiteTransparent12">#1FFFFFFF</color>
-    <color name="blackTransparent12">#1F212121</color>
-    <color name="anilistDarkBlueTransparent12">#1F2B2D42</color>
-    <color name="anilistDarkWhiteTransparent12">#1F9FADBD</color>
+    <color name="whiteTransparent12">#1FFFFBFE</color>
+    <color name="blackTransparent12">#1F1C1B1F</color>
+    <color name="anilistDarkBlueTransparent12">#1F1F2937</color>
+    <color name="anilistDarkWhiteTransparent12">#1F9CA3AF</color>
 
-    <!-- Default Theme -->
-    <color name="yellow">#FCF1C2</color>
-    <color name="cyan">#DCFDF9</color>
-    <color name="cyanTransparent50">#80DCFDF9</color>
-    <color name="cyanTransparent20">#33DCFDF9</color>
-    <color name="magentaDark">#C987C4</color>
-    <color name="magentaDarkTransparent50">#80C987C4</color>
+    <!-- ========================================= -->
+    <!-- Material Design 3 Accent Colors          -->
+    <!-- ========================================= -->
 
-    <color name="blue">#B0D2F8</color>
-    <color name="cream">#F9CDC9</color>
-    <color name="creamTransparent50">#80F9CDC9</color>
-    <color name="creamTransparent20">#33F9CDC9</color>
-    <color name="gold">#B9C478</color>
-    <color name="goldTransparent50">#80B9C478</color>
+    <!-- Default Theme - Soft Pastels -->
+    <color name="yellow">#FEF3C7</color>
+    <color name="cyan">#CFFAFE</color>
+    <color name="cyanTransparent50">#80CFFAFE</color>
+    <color name="cyanTransparent20">#33CFFAFE</color>
+    <color name="magentaDark">#A855F7</color>
+    <color name="magentaDarkTransparent50">#80A855F7</color>
 
-    <color name="green">#BEFAC6</color>
-    <color name="lavender">#E3D8FB</color>
-    <color name="lavenderTransparent50">#80E3D8FB</color>
-    <color name="lavenderTransparent20">#33E3D8FB</color>
-    <color name="brown">#C7A683</color>
-    <color name="brownTransparent50">#80C7A683</color>
+    <color name="blue">#BFDBFE</color>
+    <color name="cream">#FECACA</color>
+    <color name="creamTransparent50">#80FECACA</color>
+    <color name="creamTransparent20">#33FECACA</color>
+    <color name="gold">#84CC16</color>
+    <color name="goldTransparent50">#8084CC16</color>
 
-    <color name="red">#FDD5B5</color>
-    <color name="aloevera">#CFFDD0</color>
-    <color name="aloeveraTransparent50">#80CFFDD0</color>
-    <color name="aloeveraTransparent20">#33CFFDD0</color>
-    <color name="purple">#8D7DC9</color>
-    <color name="purpleTransparent50">#808D7DC9</color>
+    <color name="green">#BBF7D0</color>
+    <color name="lavender">#E9D5FF</color>
+    <color name="lavenderTransparent50">#80E9D5FF</color>
+    <color name="lavenderTransparent20">#33E9D5FF</color>
+    <color name="brown">#92400E</color>
+    <color name="brownTransparent50">#8092400E</color>
 
-    <color name="pink">#FCC3FF</color>
-    <color name="sunshine">#FFF7DB</color>
-    <color name="sunshineTransparent50">#80FFF7DB</color>
-    <color name="sunshineTransparent20">#33FFF7DB</color>
-    <color name="jade">#87CCBE</color>
-    <color name="jadeTransparent50">#8087CCBE</color>
+    <color name="red">#FED7AA</color>
+    <color name="aloevera">#A7F3D0</color>
+    <color name="aloeveraTransparent50">#80A7F3D0</color>
+    <color name="aloeveraTransparent20">#33A7F3D0</color>
+    <color name="purple">#8B5CF6</color>
+    <color name="purpleTransparent50">#808B5CF6</color>
 
-    <!-- Light Theme -->
-    <color name="lightBlue">#007AFF</color>
-    <color name="lightCream">#FF2A19</color>
-    <color name="lightCreamTransparent50">#80FF2A19</color>
-    <color name="lightCreamTransparent20">#33FF2A19</color>
-    <color name="lightGold">#9DB309</color>
-    <color name="lightGoldTransparent50">#809DB309</color>
+    <color name="pink">#FBCFE8</color>
+    <color name="sunshine">#FEF9C3</color>
+    <color name="sunshineTransparent50">#80FEF9C3</color>
+    <color name="sunshineTransparent20">#33FEF9C3</color>
+    <color name="jade">#2DD4BF</color>
+    <color name="jadeTransparent50">#802DD4BF</color>
 
-    <color name="lightGreen">#2FB651</color>
-    <color name="lightLavender">#7241B5</color>
-    <color name="lightLavenderTransparent50">#807241B5</color>
-    <color name="lightLavenderTransparent20">#337241B5</color>
-    <color name="lightBrown">#B5731D</color>
-    <color name="lightBrownTransparent50">#80B5731D</color>
+    <!-- Light Theme - Vibrant & Modern -->
+    <color name="lightBlue">#3B82F6</color>
+    <color name="lightCream">#F43F5E</color>
+    <color name="lightCreamTransparent50">#80F43F5E</color>
+    <color name="lightCreamTransparent20">#33F43F5E</color>
+    <color name="lightGold">#84CC16</color>
+    <color name="lightGoldTransparent50">#8084CC16</color>
 
-    <color name="lightThemeYellow">#FF8C00</color>
-    <color name="lightThemeCyan">#0078B3</color>
-    <color name="lightThemeCyanTransparent50">#800078B3</color>
-    <color name="lightThemeCyanTransparent20">#330078B3</color>
-    <color name="lightThemeMagentaDark">#7419FF</color>
-    <color name="lightThemeMagentaDarkTransparent50">#807419FF</color>
+    <color name="lightGreen">#22C55E</color>
+    <color name="lightLavender">#8B5CF6</color>
+    <color name="lightLavenderTransparent50">#808B5CF6</color>
+    <color name="lightLavenderTransparent20">#338B5CF6</color>
+    <color name="lightBrown">#D97706</color>
+    <color name="lightBrownTransparent50">#80D97706</color>
 
-    <color name="lightRed">#FF3B30</color>
-    <color name="lightAloevera">#00B344</color>
-    <color name="lightAloeveraTransparent50">#8000B344</color>
-    <color name="lightAloeveraTransparent20">#3300B344</color>
-    <color name="lightPurple">#1791FF</color>
-    <color name="lightPurpleTransparent50">#801791FF</color>
+    <color name="lightThemeYellow">#F59E0B</color>
+    <color name="lightThemeCyan">#0891B2</color>
+    <color name="lightThemeCyanTransparent50">#800891B2</color>
+    <color name="lightThemeCyanTransparent20">#330891B2</color>
+    <color name="lightThemeMagentaDark">#7C3AED</color>
+    <color name="lightThemeMagentaDarkTransparent50">#807C3AED</color>
 
-    <color name="lightPink">#FD00F9</color>
-    <color name="lightSunshine">#FF9A1C</color>
-    <color name="lightSunshineTransparent50">#80FF9A1C</color>
-    <color name="lightSunshineTransparent20">#33FF9A1C</color>
-    <color name="lightJade">#09B098</color>
-    <color name="lightJadeTransparent50">#8009B098</color>
+    <color name="lightRed">#EF4444</color>
+    <color name="lightAloevera">#10B981</color>
+    <color name="lightAloeveraTransparent50">#8010B981</color>
+    <color name="lightAloeveraTransparent20">#3310B981</color>
+    <color name="lightPurple">#0EA5E9</color>
+    <color name="lightPurpleTransparent50">#800EA5E9</color>
 
-    <!-- AniList Theme   -->
-    <color name="anilistBlue">#3DB4F2</color>
-    <color name="anilistLightBlue">#86CEF4</color>
-    <color name="anilistLightBlueTransparent50">#8086CEF4</color>
-    <color name="anilistLightBlueTransparent20">#3386CEF4</color>
-    <color name="anilistBrightRed">#F25560</color>
-    <color name="anilistBrightRedTransparent50">#80F25560</color>
+    <color name="lightPink">#EC4899</color>
+    <color name="lightSunshine">#F59E0B</color>
+    <color name="lightSunshineTransparent50">#80F59E0B</color>
+    <color name="lightSunshineTransparent20">#33F59E0B</color>
+    <color name="lightJade">#14B8A6</color>
+    <color name="lightJadeTransparent50">#8014B8A6</color>
 
-    <color name="anilistPurple">#C063FF</color>
-    <color name="anilistLightPurple">#DFB0FF</color>
-    <color name="anilistLightPurpleTransparent50">#80DFB0FF</color>
-    <color name="anilistLightPurpleTransparent20">#33DFB0FF</color>
-    <color name="anilistPaleOrange">#FFD07D</color>
-    <color name="anilistPaleOrangeTransparent50">#80FFD07D</color>
+    <!-- AniList Theme - Brand Colors -->
+    <color name="anilistBlue">#02A9FF</color>
+    <color name="anilistLightBlue">#7DD3FC</color>
+    <color name="anilistLightBlueTransparent50">#807DD3FC</color>
+    <color name="anilistLightBlueTransparent20">#337DD3FC</color>
+    <color name="anilistBrightRed">#F43F5E</color>
+    <color name="anilistBrightRedTransparent50">#80F43F5E</color>
 
-    <color name="anilistGreen">#4CCA51</color>
-    <color name="anilistLightGreen">#8FD291</color>
-    <color name="anilistLightGreenTransparent50">#808FD291</color>
-    <color name="anilistLightGreenTransparent20">#338FD291</color>
-    <color name="anilistDarkPurple">#7761C9</color>
-    <color name="anilistDarkPurpleTransparent50">#807761C9</color>
+    <color name="anilistPurple">#A855F7</color>
+    <color name="anilistLightPurple">#D8B4FE</color>
+    <color name="anilistLightPurpleTransparent50">#80D8B4FE</color>
+    <color name="anilistLightPurpleTransparent20">#33D8B4FE</color>
+    <color name="anilistPaleOrange">#FDBA74</color>
+    <color name="anilistPaleOrangeTransparent50">#80FDBA74</color>
 
-    <color name="anilistOrange">#EF881A</color>
-    <color name="anilistLightOrange">#F2AD63</color>
-    <color name="anilistLightOrangeTransparent50">#80F2AD63</color>
-    <color name="anilistLightOrangeTransparent20">#33F2AD63</color>
-    <color name="anilistBrightGreen">#32F04F</color>
-    <color name="anilistBrightGreenTransparent50">#8032F04F</color>
+    <color name="anilistGreen">#22C55E</color>
+    <color name="anilistLightGreen">#86EFAC</color>
+    <color name="anilistLightGreenTransparent50">#8086EFAC</color>
+    <color name="anilistLightGreenTransparent20">#3386EFAC</color>
+    <color name="anilistDarkPurple">#7C3AED</color>
+    <color name="anilistDarkPurpleTransparent50">#807C3AED</color>
 
-    <color name="anilistRed">#E13333</color>
-    <color name="anilistLightRed">#E67A7A</color>
-    <color name="anilistLightRedTransparent50">#80E67A7A</color>
-    <color name="anilistLightRedTransparent20">#33E67A7A</color>
-    <color name="anilistBrightYellow">#E0DE4A</color>
-    <color name="anilistBrightYellowTransparent50">#80E0DE4A</color>
+    <color name="anilistOrange">#F97316</color>
+    <color name="anilistLightOrange">#FDBA74</color>
+    <color name="anilistLightOrangeTransparent50">#80FDBA74</color>
+    <color name="anilistLightOrangeTransparent20">#33FDBA74</color>
+    <color name="anilistBrightGreen">#22C55E</color>
+    <color name="anilistBrightGreenTransparent50">#8022C55E</color>
 
-    <color name="anilistPink">#FC9DD6</color>
-    <color name="anilistBrightPink">#FD51B8</color>
-    <color name="anilistBrightPinkTransparent50">#80FD51B8</color>
-    <color name="anilistBrightPinkTransparent20">#33FD51B8</color>
-    <color name="anilistCyan">#64ABB0</color>
-    <color name="anilistCyanTransparent50">#8064ABB0</color>
+    <color name="anilistRed">#DC2626</color>
+    <color name="anilistLightRed">#FCA5A5</color>
+    <color name="anilistLightRedTransparent50">#80FCA5A5</color>
+    <color name="anilistLightRedTransparent20">#33FCA5A5</color>
+    <color name="anilistBrightYellow">#FBBF24</color>
+    <color name="anilistBrightYellowTransparent50">#80FBBF24</color>
 
-    <color name="anilistGrey">#677B94</color>
-    <color name="anilistBrightGrey">#426FA6</color>
-    <color name="anilistBrightGreyTransparent50">#80426FA6</color>
-    <color name="anilistBrightGreyTransparent20">#33426FA6</color>
-    <color name="anilistBrown">#947976</color>
-    <color name="anilistBrownTransparent50">#80947976</color>
+    <color name="anilistPink">#F9A8D4</color>
+    <color name="anilistBrightPink">#EC4899</color>
+    <color name="anilistBrightPinkTransparent50">#80EC4899</color>
+    <color name="anilistBrightPinkTransparent20">#33EC4899</color>
+    <color name="anilistCyan">#22D3EE</color>
+    <color name="anilistCyanTransparent50">#8022D3EE</color>
+
+    <color name="anilistGrey">#64748B</color>
+    <color name="anilistBrightGrey">#475569</color>
+    <color name="anilistBrightGreyTransparent50">#80475569</color>
+    <color name="anilistBrightGreyTransparent20">#33475569</color>
+    <color name="anilistBrown">#78716C</color>
+    <color name="anilistBrownTransparent50">#8078716C</color>
+    
+    <!-- Ripple/Overlay Colors -->
+    <color name="rippleLight">#1F000000</color>
+    <color name="rippleDark">#1FFFFFFF</color>
 </resources>

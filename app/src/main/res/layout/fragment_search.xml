@@ -20,12 +20,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchBarLayout"
-            app:contentPadding="@dimen/marginSmall"
+            app:contentPadding="@dimen/marginNormal"
             app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/cornerLarge"
+            app:cardElevation="@dimen/elevationNone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/searchSettingButton"
-            android:layout_marginEnd="@dimen/marginPageNormal"
+            android:layout_marginEnd="@dimen/marginNormal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
@@ -63,10 +65,13 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchSettingButton"
             app:cardBackgroundColor="?themePrimaryColor"
+            app:cardCornerRadius="@dimen/cornerNormal"
+            app:cardElevation="@dimen/elevationNone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/searchBarLayout"
             app:layout_constraintBottom_toBottomOf="@id/searchBarLayout"
             app:layout_constraintDimensionRatio="1:1"
+            android:foreground="?selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="0dp">
 

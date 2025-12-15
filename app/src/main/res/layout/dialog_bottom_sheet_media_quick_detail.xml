@@ -16,10 +16,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="?themeDividerColor"
-            android:layout_marginTop="@dimen/marginPageBig"
-            android:layout_width="@dimen/marginFar"
-            android:layout_height="@dimen/marginClose"/>
+            android:background="@drawable/shape_bottom_sheet_handle"
+            android:layout_marginTop="@dimen/marginMedium"
+            android:layout_width="32dp"
+            android:layout_height="4dp"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialogMediaTitle"

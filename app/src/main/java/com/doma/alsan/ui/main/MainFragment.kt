@@ -77,7 +77,7 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
             )
 
             binding.mainViewPager.adapter = viewPagerAdapter
-            mainViewPager.isUserInputEnabled = false
+            mainViewPager.isUserInputEnabled = true
             mainViewPager.offscreenPageLimit = 4
 
             binding.mainBottomNavigation.menu.findItem(R.id.menuAnime).isVisible = isViewerAuthenticated
