@@ -27,6 +27,7 @@ query MediaCharactersQuery($id:Int, $page:Int, $language:StaffLanguage) {
         voiceActorRoles(language:$language, sort:[RELEVANCE]) {
           voiceActor {
             id
+            languageV2
             name {
               first
               middle

@@ -33,6 +33,11 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
 
             aboutSettingsAppVersionText.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
+            // AL-chan original repo link
+            aboutSettingsAlchanLink.clicks {
+                navigation.openWebView(NavigationManager.Url.ALCHAN_GITHUB)
+            }
+
             // AniList link - commented out
             // aboutSettingsAniListLink.clicks {
             //     navigation.openWebView(NavigationManager.Url.ALSAN_FORUM_THREAD)

@@ -64,7 +64,7 @@ class DefaultBrowseRepository(
     override fun getMediaCharacters(
         id: Int,
         page: Int,
-        language: StaffLanguage
+        language: StaffLanguage?
     ): Observable<Pair<PageInfo, List<CharacterEdge>>> {
         return browseDataSource.getMediaCharactersQuery(id, page, language).map {
             val characterConnection = it.data?.convert() ?: return@map Pair(PageInfo(), listOf())

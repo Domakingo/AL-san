@@ -204,6 +204,8 @@
     <string name="play_store">Play Store</string>
     <string name="alchan_app">\@domakingo</string>
     <string name="al_chan_is_an_unofficial_app_for_anilist_this_app_exists_with_the_purpose_to_help_manage_your_anilist_account">AL-san is an unofficial app for AniList. This app exists with the purpose to help manage your AniList account.</string>
+    <string name="al_san_is_a_fork">This app is an unofficial fork of </string>
+    <string name="al_chan">AL-chan</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="the_privacy_policy_of_this_app_can_be_read_fully_here">The privacy policy of this app can be read fully here.</string>
     <string name="filter">Filter</string>
@@ -432,6 +434,7 @@
     <string name="search_anime">Search Anime</string>
     <string name="search_manga">Search Manga</string>
     <string name="search_characters">Search Characters</string>
+    <string name="search_character_or_voice_actor">Search character or voice actor</string>
     <string name="search_staff">Search Staff</string>
     <string name="search_studios">Search Studios</string>
     <string name="search_users">Search Users</string>

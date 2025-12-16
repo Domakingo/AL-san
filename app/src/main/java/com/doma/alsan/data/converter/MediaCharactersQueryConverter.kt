@@ -43,7 +43,8 @@ fun MediaCharactersQuery.Data.convert(): CharacterConnection {
                             image = StaffImage(
                                 large = voiceActorRole?.voiceActor?.image?.large ?: "",
                                 medium = voiceActorRole?.voiceActor?.image?.medium ?: ""
-                            )
+                            ),
+                            language = voiceActorRole?.voiceActor?.languageV2 ?: ""
                         ),
                         roleNote = voiceActorRole?.roleNotes ?: "",
                         dubGroup = voiceActorRole?.dubGroup ?: ""

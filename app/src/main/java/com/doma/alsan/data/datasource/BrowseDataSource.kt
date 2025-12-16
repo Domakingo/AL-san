@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Observable
 interface BrowseDataSource {
     fun getUserQuery(id: Int?, name: String?, sort: List<UserStatisticsSort>): Observable<ApolloResponse<UserQuery.Data>>
     fun getMediaQuery(id: Int): Observable<ApolloResponse<MediaQuery.Data>>
-    fun getMediaCharactersQuery(id: Int, page: Int, language: StaffLanguage): Observable<ApolloResponse<MediaCharactersQuery.Data>>
+    fun getMediaCharactersQuery(id: Int, page: Int, language: StaffLanguage?): Observable<ApolloResponse<MediaCharactersQuery.Data>>
     fun getMediaStaffQuery(id: Int, page: Int): Observable<ApolloResponse<MediaStaffQuery.Data>>
     fun getMediaFollowingMediaListQuery(id: Int, page: Int): Observable<ApolloResponse<MediaFollowingMediaListQuery.Data>>
     fun getMediaActivityQuery(id: Int, page: Int): Observable<ApolloResponse<MediaActivityQuery.Data>>

@@ -24,24 +24,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Activity Subscription Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/notificationsSettingsActivitySubscriptionLayout"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/notificationsSettingsActivitySubscriptionTitle"
-                    android:text="@string/activity_subscription"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/notificationsSettingsActivitySubscriptionTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_custom_activity"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/notificationsSettingsActivitySubscriptionTitle"
+                        android:text="@string/activity_subscription"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/notificationsSettingsSubscribeActivityCreatedLayout"
-                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsActivitySubscriptionTitle"
+                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsActivitySubscriptionTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -89,25 +106,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Social Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/notificationsSettingsSocialLayout"
                 app:layout_constraintTop_toBottomOf="@id/notificationsSettingsActivitySubscriptionLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/notificationsSettingsSocialTitle"
-                    android:text="@string/social"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/notificationsSettingsSocialTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_contacts"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/notificationsSettingsSocialTitle"
+                        android:text="@string/social"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/notificationsSettingsSomeoneFollowLayout"
-                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSocialTitle"
+                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSocialTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -225,9 +259,44 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Forum Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/notificationsSettingsForumLayout"
+                app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSocialLayout"
+                android:layout_marginTop="@dimen/marginBig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/notificationsSettingsForumTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chat"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/notificationsSettingsForumTitle"
+                        android:text="@string/forum"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/notificationsSettingsSomeoneRepliesForumLayout"
-                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSomeoneLikesActivityReplyLayout"
+                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsForumTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -347,25 +416,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Site Data Changes Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/notificationsSettingsSiteDataChangesLayout"
-                app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSocialLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                app:layout_constraintTop_toBottomOf="@id/notificationsSettingsForumLayout"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/notificationsSettingsSiteDataChangesTitle"
-                    android:text="@string/site_data_changes"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/notificationsSettingsSiteDataChangesTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_baseline_dashboard"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/notificationsSettingsSiteDataChangesTitle"
+                        android:text="@string/site_data_changes"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/notificationsSettingsEntryCreatedLayout"
-                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSiteDataChangesTitle"
+                    app:layout_constraintTop_toBottomOf="@id/notificationsSettingsSiteDataChangesTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"

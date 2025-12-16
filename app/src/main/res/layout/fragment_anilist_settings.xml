@@ -24,24 +24,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Title Language Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/aniListSettingsTitleLanguageLayout"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/aniListSettingsLanguageTitle"
-                    android:text="@string/title_language"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/aniListSettingsLanguageTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_title"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aniListSettingsLanguageTitle"
+                        android:text="@string/title_language"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/aniListSettingsSelectedLanguageLayout"
-                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsLanguageTitle"
+                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsLanguageTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -66,25 +83,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Staff and Character Naming Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/aniListSettingsStaffCharacterNamingLayout"
                 app:layout_constraintTop_toBottomOf="@id/aniListSettingsTitleLanguageLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/aniListSettingsStaffCharacterNamingTitle"
-                    android:text="@string/staff_and_character_naming"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/aniListSettingsStaffCharacterNamingTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_contacts"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aniListSettingsStaffCharacterNamingTitle"
+                        android:text="@string/staff_and_character_naming"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/aniListSettingsSelectedNamingLayout"
-                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsStaffCharacterNamingTitle"
+                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsStaffCharacterNamingTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -109,25 +143,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Activity Merge Time Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/aniListSettingsActivityMergeTimeLayout"
                 app:layout_constraintTop_toBottomOf="@id/aniListSettingsStaffCharacterNamingLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/aniListSettingsActivityMergeTimeTitle"
-                    android:text="@string/activity_merge_time"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/aniListSettingsActivityMergeTimeTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_rearrange"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aniListSettingsActivityMergeTimeTitle"
+                        android:text="@string/activity_merge_time"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/aniListSettingsSelectedMergeTimeLayout"
-                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsActivityMergeTimeTitle"
+                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsActivityMergeTimeTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -152,25 +203,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- 18+ Content Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/aniListSettingsAdultContentLayout"
                 app:layout_constraintTop_toBottomOf="@id/aniListSettingsActivityMergeTimeLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/aniListSettingsAdultContentTitle"
-                    android:text="@string/_18_content"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/aniListSettingsAdultContentTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_visibility_off"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aniListSettingsAdultContentTitle"
+                        android:text="@string/_18_content"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/aniListSettingsShowAdultContentLayout"
-                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsAdultContentTitle"
+                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsAdultContentTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -194,25 +262,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Notifications Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/aniListSettingsNotificationsLayout"
                 app:layout_constraintTop_toBottomOf="@id/aniListSettingsAdultContentLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/aniListSettingsNotificationsTitle"
-                    android:text="@string/notifications"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/aniListSettingsNotificationsTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_notification"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aniListSettingsNotificationsTitle"
+                        android:text="@string/notifications"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/aniListSettingsReceiveAiringNotificationsLayout"
-                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsNotificationsTitle"
+                    app:layout_constraintTop_toBottomOf="@id/aniListSettingsNotificationsTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"

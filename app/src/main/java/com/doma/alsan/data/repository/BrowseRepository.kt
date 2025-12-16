@@ -25,7 +25,7 @@ interface BrowseRepository {
     fun getOthersListType(): Observable<ListType>
     fun updateOthersListType(newListType: ListType)
     fun getMedia(id: Int): Observable<Media>
-    fun getMediaCharacters(id: Int, page: Int, language: StaffLanguage): Observable<Pair<PageInfo, List<CharacterEdge>>>
+    fun getMediaCharacters(id: Int, page: Int, language: StaffLanguage?): Observable<Pair<PageInfo, List<CharacterEdge>>>
     fun getMediaStaff(id: Int, page: Int): Observable<Pair<PageInfo, List<StaffEdge>>>
     fun getMediaFollowingMediaList(id: Int, page: Int): Observable<Page<MediaList>>
     fun getMediaActivity(id: Int, page: Int): Observable<Page<ListActivity>>

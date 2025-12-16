@@ -296,7 +296,12 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private fun getMediaCharacterListener(): MediaListener.MediaCharacterListener {
         return object : MediaListener.MediaCharacterListener {
             override fun navigateToMediaCharacters(media: Media) {
-                navigation.navigateToMediaCharacters(media.getId())
+                val mediaType = if (media.type == com.doma.alsan.type.MediaType.MANGA) {
+                    com.doma.alsan.helper.enums.MediaType.MANGA
+                } else {
+                    com.doma.alsan.helper.enums.MediaType.ANIME
+                }
+                navigation.navigateToMediaCharacters(media.getId(), mediaType)
             }
 
             override fun navigateToCharacter(character: Character) {
