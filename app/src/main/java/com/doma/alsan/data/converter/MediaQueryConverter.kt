@@ -93,23 +93,42 @@ fun MediaQuery.Data.convert(): Media {
             } ?: listOf()
         ),
         characters = CharacterConnection(
-            nodes = Media?.characters?.nodes?.filterNotNull()?.map {
-                Character(
-                    id = it.id,
-                    name = CharacterName(
-                        first = it.name?.first ?: "",
-                        middle = it.name?.middle ?: "",
-                        last = it.name?.last ?: "",
-                        full = it.name?.full ?: "",
-                        native = it.name?.native ?: "",
-                        alternative = it.name?.alternative?.filterNotNull() ?: listOf(),
-                        alternativeSpoiler = it.name?.alternativeSpoiler?.filterNotNull() ?: listOf(),
-                        userPreferred = it.name?.userPreferred ?: "",
+            edges = Media?.characters?.edges?.filterNotNull()?.map { edge ->
+                CharacterEdge(
+                    node = Character(
+                        id = edge.node?.id ?: 0,
+                        name = CharacterName(
+                            first = edge.node?.name?.first ?: "",
+                            middle = edge.node?.name?.middle ?: "",
+                            last = edge.node?.name?.last ?: "",
+                            full = edge.node?.name?.full ?: "",
+                            native = edge.node?.name?.native ?: "",
+                            alternative = edge.node?.name?.alternative?.filterNotNull() ?: listOf(),
+                            alternativeSpoiler = edge.node?.name?.alternativeSpoiler?.filterNotNull() ?: listOf(),
+                            userPreferred = edge.node?.name?.userPreferred ?: "",
+                        ),
+                        image = CharacterImage(
+                            large = edge.node?.image?.large ?: "",
+                            medium = edge.node?.image?.medium ?: ""
+                        )
                     ),
-                    image = CharacterImage(
-                        large = it.image?.large ?: "",
-                        medium = it.image?.medium ?: ""
-                    )
+                    role = edge.role,
+                    voiceActorRoles = edge.voiceActorRoles?.filterNotNull()?.map { role ->
+                        StaffRoleType(
+                            voiceActor = Staff(
+                                id = role.voiceActor?.id ?: 0,
+                                name = StaffName(
+                                    userPreferred = role.voiceActor?.name?.userPreferred ?: ""
+                                ),
+                                image = StaffImage(
+                                    large = role.voiceActor?.image?.large ?: "",
+                                    medium = role.voiceActor?.image?.medium ?: ""
+                                ),
+                                language = role.voiceActor?.languageV2 ?: ""
+                            ),
+                            dubGroup = role.dubGroup ?: ""
+                        )
+                    } ?: listOf()
                 )
             } ?: listOf()
         ),

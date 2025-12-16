@@ -218,6 +218,14 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.bannerImageUrlForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.mediaBannerImage)
+            },
+            viewModel.voiceActorLanguages.subscribe { languages ->
+                dialog.showListDialog(languages) { data, _ ->
+                    viewModel.updateVoiceActorLanguage(data)
+                }
+            },
+            viewModel.selectedLanguage.subscribe { language ->
+                mediaAdapter?.updateSelectedLanguage(language)
             }
         )
 
@@ -293,6 +301,14 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
 
             override fun navigateToCharacter(character: Character) {
                 navigation.navigateToCharacter(character.id)
+            }
+
+            override fun navigateToStaff(staff: Staff) {
+                navigation.navigateToStaff(staff.id)
+            }
+
+            override fun openLanguageDialog() {
+                viewModel.loadVoiceActorLanguages()
             }
         }
     }

@@ -20,6 +20,17 @@
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:visibility="gone"
+            android:id="@+id/horizontalListLanguageSelector"
+            style="?themeSmallClickableFont"
+            android:textColor="?themeSecondaryColor"
+            android:foreground="?selectableItemBackground"
+            android:paddingVertical="@dimen/iconPadding"
+            android:layout_marginEnd="@dimen/marginNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/horizontalListSeeMore"
             style="?themeSmallClickableFont"
             android:foreground="?selectableItemBackground"

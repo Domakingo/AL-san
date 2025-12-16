@@ -22,6 +22,7 @@ import com.doma.alsan.helper.utils.*
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 import com.doma.alsan.ui.common.GenreRvAdapter
 import com.doma.alsan.ui.common.TextRvAdapter
+import com.doma.alsan.type.StaffLanguage
 
 class MediaRvAdapter(
     private val context: Context,
@@ -40,6 +41,15 @@ class MediaRvAdapter(
     private var relationsAdapter: MediaRelationsRvAdapter? = null
     private var recommendationsAdapter: MediaRecommendationsRvAdapter? = null
     private var linksAdapter: MediaLinksRvAdapter? = null
+    
+    private var selectedLanguage: StaffLanguage = StaffLanguage.JAPANESE
+    private var characterViewHolderBinding: LayoutHorizontalListBinding? = null
+
+    fun updateSelectedLanguage(language: StaffLanguage) {
+        selectedLanguage = language
+        characterViewHolderBinding?.horizontalListLanguageSelector?.text = language.getString()
+        characterAdapter?.updateSelectedLanguage(language)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -169,9 +179,23 @@ class MediaRvAdapter(
 
     inner class CharacterViewHolder(private val binding: LayoutHorizontalListBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
+            characterViewHolderBinding = binding
             binding.horizontalListTitle.text = context.getString(R.string.characters)
             binding.horizontalListSeeMore.clicks { listener.mediaCharacterListener.navigateToMediaCharacters(item.media) }
-            characterAdapter?.updateData(item.media.characters.nodes)
+            
+            // Show language selector only for anime (voice actors)
+            if (item.media.type == com.doma.alsan.type.MediaType.ANIME) {
+                binding.horizontalListLanguageSelector.show(true)
+                binding.horizontalListLanguageSelector.text = selectedLanguage.getString()
+                binding.horizontalListLanguageSelector.clicks {
+                    listener.mediaCharacterListener.openLanguageDialog()
+                }
+            } else {
+                binding.horizontalListLanguageSelector.show(false)
+            }
+            
+            characterAdapter?.updateData(item.media.characters.edges)
+            characterAdapter?.updateSelectedLanguage(selectedLanguage)
         }
     }
 

@@ -27,6 +27,9 @@ import com.doma.alsan.type.MediaFormat
 import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.MediaRelation
 import com.doma.alsan.type.MediaStatus
+import com.doma.alsan.type.StaffLanguage
+import com.doma.alsan.helper.pojo.ListItem
+import com.doma.alsan.helper.extensions.getNonUnknownValues
 
 class MediaViewModel(
     private val browseRepository: BrowseRepository,
@@ -98,6 +101,14 @@ class MediaViewModel(
     private val _bannerImageUrlForPreview = PublishSubject.create<String>()
     val bannerImageUrlForPreview: Observable<String>
         get() = _bannerImageUrlForPreview
+
+    private val _voiceActorLanguages = PublishSubject.create<List<ListItem<StaffLanguage>>>()
+    val voiceActorLanguages: Observable<List<ListItem<StaffLanguage>>>
+        get() = _voiceActorLanguages
+
+    private val _selectedLanguage = BehaviorSubject.createDefault(StaffLanguage.JAPANESE)
+    val selectedLanguage: Observable<StaffLanguage>
+        get() = _selectedLanguage
 
     private var mediaId = 0
 
@@ -252,7 +263,7 @@ class MediaViewModel(
                         if (media.description.isNotBlank())
                             mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_SYNOPSIS))
 
-                        if (media.characters.nodes.isNotEmpty())
+                        if (media.characters.edges.isNotEmpty())
                             mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_CHARACTERS))
 
                         mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_INFO))
@@ -351,5 +362,30 @@ class MediaViewModel(
             currentMediaListItems[themeSectionIndex].themeGroup = newGroup
             _mediaItemList.onNext(currentMediaListItems)
         }
+    }
+
+    fun loadVoiceActorLanguages() {
+        // Extract available languages from all voice actors in the media
+        val availableLanguages = media.characters.edges
+            .flatMap { it.voiceActorRoles }
+            .mapNotNull { it.voiceActor.language.ifBlank { null } }
+            .distinct()
+            .mapNotNull { language ->
+                // Map language string to StaffLanguage enum
+                StaffLanguage.values().find { 
+                    it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
+                }
+            }
+            .sortedBy { it.ordinal }
+        
+        if (availableLanguages.isNotEmpty()) {
+            _voiceActorLanguages.onNext(availableLanguages.map { ListItem(it.getString(), it) })
+        }
+    }
+
+    fun updateVoiceActorLanguage(newLanguage: StaffLanguage) {
+        _selectedLanguage.onNext(newLanguage)
+        // Just notify the adapter to update the displayed voice actors
+        // No need to reload media, the data is already there
     }
 }

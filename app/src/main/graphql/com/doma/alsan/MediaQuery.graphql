@@ -82,21 +82,38 @@ query MediaQuery($id:Int, $statusVersion:Int, $sourceVersion:Int, $relationTypeV
             }
         }
         characters(role: MAIN, sort: [ID]) {
-            nodes {
-                id
-                name {
-                    first
-                    middle
-                    last
-                    full
-                    native
-                    alternative
-                    alternativeSpoiler
-                    userPreferred
+            edges {
+                node {
+                    id
+                    name {
+                        first
+                        middle
+                        last
+                        full
+                        native
+                        alternative
+                        alternativeSpoiler
+                        userPreferred
+                    }
+                    image {
+                        large
+                        medium
+                    }
                 }
-                image {
-                    large
-                    medium
+                role
+                voiceActorRoles(sort: [RELEVANCE]) {
+                    voiceActor {
+                        id
+                        name {
+                            userPreferred
+                        }
+                        image {
+                            large
+                            medium
+                        }
+                        languageV2
+                    }
+                    dubGroup
                 }
             }
         }

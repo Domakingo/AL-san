@@ -21,6 +21,7 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/mediaAppBarLayout"
                 android:backgroundTint="@android:color/transparent"
+                app:elevation="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -274,6 +275,12 @@
                             </com.google.android.material.card.MaterialCardView>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        app:layout_constraintTop_toBottomOf="@+id/mediaBannerContentLayout"
+                        android:background="?themeDividerColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/lineWidth"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
