@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="@dimen/marginPageBig"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/marginBig"
+    android:layout_marginTop="@dimen/marginNormal"
+    android:layout_marginBottom="@dimen/marginNormal"
+    app:cardBackgroundColor="?themeCardColor"
+    app:cardCornerRadius="@dimen/cornerMedium"
+    app:cardElevation="@dimen/elevationNormal"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/marginNormal"
+        android:paddingVertical="@dimen/marginNormal">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsTitleLayout"
@@ -240,4 +252,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
