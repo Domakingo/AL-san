@@ -37,10 +37,11 @@
 }
 
 # =============================================================================
-# Security - EncryptedSharedPreferences
+# Security - DataStore + Google Tink Encryption
 # =============================================================================
--keep class androidx.security.crypto.** { *; }
 -keep class com.google.crypto.tink.** { *; }
+-keep class androidx.datastore.** { *; }
+-keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite { *; }
 
 # =============================================================================
 # Suppress warnings for optional dependencies
