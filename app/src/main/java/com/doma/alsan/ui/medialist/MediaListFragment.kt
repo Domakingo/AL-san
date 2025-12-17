@@ -81,6 +81,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemFilter = menu.findItem(R.id.itemFilter)
                 menuItemRandom = menu.findItem(R.id.itemRandom)
                 menuItemCollapse = menu.findItem(R.id.itemCollapse)
+                menuItemCollapse?.isVisible = viewModel.mediaType != MediaType.MANGA
             }
 
             searchView = menuItemSearch?.actionView as? SearchView
