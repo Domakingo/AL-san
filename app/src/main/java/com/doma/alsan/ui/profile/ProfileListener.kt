@@ -10,6 +10,7 @@ interface ProfileListener {
 
     interface StatsListener {
         fun navigateToStatsDetail()
+        fun navigateToForceUpdate()
     }
 
     interface FavoriteMediaListener {

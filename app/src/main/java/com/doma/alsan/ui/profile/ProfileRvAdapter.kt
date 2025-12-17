@@ -288,6 +288,7 @@ class ProfileRvAdapter(
                 profileStatsMangaMeanScoreText.text = item.mangaStats?.meanScore?.roundToTwoDecimal()
 
                 profileStatsDetailText.clicks { listener.statsListener.navigateToStatsDetail() }
+                profileStatsForceUpdateText.clicks { listener.statsListener.navigateToForceUpdate() }
             }
         }
     }

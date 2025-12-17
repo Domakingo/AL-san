@@ -348,6 +348,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
                     navigation.navigateToUserStats(currentUserId)
                 }
             }
+
+            override fun navigateToForceUpdate() {
+                 navigation.navigateToAccountSettings()
+            }
         }
     }
 
