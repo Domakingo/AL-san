@@ -17,7 +17,9 @@ import com.doma.alsan.databinding.*
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.Affinity
+import com.doma.alsan.helper.pojo.ProfileHeaderData
 import com.doma.alsan.helper.pojo.ProfileItem
+import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.helper.utils.MarkdownSetup
 import com.doma.alsan.helper.utils.MarkdownUtil
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
@@ -43,6 +45,10 @@ class ProfileRvAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
+            ProfileItem.VIEW_TYPE_HEADER -> {
+                val view = LayoutProfileHeaderBinding.inflate(inflater, parent, false)
+                return HeaderViewHolder(view)
+            }
             ProfileItem.VIEW_TYPE_BIO -> {
                 val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
                 markdownSetup = MarkdownUtil.getMarkdownSetup(context, width, null)
@@ -105,6 +111,74 @@ class ProfileRvAdapter(
     private fun setUpGridRecyclerView(recyclerView: RecyclerView, adapter: BaseRecyclerViewAdapter<*, *>?) {
         recyclerView.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.gridSpan))
         recyclerView.adapter = adapter
+    }
+
+    inner class HeaderViewHolder(private val binding: LayoutProfileHeaderBinding) : ViewHolder(binding) {
+        override fun bind(item: ProfileItem, index: Int) {
+            val headerData = item.headerData ?: return
+            binding.apply {
+                // Load images
+                if (headerData.bannerUrl != null) {
+                    ImageUtil.loadImage(context, headerData.bannerUrl, profileBannerImage)
+                }
+                
+                if (headerData.isCircleAvatar) {
+                    headerData.avatarUrl?.let { url ->
+                        ImageUtil.loadCircleImage(context, url, profileAvatarCircleImage)
+                    }
+                    profileAvatarCircleImage.show(true)
+                    profileAvatarRectangleImage.show(false)
+                } else {
+                    headerData.avatarUrl?.let { url ->
+                        ImageUtil.loadRectangleImage(context, url, profileAvatarRectangleImage)
+                    }
+                    profileAvatarCircleImage.show(false)
+                    profileAvatarRectangleImage.show(true)
+                }
+                
+                // Username
+                profileUsernameText.text = headerData.username
+                
+                // Badges
+                if (headerData.isModerator || headerData.donatorTier > 0) {
+                    profileBadgeLayout.show(true)
+                    if (headerData.isModerator) {
+                        profileModCard.show(true)
+                        profileModText.text = headerData.modRole ?: "Mod"
+                    }
+                    if (headerData.donatorTier > 0) {
+                        profileDonatorCard.show(true)
+                        profileDonatorText.text = headerData.donatorBadge ?: "Donator"
+                        if (headerData.isModerator) profileBadgeSpace.show(true)
+                    }
+                }
+                
+                // Follow button
+                if (!headerData.isViewer) {
+                    profileFollowButton.show(true)
+                    profileFollowButton.text = when {
+                        headerData.isFollowing -> context.getString(R.string.following)
+                        else -> context.getString(R.string.follow)
+                    }
+                }
+                
+                // Stats
+                profileAnimeCountText.text = headerData.animeCount.toString()
+                profileMangaCountText.text = headerData.mangaCount.toString()
+                profileFollowingCountText.text = headerData.followingCount.toString()
+                profileFollowersCountText.text = headerData.followersCount.toString()
+                
+                // Click listeners
+                profileAvatarCircleImage.clicks { listener.headerListener.onAvatarClick(true) }
+                profileAvatarRectangleImage.clicks { listener.headerListener.onAvatarClick(false) }
+                profileBannerImage.clicks { listener.headerListener.onBannerClick() }
+                profileFollowButton.clicks { listener.headerListener.onFollowClick() }
+                profileAnimeCountLayout.clicks { listener.headerListener.onAnimeCountClick() }
+                profileMangaCountLayout.clicks { listener.headerListener.onMangaCountClick() }
+                profileFollowingCountLayout.clicks { listener.headerListener.onFollowingCountClick() }
+                profileFollowersCountLayout.clicks { listener.headerListener.onFollowersCountClick() }
+            }
+        }
     }
 
     inner class BioViewHolder(private val binding: LayoutTitleAndTextBinding) : ViewHolder(binding) {

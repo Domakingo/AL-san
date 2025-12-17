@@ -8,6 +8,16 @@ import com.doma.alsan.helper.enums.MediaType
 
 interface ProfileListener {
 
+    interface HeaderListener {
+        fun onAvatarClick(isCircle: Boolean)
+        fun onBannerClick()
+        fun onFollowClick()
+        fun onAnimeCountClick()
+        fun onMangaCountClick()
+        fun onFollowingCountClick()
+        fun onFollowersCountClick()
+    }
+
     interface StatsListener {
         fun navigateToStatsDetail()
         fun navigateToForceUpdate()
@@ -33,6 +43,7 @@ interface ProfileListener {
         fun navigateToStudio(studio: Studio)
     }
 
+    val headerListener: HeaderListener
     val statsListener: StatsListener
     val favoriteMediaListener: FavoriteMediaListener
     val favoriteCharacterListener: FavoriteCharacterListener

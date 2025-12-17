@@ -3,15 +3,9 @@ package com.doma.alsan.ui.profile
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
-import com.google.android.material.appbar.AppBarLayout
+import coil.load
 import com.doma.alsan.R
 import com.doma.alsan.data.entity.AppSetting
 import com.doma.alsan.data.response.anilist.Character
@@ -23,15 +17,13 @@ import com.doma.alsan.helper.enums.ActivityListPage
 import com.doma.alsan.helper.enums.Favorite
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.extensions.applyBottomPaddingInsets
-import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.helper.extensions.show
-import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
+import com.stfalcon.imageviewer.StfalconImageViewer
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.abs
 
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>() {
@@ -48,10 +40,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     private var menuItemCopyLink: MenuItem? = null
     private var menuItemReport: MenuItem? = null
 
-    private var scaleUpAnimation: Animation? = null
-    private var scaleDownAnimation: Animation? = null
-    private var isToolbarExpanded = true
-
     private var profileAdapter: ProfileRvAdapter? = null
     private var currentUserId = 0
     private var appSetting = AppSetting()
@@ -65,10 +53,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
 
     override fun setUpLayout() {
         binding.apply {
-            scaleUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up)
-            scaleDownAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
-            profileAppBarLayout.setExpanded(isToolbarExpanded)
-
             if (!isViewer()) {
                 setUpToolbar(profileToolbar, "", R.drawable.ic_custom_close) {
                     navigation.closeBrowseScreen()
@@ -88,8 +72,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
 
             profileToolbar.overflowIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_custom_more)
 
-            profileRecyclerView.addItemDecoration(SpaceItemDecoration(top = resources.getDimensionPixelSize(R.dimen.marginNormal)))
-            
             // Disable ViewPager2 swipe while scrolling to prevent scroll/swipe conflicts
             profileRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView, newState: Int) {
@@ -154,68 +136,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
                 true
             }
 
-            profileAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                isToolbarExpanded = verticalOffset == 0
-                profileSwipeRefresh.isEnabled = isToolbarExpanded
-                // Profile banner content always stays visible - no scale animation
-            })
-
             profileSwipeRefresh.setOnRefreshListener {
                 viewModel.reloadData()
-            }
-
-            profileAvatarCircleImage.clicks {
-                viewModel.loadAvatarUrl(true)
-            }
-
-            profileAvatarRectangleImage.clicks {
-                viewModel.loadAvatarUrl(false)
-            }
-
-            profileBannerImage.clicks {
-                viewModel.loadBannerUrl()
-            }
-
-            profileFollowButton.clicks {
-                viewModel.toggleFollow()
-            }
-
-            profileAnimeCountLayout.clicks {
-                if (isViewer())
-                    sharedViewModel.navigateTo(SharedMainViewModel.Page.ANIME)
-                else {
-                    doIfUserIdIsLoaded {
-                        navigation.navigateToAnimeMediaList(currentUserId)
-                    }
-                }
-            }
-
-            profileMangaCountLayout.clicks {
-                if (isViewer())
-                    sharedViewModel.navigateTo(SharedMainViewModel.Page.MANGA)
-                else {
-                    doIfUserIdIsLoaded {
-                        navigation.navigateToMangaMediaList(currentUserId)
-                    }
-                }
-            }
-
-            profileFollowingCountLayout.clicks {
-                doIfUserIdIsLoaded {
-                    navigation.navigateToFollowing(currentUserId)
-                }
-            }
-
-            profileFollowersCountLayout.clicks {
-                doIfUserIdIsLoaded {
-                    navigation.navigateToFollowers(currentUserId)
-                }
             }
         }
     }
 
     override fun setUpInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.profileCollapsingToolbar, null)
         if (!isViewer()) {
             binding.profileRecyclerView.applyBottomPaddingInsets()
         }
@@ -249,47 +176,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
             viewModel.reportMenuItemVisibility.subscribe {
                 menuItemReport?.isVisible = it
             },
-            viewModel.avatarUrl.subscribe { (avatarUrl, useCircular) ->
-                binding.profileAvatarCircleImage.show(useCircular)
-                binding.profileAvatarRectangleImage.show(!useCircular)
-                if (useCircular) {
-                    ImageUtil.loadCircleImage(requireContext(), avatarUrl, binding.profileAvatarCircleImage)
-                } else {
-                    ImageUtil.loadRectangleImage(requireContext(), avatarUrl, binding.profileAvatarRectangleImage)
-                }
-            },
-            viewModel.bannerUrl.subscribe {
-                ImageUtil.loadImage(requireContext(), it, binding.profileBannerImage)
-            },
-            viewModel.username.subscribe {
-                binding.profileUsernameText.text = it
-            },
-            viewModel.donatorAndModBadge.subscribe { (donatorBadge, modBadge) ->
-                binding.profileBadgeLayout.show(donatorBadge != null || modBadge != null)
-                binding.profileBadgeSpace.show(donatorBadge != null && modBadge != null)
-                binding.profileDonatorCard.show(donatorBadge != null)
-                binding.profileDonatorText.text = donatorBadge
-                binding.profileModCard.show(modBadge != null)
-                binding.profileModText.text = modBadge
-            },
-            viewModel.followButtonVisibility.subscribe {
-                binding.profileFollowButton.show(it)
-            },
-            viewModel.followButtonText.subscribe {
-                binding.profileFollowButton.text = getString(it)
-            },
-            viewModel.animeCompletedCount.subscribe {
-                binding.profileAnimeCountText.text = it.toString()
-            },
-            viewModel.mangaCompletedCount.subscribe {
-                binding.profileMangaCountText.text = it.toString()
-            },
-            viewModel.followingCount.subscribe {
-                binding.profileFollowingCountText.text = it.toString()
-            },
-            viewModel.followersCount.subscribe {
-                binding.profileFollowersCountText.text = it.toString()
-            },
             viewModel.profileItemList.subscribe {
                 profileAdapter?.updateData(it, true)
             },
@@ -299,19 +185,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
             viewModel.profileUrlForShareSheet.subscribe {
                 dialog.showShareSheet(it)
             },
-            viewModel.avatarUrlForPreview.subscribe {
-                ImageUtil.showFullScreenImage(
-                    requireContext(),
-                    it.first,
-                    if (it.second) binding.profileAvatarCircleImage else binding.profileAvatarRectangleImage
-                )
+            viewModel.avatarUrlForPreview.subscribe { (url, _) ->
+                // Show full screen image without transition from source view
+                StfalconImageViewer.Builder<String>(requireContext(), arrayOf(url)) { view, image ->
+                    view.load(image)
+                }.withHiddenStatusBar(false).show(true)
             },
             viewModel.bannerUrlForPreview.subscribe {
-                ImageUtil.showFullScreenImage(
-                    requireContext(),
-                    it,
-                    binding.profileBannerImage
-                )
+                StfalconImageViewer.Builder<String>(requireContext(), arrayOf(it)) { view, image ->
+                    view.load(image)
+                }.withHiddenStatusBar(false).show(true)
             },
             viewModel.currentUserId.subscribe {
                 currentUserId = it
@@ -333,11 +216,60 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
 
     private fun getProfileListener(): ProfileListener {
         return object : ProfileListener {
+            override val headerListener: ProfileListener.HeaderListener = getHeaderListener()
             override val statsListener: ProfileListener.StatsListener = getStatsListener()
             override val favoriteMediaListener: ProfileListener.FavoriteMediaListener = getFavoriteMediaListener()
             override val favoriteCharacterListener: ProfileListener.FavoriteCharacterListener = getFavoriteCharacterListener()
             override val favoriteStaffListener: ProfileListener.FavoriteStaffListener = getFavoriteStaffListener()
             override val favoriteStudioListener: ProfileListener.FavoriteStudioListener = getFavoriteStudioListener()
+        }
+    }
+
+    private fun getHeaderListener(): ProfileListener.HeaderListener {
+        return object : ProfileListener.HeaderListener {
+            override fun onAvatarClick(isCircle: Boolean) {
+                viewModel.loadAvatarUrl(isCircle)
+            }
+
+            override fun onBannerClick() {
+                viewModel.loadBannerUrl()
+            }
+
+            override fun onFollowClick() {
+                viewModel.toggleFollow()
+            }
+
+            override fun onAnimeCountClick() {
+                if (isViewer())
+                    sharedViewModel.navigateTo(SharedMainViewModel.Page.ANIME)
+                else {
+                    doIfUserIdIsLoaded {
+                        navigation.navigateToAnimeMediaList(currentUserId)
+                    }
+                }
+            }
+
+            override fun onMangaCountClick() {
+                if (isViewer())
+                    sharedViewModel.navigateTo(SharedMainViewModel.Page.MANGA)
+                else {
+                    doIfUserIdIsLoaded {
+                        navigation.navigateToMangaMediaList(currentUserId)
+                    }
+                }
+            }
+
+            override fun onFollowingCountClick() {
+                doIfUserIdIsLoaded {
+                    navigation.navigateToFollowing(currentUserId)
+                }
+            }
+
+            override fun onFollowersCountClick() {
+                doIfUserIdIsLoaded {
+                    navigation.navigateToFollowers(currentUserId)
+                }
+            }
         }
     }
 

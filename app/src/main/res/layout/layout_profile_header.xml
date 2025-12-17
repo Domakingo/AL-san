@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/bannerFrame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileBannerContentLayout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/profileBannerImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_gradient_three" />
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/profileBannerContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/toolbarBigHeight"
+        android:paddingBottom="@dimen/marginSmall"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profileAvatarCircleImage"
+                android:layout_width="@dimen/imageCircleSize"
+                android:layout_height="@dimen/imageCircleSize"
+                android:adjustViewBounds="true"
+                android:visibility="invisible" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profileAvatarRectangleImage"
+                android:layout_width="@dimen/imageCircleSize"
+                android:layout_height="@dimen/imageCircleSize"
+                android:adjustViewBounds="true"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profileUsernameText"
+            style="?themeTitleFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginNormal" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/profileBadgeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginNormal"
+            android:visibility="gone">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileModCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardBackgroundColor="?themeSecondaryColor"
+                app:cardElevation="0dp"
+                app:contentPadding="@dimen/marginClose">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/profileModText"
+                    style="?themeSmallFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?themeBackgroundColor" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <View
+                android:id="@+id/profileBadgeSpace"
+                android:layout_width="@dimen/marginNormal"
+                android:layout_height="0dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileDonatorCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardBackgroundColor="?themeSecondaryColor"
+                app:cardElevation="0dp"
+                app:contentPadding="@dimen/marginClose">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/profileDonatorText"
+                    style="?themeSmallFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?themeBackgroundColor" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileFollowButton"
+            style="?themePrimaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginNormal"
+            android:text="@string/follow"
+            android:visibility="gone" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/profileStatsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/marginBig"
+            android:layout_marginTop="@dimen/marginMedium"
+            app:cardBackgroundColor="?themeCardColor"
+            app:cardCornerRadius="@dimen/cornerMedium"
+            app:cardElevation="@dimen/elevationNormal"
+            app:strokeWidth="0dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/marginNormal">
+
+                <LinearLayout
+                    android:id="@+id/profileAnimeCountLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foreground="?selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/profileAnimeCountText"
+                        style="?themeRegularClickableBoldFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="0"
+                        android:textAlignment="center" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="?themeSmallClickableFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/anime"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/profileBarDivider1"
+                    android:layout_width="@dimen/lineWidth"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/marginClose"
+                    android:background="?themeDividerColor" />
+
+                <LinearLayout
+                    android:id="@+id/profileMangaCountLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foreground="?selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/profileMangaCountText"
+                        style="?themeRegularClickableBoldFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="0"
+                        android:textAlignment="center" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="?themeSmallClickableFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/manga"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/profileBarDivider2"
+                    android:layout_width="@dimen/lineWidth"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/marginClose"
+                    android:background="?themeDividerColor" />
+
+                <LinearLayout
+                    android:id="@+id/profileFollowingCountLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foreground="?selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/profileFollowingCountText"
+                        style="?themeRegularClickableBoldFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="0"
+                        android:textAlignment="center" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="?themeSmallClickableFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/following"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/profileBarDivider3"
+                    android:layout_width="@dimen/lineWidth"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/marginClose"
+                    android:background="?themeDividerColor" />
+
+                <LinearLayout
+                    android:id="@+id/profileFollowersCountLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foreground="?selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/profileFollowersCountText"
+                        style="?themeRegularClickableBoldFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="0"
+                        android:textAlignment="center" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="?themeSmallClickableFont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/followers"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
