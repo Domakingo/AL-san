@@ -48,6 +48,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
     private var menuItemChangeListType: MenuItem? = null
     private var menuItemFilter: MenuItem? = null
     private var menuItemRandom: MenuItem? = null
+    private var menuItemCollapse: MenuItem? = null
 
     private var searchView: SearchView? = null
 
@@ -79,6 +80,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemChangeListType = menu.findItem(R.id.itemChangeListType)
                 menuItemFilter = menu.findItem(R.id.itemFilter)
                 menuItemRandom = menu.findItem(R.id.itemRandom)
+                menuItemCollapse = menu.findItem(R.id.itemCollapse)
             }
 
             searchView = menuItemSearch?.actionView as? SearchView
@@ -134,6 +136,11 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
 
             menuItemRandom?.setOnMenuItemClickListener {
                 viewModel.pickRandomPlanningMedia()
+                true
+            }
+
+            menuItemCollapse?.setOnMenuItemClickListener {
+                viewModel.toggleCollapsedMode()
                 true
             }
 
@@ -256,6 +263,11 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             },
             viewModel.randomMedia.subscribe {
                 navigation.navigateToMedia(it.getId())
+            },
+            viewModel.isCollapsedMode.subscribe { isCollapsed ->
+                menuItemCollapse?.title = getString(
+                    if (isCollapsed) R.string.expand_series else R.string.collapse_series
+                )
             }
         )
 
@@ -398,6 +410,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
         menuItemChangeListType = null
         menuItemFilter = null
         menuItemRandom = null
+        menuItemCollapse = null
         searchView = null
     }
 
