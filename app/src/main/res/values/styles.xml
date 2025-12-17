@@ -329,6 +329,15 @@
         <item name="themeNegativeTransparent50Color">@color/dangerRedTransparent50</item>
     </style>
 
+    <style name="AppTheme.ThemeAniListLightYellow" parent="AniListLightAppTheme">
+        <item name="themePrimaryColor">@color/deepYellow</item>
+        <item name="themeSecondaryColor">@color/deepYellowSecondary</item>
+        <item name="themeSecondaryTransparent50Color">@color/deepYellowSecondaryTransparent50</item>
+        <item name="themeSecondaryTransparent20Color">@color/deepYellowSecondaryTransparent20</item>
+        <item name="themeNegativeColor">@color/dangerRed</item>
+        <item name="themeNegativeTransparent50Color">@color/dangerRedTransparent50</item>
+    </style>
+
     <style name="AppTheme.ThemeAniListLightGrey" parent="AniListLightAppTheme">
         <item name="themePrimaryColor">@color/anilistGrey</item>
         <item name="themeSecondaryColor">@color/anilistBrightGrey</item>
@@ -392,6 +401,15 @@
         <item name="themeSecondaryColor">@color/pastelPinkSecondary</item>
         <item name="themeSecondaryTransparent50Color">@color/pastelPinkSecondaryTransparent50</item>
         <item name="themeSecondaryTransparent20Color">@color/pastelPinkSecondaryTransparent20</item>
+        <item name="themeNegativeColor">@color/dangerRed</item>
+        <item name="themeNegativeTransparent50Color">@color/dangerRedTransparent50</item>
+    </style>
+
+    <style name="AppTheme.ThemeAniListDarkYellow" parent="AniListDarkAppTheme">
+        <item name="themePrimaryColor">@color/pastelYellow</item>
+        <item name="themeSecondaryColor">@color/pastelYellowSecondary</item>
+        <item name="themeSecondaryTransparent50Color">@color/pastelYellowSecondaryTransparent50</item>
+        <item name="themeSecondaryTransparent20Color">@color/pastelYellowSecondaryTransparent20</item>
         <item name="themeNegativeColor">@color/dangerRed</item>
         <item name="themeNegativeTransparent50Color">@color/dangerRedTransparent50</item>
     </style>

@@ -76,6 +76,11 @@
     <color name="pastelPinkSecondaryTransparent50">#80FAA2C1</color>
     <color name="pastelPinkSecondaryTransparent20">#33FAA2C1</color>
     
+    <color name="pastelYellow">#FEF3C7</color>
+    <color name="pastelYellowSecondary">#FDE68A</color>
+    <color name="pastelYellowSecondaryTransparent50">#80FDE68A</color>
+    <color name="pastelYellowSecondaryTransparent20">#33FDE68A</color>
+    
     <!-- Pastel Colors for Light Mode (Deeper/Muted colors) -->
     <color name="deepBlue">#1971C2</color>
     <color name="deepBlueSecondary">#339AF0</color>
@@ -96,6 +101,11 @@
     <color name="deepPinkSecondary">#F06595</color>
     <color name="deepPinkSecondaryTransparent50">#80F06595</color>
     <color name="deepPinkSecondaryTransparent20">#33F06595</color>
+    
+    <color name="deepYellow">#D97706</color>
+    <color name="deepYellowSecondary">#F59E0B</color>
+    <color name="deepYellowSecondaryTransparent50">#80F59E0B</color>
+    <color name="deepYellowSecondaryTransparent20">#33F59E0B</color>
 
     <!-- Card Background - Modern Elevated Surfaces -->
     <color name="blackLight">#2B2930</color>

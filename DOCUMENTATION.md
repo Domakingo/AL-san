@@ -132,7 +132,7 @@ Users can pick from two different themes:
 - **Light**
 - **Dark**
 
-Each theme has color variants: Blue, Green, Pink, Purple.
+Each theme has color variants: Yellow, Blue, Green, Pink, Purple.
 
 ---
 

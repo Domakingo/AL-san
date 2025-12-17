@@ -268,7 +268,8 @@ class AppSettingsViewModel(
             "AniList" to Pair(AppTheme.ANILIST_LIGHT_BLUE, AppTheme.ANILIST_DARK_BLUE),
             "Purple" to Pair(AppTheme.LIGHT_PURPLE, AppTheme.DARK_PURPLE),
             "Green" to Pair(AppTheme.LIGHT_GREEN, AppTheme.DARK_GREEN),
-            "Pink" to Pair(AppTheme.LIGHT_PINK, AppTheme.DARK_PINK)
+            "Pink" to Pair(AppTheme.LIGHT_PINK, AppTheme.DARK_PINK),
+            "Yellow" to Pair(AppTheme.LIGHT_YELLOW, AppTheme.DARK_YELLOW)
         )
         
         themeGroups.forEach { (name, themes) ->
