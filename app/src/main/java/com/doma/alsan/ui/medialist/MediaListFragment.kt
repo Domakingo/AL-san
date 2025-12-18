@@ -46,7 +46,6 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
     private var menuItemSearch: MenuItem? = null
     private var menuItemCustomiseList: MenuItem? = null
     private var menuItemChangeListType: MenuItem? = null
-    private var menuItemFilter: MenuItem? = null
     private var menuItemRandom: MenuItem? = null
     private var menuItemCollapse: MenuItem? = null
 
@@ -78,7 +77,6 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemSearch = menu.findItem(R.id.itemSearch)
                 menuItemCustomiseList = menu.findItem(R.id.itemCustomiseList)
                 menuItemChangeListType = menu.findItem(R.id.itemChangeListType)
-                menuItemFilter = menu.findItem(R.id.itemFilter)
                 menuItemRandom = menu.findItem(R.id.itemRandom)
                 menuItemCollapse = menu.findItem(R.id.itemCollapse)
                 menuItemCollapse?.isVisible = viewModel.mediaType != MediaType.MANGA
@@ -120,21 +118,6 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 true
             }
 
-            menuItemFilter?.setOnMenuItemClickListener {
-                searchView?.clearFocus()
-                navigation.navigateToFilter(
-                    viewModel.mediaFilter,
-                    viewModel.mediaType,
-                    viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
-                    true,
-                    viewModel.hasBigList,
-                    viewModel.isViewer
-                ) { filterResult ->
-                    viewModel.updateMediaFilter(filterResult)
-                }
-                true
-            }
-
             menuItemRandom?.setOnMenuItemClickListener {
                 viewModel.pickRandomPlanningMedia()
                 true
@@ -146,7 +129,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             }
 
             mediaListSwitchListButton.clicks {
-                viewModel.loadListSections()
+                viewModel.loadFabOptions()
             }
 
             mediaListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -269,6 +252,29 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemCollapse?.title = getString(
                     if (isCollapsed) R.string.expand_series else R.string.collapse_series
                 )
+            },
+            viewModel.fabOptions.subscribe { options ->
+                dialog.showListDialog(options) { data, index ->
+                    when (data) {
+                        "advanced_options" -> {
+                            searchView?.clearFocus()
+                            navigation.navigateToFilter(
+                                viewModel.mediaFilter,
+                                viewModel.mediaType,
+                                viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
+                                true,
+                                viewModel.hasBigList,
+                                viewModel.isViewer
+                            ) { filterResult ->
+                                viewModel.updateMediaFilter(filterResult)
+                            }
+                        }
+                        else -> {
+                            // It's a section, use the index directly
+                            viewModel.showSelectedSectionMediaList(index)
+                        }
+                    }
+                }
             }
         )
 
@@ -409,7 +415,6 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
         menuItemSearch = null
         menuItemCustomiseList = null
         menuItemChangeListType = null
-        menuItemFilter = null
         menuItemRandom = null
         menuItemCollapse = null
         searchView = null

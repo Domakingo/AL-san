@@ -3,6 +3,8 @@ package com.doma.alsan.ui.common
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.doma.alsan.R
 import com.doma.alsan.databinding.ListTextBinding
 import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.helper.pojo.ListItem
@@ -26,6 +28,18 @@ class BottomSheetListRvAdapter<T>(
                 convertedText = convertedText.replace("{$counter}", context.getString(stringResource))
             }
             binding.itemText.text = convertedText
+            
+            // Apply theme color for highlighted items
+            if (item.isHighlighted) {
+                val typedValue = android.util.TypedValue()
+                context.theme.resolveAttribute(R.attr.themePrimaryColor, typedValue, true)
+                binding.itemText.setTextColor(typedValue.data)
+            } else {
+                val typedValue = android.util.TypedValue()
+                context.theme.resolveAttribute(R.attr.themeContentColor, typedValue, true)
+                binding.itemText.setTextColor(typedValue.data)
+            }
+            
             binding.itemLayout.clicks { listener.getSelectedItem(item.data, index) }
         }
     }

@@ -22,7 +22,4 @@
     <item android:id="@+id/itemChangeListType"
         android:title="@string/change_list_type"
         app:showAsAction="never"/>
-    <item android:id="@+id/itemFilter"
-        android:title="@string/filter"
-        app:showAsAction="never"/>
 </menu>

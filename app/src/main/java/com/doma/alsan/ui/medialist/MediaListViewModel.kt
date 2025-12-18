@@ -89,6 +89,10 @@ class MediaListViewModel(
     val isCollapsedMode: Observable<Boolean>
         get() = _isCollapsedMode
 
+    private val _fabOptions = PublishSubject.create<List<ListItem<String>>>()
+    val fabOptions: Observable<List<ListItem<String>>>
+        get() = _fabOptions
+
     var mediaType: MediaType = MediaType.ANIME
     var userId = 0
 
@@ -311,6 +315,34 @@ class MediaListViewModel(
 
             _listSections.onNext(sections)
         }
+    }
+
+    fun loadFabOptions() {
+        val options = ArrayList<ListItem<String>>()
+        
+        // Add list sections
+        currentMediaListCollection?.lists?.let { groups ->
+            var totalEntries = 0
+            val listFromCurrentGroups = groups.map {
+                totalEntries += it.entries.size
+                val formattedTitle = "${it.name} (${it.entries.size})"
+                ListItem(formattedTitle, "section:${groups.indexOf(it)}")
+            }
+            
+            val allListItem = ListItem("All ($totalEntries)", "section:all")
+            if (isAllListPositionAtTop) {
+                options.add(allListItem)
+                options.addAll(listFromCurrentGroups)
+            } else {
+                options.addAll(listFromCurrentGroups)
+                options.add(allListItem)
+            }
+        }
+        
+        // Add Advanced Options at the end (highlighted with theme color)
+        options.add(ListItem("Advanced Options", "advanced_options", isHighlighted = true))
+        
+        _fabOptions.onNext(options)
     }
 
     fun showSelectedSectionMediaList(index: Int) {

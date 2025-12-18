@@ -42,7 +42,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mediaListSwitchListButton"
-            android:src="@drawable/ic_rearrange"
+            android:src="@drawable/ic_filter"
             android:layout_margin="@dimen/marginPageNormal"
             app:backgroundTint="?themeSecondaryColor"
             app:tint="?themeBackgroundColor"
