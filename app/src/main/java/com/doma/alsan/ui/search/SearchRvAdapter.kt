@@ -56,6 +56,11 @@ class SearchRvAdapter(
                 when (item.searchCategory) {
                     SearchCategory.ANIME, SearchCategory.MANGA -> {
                         ImageUtil.loadImage(context, item.media.getCoverImage(appSetting), searchImage)
+                        searchImage.clicks { listener.navigateToMedia(item.media) }
+                        searchImage.setOnLongClickListener {
+                            ImageUtil.downloadImage(context, item.media.getCoverImage(appSetting), "${item.media.getTitle(appSetting)}_cover.jpg")
+                            true
+                        }
                         searchTitle.text = item.media.getTitle(appSetting)
                         searchMediaExtraInfoLayout.show(true)
                         searchMediaYearText.text = item.media.startDate?.year?.toString() ?: if (item.media.status == MediaStatus.NOT_YET_RELEASED) "TBA" else "?"

@@ -45,6 +45,13 @@ class MediaListGridRvAdapter(
             binding.apply {
                 // cover
                 ImageUtil.loadImage(context, getCoverImage(media), mediaListCoverImage)
+                mediaListCoverImage.clicks {
+                    listener.navigateToMedia(media)
+                }
+                mediaListCoverImage.setOnLongClickListener {
+                    ImageUtil.downloadImage(context, getCoverImage(media), "${getTitle(media)}_cover.jpg")
+                    true
+                }
 
                 // title
                 mediaListTitleText.text = getTitle(media)

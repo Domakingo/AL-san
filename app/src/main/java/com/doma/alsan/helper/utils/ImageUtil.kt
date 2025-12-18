@@ -94,4 +94,29 @@ object ImageUtil {
             loader.enqueue(request)
         }
     }
+
+    fun downloadImage(context: Context, url: String, fileName: String?) {
+        try {
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as android.app.DownloadManager
+            val uri = Uri.parse(url)
+            
+            // Generate valid filename
+            val extension = url.substringAfterLast('.', "jpg").substringBefore('?')
+            val validFileName = (fileName ?: "image_${System.currentTimeMillis()}").replace(Regex("[^a-zA-Z0-9.-]"), "_") + ".$extension"
+
+            val request = android.app.DownloadManager.Request(uri)
+            request.setAllowedNetworkTypes(android.app.DownloadManager.Request.NETWORK_WIFI or android.app.DownloadManager.Request.NETWORK_MOBILE)
+            request.setAllowedOverRoaming(false)
+            request.setTitle(validFileName)
+            request.setMimeType("image/*")
+            request.setNotificationVisibility(android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(android.os.Environment.DIRECTORY_PICTURES, validFileName)
+            
+            downloadManager.enqueue(request)
+            android.widget.Toast.makeText(context, R.string.downloading, android.widget.Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            android.widget.Toast.makeText(context, R.string.failed_to_download, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
 }

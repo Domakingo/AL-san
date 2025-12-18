@@ -46,6 +46,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private var menuItemMediaStats: MenuItem? = null
     private var menuItemSocial: MenuItem? = null
     private var menuItemReview: MenuItem? = null
+    private var menuItemDownloadCover: MenuItem? = null
     private var currentMedia: Media? = null
     private var appSetting = AppSetting()
 
@@ -80,6 +81,13 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             menuItemReview = mediaToolbar.menu.findItem(R.id.itemMediaReview)
             menuItemReview?.setOnMenuItemClickListener {
                 currentMedia?.let { navigation.navigateToMediaReview(it) }
+                true
+            }
+            menuItemDownloadCover = mediaToolbar.menu.findItem(R.id.itemDownloadCover)
+            menuItemDownloadCover?.setOnMenuItemClickListener {
+                currentMedia?.let {
+                    ImageUtil.downloadImage(requireContext(), it.coverImage.extraLarge, "${it.title.userPreferred}_cover.jpg")
+                }
                 true
             }
 
@@ -418,6 +426,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
         menuItemMediaStats = null
         menuItemSocial = null
         menuItemReview = null
+        menuItemDownloadCover = null
     }
 
     companion object {
