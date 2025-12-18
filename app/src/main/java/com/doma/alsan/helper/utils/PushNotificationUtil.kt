@@ -46,7 +46,7 @@ object PushNotificationUtil {
             .setContentTitle(context.getString(R.string.app_name))
             .setContentText(message)
             .setColorized(true)
-            .setColor(ContextCompat.getColor(context, R.color.yellow))
+            .setColor(ContextCompat.getColor(context, R.color.pastelYellow))
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(notificationPendingIntent)
