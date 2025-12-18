@@ -221,9 +221,23 @@ class MediaListLinearRvAdapter(
             val isAtMaxProgress = when (mediaList.media.type) {
                 MediaType.ANIME -> mediaList.media.episodes != null && mediaList.progress >= mediaList.media.episodes
                 MediaType.MANGA -> if (isVolumeProgress) {
-                    mediaList.media.volumes != null && (mediaList.progressVolumes ?: 0) >= mediaList.media.volumes
+                    // For finished manga with no volumes, treat as "complete" (hide +1 button)
+                    val volumes = mediaList.media.volumes
+                    if (volumes != null) {
+                        (mediaList.progressVolumes ?: 0) >= volumes
+                    } else {
+                        // No volume data - if manga is finished, hide the button
+                        mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED
+                    }
                 } else {
-                    mediaList.media.chapters != null && mediaList.progress >= mediaList.media.chapters
+                    // For finished manga with no chapters, treat as "complete" (hide +1 button)
+                    val chapters = mediaList.media.chapters
+                    if (chapters != null) {
+                        mediaList.progress >= chapters
+                    } else {
+                        // No chapter data - if manga is finished, hide the button
+                        mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED
+                    }
                 }
                 else -> false
             }

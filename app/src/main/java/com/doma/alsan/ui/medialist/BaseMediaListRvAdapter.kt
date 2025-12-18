@@ -146,7 +146,16 @@ abstract class BaseMediaListRvAdapter(
                     "${mediaList.progress} / ${mediaList.media.episodes ?: "?"}"
                 }
                 MediaType.MANGA -> {
-                    "${mediaList.progress} / ${mediaList.media.chapters ?: "?"}"
+                    val chapters = mediaList.media.chapters
+                    // For finished manga with no chapter info in database, show "X/0" instead of "X/?"
+                    // This handles one-shots and specials that will never have chapter data
+                    if (chapters != null) {
+                        "${mediaList.progress} / $chapters"
+                    } else if (mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED) {
+                        "${mediaList.progress} / 0"
+                    } else {
+                        "${mediaList.progress} / ?"
+                    }
                 }
                 else -> {
                     "${mediaList.progress} / ?"
@@ -155,7 +164,20 @@ abstract class BaseMediaListRvAdapter(
         }
 
         protected fun getProgressVolumeText(mediaList: MediaList): String {
-            return "${mediaList.progressVolumes ?: 0} / ${mediaList.media.volumes ?: "?"}"
+            val volumes = mediaList.media.volumes
+            val progressVolumes = mediaList.progressVolumes ?: 0
+            
+            // For finished manga with no volume info in database, show "0/0" instead of "0/?"
+            // This handles one-shots and specials that will never have volume data
+            return if (volumes != null) {
+                "$progressVolumes / $volumes"
+            } else if (mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED) {
+                // Manga is finished but has no volume info - treat as 0 volumes (one-shot/special)
+                "$progressVolumes / 0"
+            } else {
+                // Manga is still releasing or upcoming, volumes are genuinely unknown
+                "$progressVolumes / ?"
+            }
         }
 
         protected fun shouldShowProgress(media: Media): Boolean {
