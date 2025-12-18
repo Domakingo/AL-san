@@ -13,7 +13,7 @@ import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.base.NavigationManager
 import com.doma.alsan.ui.main.SharedMainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NotificationsFragment : BaseFragment<LayoutInfiniteScrollingBinding, NotificationsViewModel>() {
@@ -21,7 +21,7 @@ class NotificationsFragment : BaseFragment<LayoutInfiniteScrollingBinding, Notif
     private var adapter: NotificationsAdapter? = null
 
     override val viewModel: NotificationsViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     override fun generateViewBinding(
         inflater: LayoutInflater,

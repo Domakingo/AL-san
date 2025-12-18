@@ -171,6 +171,7 @@ class EditorViewModel(
     private var media = Media()
     private var appSetting = AppSetting()
 
+    @Suppress("UNCHECKED_CAST")
     override fun loadData(param: Unit) {
         loadOnce {
             _loading.onNext(true)

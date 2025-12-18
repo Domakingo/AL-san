@@ -26,7 +26,7 @@ abstract class BaseFileStorageHandler(
             var outputStream: OutputStream? = null
 
             try {
-                val targetFolder = File(context.getExternalFilesDir(null)?.path)
+                val targetFolder = File(context.getExternalFilesDir(null)?.path ?: "")
 
                 if (!targetFolder.exists()) {
                     targetFolder.mkdirs()

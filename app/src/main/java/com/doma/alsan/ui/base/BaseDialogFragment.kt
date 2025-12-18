@@ -59,6 +59,7 @@ abstract class BaseDialogFragment<VB: ViewBinding> : BottomSheetDialogFragment()
         return dialog
     }
 
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

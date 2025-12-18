@@ -19,6 +19,7 @@ class DeepLinkActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun openRootActivity(intent: Intent) {
         intent.setClass(this, RootActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

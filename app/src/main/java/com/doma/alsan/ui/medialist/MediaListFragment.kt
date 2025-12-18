@@ -31,7 +31,7 @@ import com.doma.alsan.helper.pojo.MediaListItem
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.ScoreFormat
@@ -39,7 +39,7 @@ import com.doma.alsan.type.ScoreFormat
 class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewModel>() {
 
     override val viewModel: MediaListViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     private var adapter: BaseMediaListRvAdapter? = null
 
@@ -192,6 +192,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             },
             viewModel.scoreValues.subscribe { (mediaList: MediaList, scoreFormat: ScoreFormat) ->
                 val currentScore = mediaList.score
+                @Suppress("UNCHECKED_CAST")
                 val advancedScores = if (viewModel.user.mediaListOptions.animeList.advancedScoringEnabled) mediaList.advancedScores as? LinkedHashMap<String, Double> else null
                 dialog.showScoreDialog(scoreFormat, currentScore, advancedScores) { newScore, newAdvancedScores ->
                     viewModel.updateScore(mediaList, newScore, newAdvancedScores)

@@ -22,14 +22,14 @@ import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
 import com.stfalcon.imageviewer.StfalconImageViewer
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>() {
 
     override val viewModel: ProfileViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     private var menuItemReviews: MenuItem? = null
     private var menuItemActivities: MenuItem? = null

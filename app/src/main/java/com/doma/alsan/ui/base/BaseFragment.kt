@@ -125,6 +125,7 @@ abstract class BaseFragment<VB: ViewBinding, VM: BaseViewModel<*>> : Fragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     protected fun restartApp(deepLink: DeepLink? = null, skipSplashScreen: Boolean = true) {
         val intent = Intent(parentActivity, LaunchActivity::class.java)
         if (deepLink?.uri != null) {

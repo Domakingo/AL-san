@@ -111,6 +111,7 @@ class MediaListViewModel(
     private var selectedSectionIndex = 0
     private var searchKeyword = ""
 
+    @Suppress("UNCHECKED_CAST")
     override fun loadData(param: Unit) {
         loadOnce {
             isViewer = userId == 0

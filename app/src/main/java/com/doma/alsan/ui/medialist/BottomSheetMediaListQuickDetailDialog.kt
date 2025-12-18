@@ -37,6 +37,7 @@ class BottomSheetMediaListQuickDetailDialog : BaseDialogFragment<DialogBottomShe
 
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun setUpObserver() {
         disposables.addAll(
             viewModel.settings.subscribe { (mediaListOptions, appSetting) ->

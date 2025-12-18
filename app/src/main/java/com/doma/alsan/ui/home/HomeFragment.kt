@@ -11,14 +11,14 @@ import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.extensions.applyTopPaddingInsets
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
 
     override val viewModel: HomeViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     private var homeAdapter: HomeRvAdapter? = null
 
