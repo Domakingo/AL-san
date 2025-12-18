@@ -101,6 +101,19 @@ class HomeRvAdapter(
         }
     }
 
+    private val carouselTouchListener = object : RecyclerView.OnItemTouchListener {
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: android.view.MotionEvent): Boolean {
+            if (e.action == android.view.MotionEvent.ACTION_DOWN) {
+                rv.canScrollHorizontally(1) || rv.canScrollHorizontally(-1)
+                rv.parent?.requestDisallowInterceptTouchEvent(true)
+            }
+            return false
+        }
+
+        override fun onTouchEvent(rv: RecyclerView, e: android.view.MotionEvent) {}
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+    }
+
     inner class ReleasingTodayViewHolder(private val binding: LayoutHomeReleasingTodayBinding) : ViewHolder(binding) {
         override fun bind(item: HomeItem, index: Int) {
             with(binding) {
@@ -108,6 +121,8 @@ class HomeRvAdapter(
                     releasingTodayRecyclerView.adapter = ReleasingTodayRvAdapter(context, item.releasingToday, appSetting, listener.releasingTodayListener)
                     releasingTodayRecyclerView.show(true)
                     releasingTodayEmptyText.show(false)
+                    releasingTodayRecyclerView.removeOnItemTouchListener(carouselTouchListener)
+                    releasingTodayRecyclerView.addOnItemTouchListener(carouselTouchListener)
                 } else {
                     releasingTodayRecyclerView.show(false)
                     releasingTodayEmptyText.show(true)
@@ -137,6 +152,8 @@ class HomeRvAdapter(
                 if (item.media.isNotEmpty()) {
                     trendingListRecyclerView.adapter = TrendingMediaRvAdapter(context, item.media, appSetting, width, listener.trendingMediaListener)
                     trendingProgressBar.show(false)
+                    trendingListRecyclerView.removeOnItemTouchListener(carouselTouchListener)
+                    trendingListRecyclerView.addOnItemTouchListener(carouselTouchListener)
                 } else {
                     trendingProgressBar.show(true)
                 }

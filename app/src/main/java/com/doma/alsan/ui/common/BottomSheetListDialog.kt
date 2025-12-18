@@ -12,11 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.doma.alsan.databinding.DialogBottomSheetListBinding
 import com.doma.alsan.ui.base.BaseDialogFragment
-import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 
 class BottomSheetListDialog : BaseDialogFragment<DialogBottomSheetListBinding>() {
 
-    private var adapter: BaseRecyclerViewAdapter<*, *>? = null
+    private var adapter: RecyclerView.Adapter<*>? = null
     private var onDismissListener: (() -> Unit)? = null
 
     override fun generateViewBinding(
@@ -46,7 +45,7 @@ class BottomSheetListDialog : BaseDialogFragment<DialogBottomSheetListBinding>()
     }
 
     companion object {
-        fun newInstance(adapter: BaseRecyclerViewAdapter<*, *>, onDismiss: (() -> Unit)? = null) =
+        fun newInstance(adapter: RecyclerView.Adapter<*>, onDismiss: (() -> Unit)? = null) =
             BottomSheetListDialog().apply {
                 this.adapter = adapter
                 this.onDismissListener = onDismiss

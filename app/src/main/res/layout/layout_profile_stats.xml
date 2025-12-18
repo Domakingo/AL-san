@@ -1,257 +1,277 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/marginBig"
     android:layout_marginTop="@dimen/marginNormal"
-    android:layout_marginBottom="@dimen/marginNormal"
-    app:cardBackgroundColor="?themeCardColor"
-    app:cardCornerRadius="@dimen/cornerMedium"
-    app:cardElevation="@dimen/elevationNormal"
-    app:strokeWidth="0dp">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/marginNormal"
-        android:paddingVertical="@dimen/marginNormal">
+    android:layout_marginBottom="@dimen/marginNormal">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsTitleLayout"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsTitle"
-            android:text="@string/stats"
             style="?themeRegularBoldFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/stats" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsDetailText"
-            android:text="@string/view_detail_statistics"
             style="?themeSmallClickableFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:foreground="?selectableItemBackground"
             android:paddingVertical="@dimen/iconPadding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="@string/view_detail_statistics" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsTotalAnimeLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsTitleLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/total_anime"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/total_anime" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsTotalAnimeText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsEpisodesWatchedLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsTotalAnimeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsTotalAnimeLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/episodes_watched"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/episodes_watched" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsEpisodesWatchedText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsDaysWatchedLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsEpisodesWatchedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsEpisodesWatchedLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/days_watched"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/days_watched" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsDaysWatchedText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsAnimeMeanScoreLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsDaysWatchedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsDaysWatchedLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/anime_mean_score"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/anime_mean_score" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsAnimeMeanScoreText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <include
+        android:id="@+id/profileStatsDivider"
+        layout="@layout/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/lineWidth"
+        android:layout_marginTop="@dimen/marginNormal"
+        app:layout_constraintTop_toBottomOf="@id/profileStatsAnimeMeanScoreLayout" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsTotalMangaLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsAnimeMeanScoreLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsDivider">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/total_manga"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/total_manga" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsTotalMangaText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsChaptersReadLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsTotalMangaLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsTotalMangaLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/chapters_read"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/chapters_read" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsChaptersReadText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsVolumesReadLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsChaptersReadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsChaptersReadLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/volumes_read"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/volumes_read" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsVolumesReadText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileStatsMangaMeanScoreLayout"
-        app:layout_constraintTop_toBottomOf="@id/profileStatsVolumesReadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginNormal"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/profileStatsVolumesReadLayout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/manga_mean_score"
             style="?themeSmallFont"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:text="@string/manga_mean_score" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsMangaMeanScoreText"
             style="?themeRegularFont"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?themePrimaryColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:text="@string/stats_are_automatically_updated_every_24_hours_or_you_can_force_update_them_in_account_settings"
-        style="?themeSmallFont"
-        android:textColor="?themeDividerColor"
-        app:layout_constraintTop_toBottomOf="@+id/profileStatsMangaMeanScoreLayout"
-        android:layout_marginTop="@dimen/marginBig"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginBig"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/profileStatsMangaMeanScoreLayout">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textview.MaterialTextView
+            style="?themeSmallFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stats_auto_refresh_info"
+            android:textColor="?themeContentColor" />
 
-</com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profileStatsForceUpdateText"
+            style="?themeSmallClickableFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginClose"
+            android:foreground="?selectableItemBackground"
+            android:text="@string/force_update" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,4 +10,7 @@
     <item android:id="@+id/itemMediaReview"
         android:title="@string/reviews"
         app:showAsAction="never"/>
+    <item android:id="@+id/itemDownloadCover"
+        android:title="@string/download_cover"
+        app:showAsAction="never"/>
 </menu>

@@ -78,6 +78,7 @@ import org.koin.dsl.module
 
 class AlsanApplication : Application() {
 
+    @Suppress("DEPRECATION")
     private val appModules = module {
         val gson = GsonBuilder()
             .setLenient()

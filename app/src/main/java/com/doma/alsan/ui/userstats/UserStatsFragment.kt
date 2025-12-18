@@ -62,7 +62,7 @@ class UserStatsFragment : BaseFragment<FragmentUserStatsBinding, UserStatsViewMo
     override fun setUpInsets() {
         binding.defaultToolbar.defaultToolbar.applyTopPaddingInsets()
         binding.userStatsRecyclerView.applySidePaddingInsets()
-        binding.userStatsFilterLayout.applyBottomSidePaddingInsets()
+        binding.userStatsFilterCard.applyBottomSidePaddingInsets()
     }
 
     override fun setUpObserver() {

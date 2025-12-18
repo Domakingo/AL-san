@@ -13,8 +13,10 @@ import com.doma.alsan.data.response.anilist.MediaList
 import com.doma.alsan.data.response.anilist.MediaListOptions
 import com.doma.alsan.databinding.ListMediaListLinearBinding
 import com.doma.alsan.databinding.ListTitleBinding
+import com.doma.alsan.databinding.ListCollapsedGroupBinding
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.MediaListItem
+import com.doma.alsan.helper.pojo.CollapsedSeriesGroup
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.type.MediaType
 
@@ -35,6 +37,10 @@ class MediaListLinearRvAdapter(
                 val view = ListTitleBinding.inflate(inflater, parent, false)
                 TitleViewHolder(view)
             }
+            MediaListItem.VIEW_TYPE_COLLAPSED_GROUP -> {
+                val view = ListCollapsedGroupBinding.inflate(inflater, parent, false)
+                CollapsedGroupViewHolder(view)
+            }
             else -> {
                 val view = ListMediaListLinearBinding.inflate(inflater, parent, false)
                 ListItemViewHolder(view)
@@ -51,6 +57,10 @@ class MediaListLinearRvAdapter(
                 ImageUtil.loadImage(context, getCoverImage(media), mediaListCoverImage)
                 mediaListCoverImage.clicks {
                     listener.navigateToMedia(media)
+                }
+                mediaListCoverImage.setOnLongClickListener {
+                    ImageUtil.downloadImage(context, getCoverImage(media), "${getTitle(media)}_cover.jpg")
+                    true
                 }
 
                 // title
@@ -215,13 +225,75 @@ class MediaListLinearRvAdapter(
             val isAtMaxProgress = when (mediaList.media.type) {
                 MediaType.ANIME -> mediaList.media.episodes != null && mediaList.progress >= mediaList.media.episodes
                 MediaType.MANGA -> if (isVolumeProgress) {
-                    mediaList.media.volumes != null && (mediaList.progressVolumes ?: 0) >= mediaList.media.volumes
+                    // For finished manga with no volumes, treat as "complete" (hide +1 button)
+                    val volumes = mediaList.media.volumes
+                    if (volumes != null) {
+                        (mediaList.progressVolumes ?: 0) >= volumes
+                    } else {
+                        // No volume data - if manga is finished, hide the button
+                        mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED
+                    }
                 } else {
-                    mediaList.media.chapters != null && mediaList.progress >= mediaList.media.chapters
+                    // For finished manga with no chapters, treat as "complete" (hide +1 button)
+                    val chapters = mediaList.media.chapters
+                    if (chapters != null) {
+                        mediaList.progress >= chapters
+                    } else {
+                        // No chapter data - if manga is finished, hide the button
+                        mediaList.media.status == com.doma.alsan.type.MediaStatus.FINISHED
+                    }
                 }
                 else -> false
             }
             return (if (isVolumeProgress) shouldShowProgressVolume(mediaList.media) else shouldShowProgress(mediaList.media)) && !isAtMaxProgress
+        }
+    }
+
+    inner class CollapsedGroupViewHolder(private val binding: ListCollapsedGroupBinding) : ItemViewHolder(binding) {
+        override fun bind(item: MediaListItem, index: Int) {
+            val collapsedGroup = item.collapsedGroup ?: return
+            val representativeMedia = collapsedGroup.representativeMedia
+
+            binding.apply {
+                ImageUtil.loadImage(context, getCoverImage(representativeMedia.media), collapsedGroupCoverImage)
+                collapsedGroupCoverImage.clicks {
+                    listener.navigateToMedia(representativeMedia.media)
+                }
+
+                collapsedGroupTitleText.text = collapsedGroup.franchiseName
+                collapsedGroupTitleText.clicks {
+                    listener.navigateToMedia(representativeMedia.media)
+                }
+                collapsedGroupTitleText.setOnLongClickListener {
+                    listener.copyMediaTitle(collapsedGroup.franchiseName)
+                    true
+                }
+
+                collapsedGroupCountText.text = "${collapsedGroup.totalEntries} series"
+
+                if (collapsedGroup.averageScore > 0) {
+                    collapsedGroupScoreLayout.show(true)
+                    collapsedGroupScoreText.text = String.format(java.util.Locale.US, "%.1f", collapsedGroup.averageScore)
+                } else {
+                    collapsedGroupScoreLayout.show(false)
+                }
+
+                root.clicks {
+                    listener.navigateToMedia(representativeMedia.media)
+                }
+
+                val primaryColor = listStyle.getPrimaryColor(context)
+                collapsedGroupTitleText.setTextColor(primaryColor)
+                collapsedGroupScoreText.setTextColor(primaryColor)
+
+                val textColor = listStyle.getTextColor(context)
+                collapsedGroupCountText.setTextColor(textColor)
+                collapsedGroupIcon.imageTintList = ColorStateList.valueOf(textColor)
+                collapsedGroupScoreLabel.setTextColor(textColor)
+
+                val cardColor = listStyle.getCardColor(context)
+                collapsedGroupCardBackground.setCardBackgroundColor(cardColor)
+            }
         }
     }
 }

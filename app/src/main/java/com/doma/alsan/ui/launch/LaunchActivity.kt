@@ -26,6 +26,7 @@ class LaunchActivity : BaseActivity<ActivityLaunchBinding>() {
         return ActivityLaunchBinding.inflate(layoutInflater)
     }
 
+    @Suppress("DEPRECATION")
     override fun setUpLayout() {
         val targetIntent = Intent(this, RootActivity::class.java)
         targetIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

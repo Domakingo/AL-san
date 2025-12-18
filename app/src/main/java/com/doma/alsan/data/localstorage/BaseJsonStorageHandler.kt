@@ -21,7 +21,7 @@ abstract class BaseJsonStorageHandler(
         var outputStream: FileOutputStream? = null
 
         try {
-            val targetFolder = File(externalFileDir?.path)
+            val targetFolder = File(externalFileDir?.path ?: "")
 
             if (!targetFolder.exists()) {
                 targetFolder.mkdir()

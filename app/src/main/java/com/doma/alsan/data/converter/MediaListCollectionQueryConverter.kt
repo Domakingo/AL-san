@@ -113,6 +113,16 @@ private fun MediaListCollectionQuery.Entry?.convert(): MediaList {
                     siteId = it?.siteId ?: 0
                 )
             } ?: listOf(),
+            relations = MediaConnection(
+                edges = media?.relations?.edges?.mapNotNull { edge ->
+                    MediaEdge(
+                        node = Media(
+                            idAniList = edge?.node?.id ?: 0
+                        ),
+                        relationType = edge?.relationType
+                    )
+                } ?: listOf()
+            )
         )
     )
 }

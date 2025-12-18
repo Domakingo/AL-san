@@ -17,7 +17,7 @@ import com.doma.alsan.ui.profile.ProfileFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
 
     override val viewModel: MainViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     private var viewPagerAdapter: MainViewPagerAdapter? = null
 

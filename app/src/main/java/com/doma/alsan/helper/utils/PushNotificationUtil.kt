@@ -10,8 +10,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.doma.alsan.R
 import com.doma.alsan.ui.deeplink.DeepLinkActivity
+import com.doma.alsan.data.repository.UserRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object PushNotificationUtil {
+object PushNotificationUtil : KoinComponent {
+
+    private val userRepository: UserRepository by inject()
 
     private const val CHANNEL_ID = "Notifications"
     private const val MERGED_NOTIFICATION_ID = 1017
@@ -41,12 +46,14 @@ object PushNotificationUtil {
         val notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         val notificationManager = getNotificationManager(context)
 
+        val themeColor = ContextCompat.getColor(context, userRepository.getAppTheme().colors.first)
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notif)
             .setContentTitle(context.getString(R.string.app_name))
             .setContentText(message)
             .setColorized(true)
-            .setColor(ContextCompat.getColor(context, R.color.yellow))
+            .setColor(themeColor)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(notificationPendingIntent)

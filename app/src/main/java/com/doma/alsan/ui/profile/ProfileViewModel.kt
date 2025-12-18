@@ -14,6 +14,7 @@ import com.doma.alsan.helper.extensions.convertFromSnakeCase
 import com.doma.alsan.helper.extensions.formatTwoDecimal
 import com.doma.alsan.helper.extensions.getStringResource
 import com.doma.alsan.helper.pojo.Affinity
+import com.doma.alsan.helper.pojo.ProfileHeaderData
 import com.doma.alsan.helper.pojo.ProfileItem
 import com.doma.alsan.helper.pojo.Tendency
 import com.doma.alsan.helper.service.clipboard.ClipboardService
@@ -297,6 +298,27 @@ class ProfileViewModel(
 
     private fun emitProfileItemList() {
         val profileItemList = ArrayList<ProfileItem>()
+
+        // Add header as first item
+        val headerData = ProfileHeaderData(
+            userId = user.id,
+            username = user.name,
+            avatarUrl = user.avatar.large,
+            bannerUrl = user.bannerImage.ifBlank { null },
+            isCircleAvatar = appSetting.useCircularAvatarForProfile,
+            animeCount = user.statistics.anime.statuses.find { it.status == MediaListStatus.COMPLETED }?.count ?: 0,
+            mangaCount = user.statistics.manga.statuses.find { it.status == MediaListStatus.COMPLETED }?.count ?: 0,
+            followingCount = _followingCount.value ?: 0,
+            followersCount = _followersCount.value ?: 0,
+            isFollowing = user.isFollowing,
+            isFollower = user.isFollower,
+            isModerator = user.moderatorRoles.isNotEmpty(),
+            modRole = user.moderatorRoles.firstOrNull()?.name?.convertFromSnakeCase(),
+            donatorTier = user.donatorTier,
+            donatorBadge = user.donatorBadge,
+            isViewer = isViewer
+        )
+        profileItemList.add(ProfileItem(headerData = headerData, viewType = ProfileItem.VIEW_TYPE_HEADER))
 
         if (user.about.isNotBlank())
             profileItemList.add(ProfileItem(bio = user.about, viewType = ProfileItem.VIEW_TYPE_BIO))

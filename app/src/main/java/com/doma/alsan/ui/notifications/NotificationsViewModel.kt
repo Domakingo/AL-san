@@ -144,12 +144,12 @@ class NotificationsViewModel(private val userRepository: UserRepository) : BaseV
 
     fun loadNotificationTypes() {
         val list = ArrayList<ListItem<List<NotificationType>?>>()
-        list.add(ListItem(R.string.all, notificationTypes[0]))
-        list.add(ListItem(R.string.airing, notificationTypes[1]))
-        list.add(ListItem(R.string.activity, notificationTypes[2]))
-        list.add(ListItem(R.string.forum, notificationTypes[3]))
-        list.add(ListItem(R.string.follows, notificationTypes[4]))
-        list.add(ListItem(R.string.media, notificationTypes[5]))
+        list.add(ListItem("{0}", listOf(R.string.all), notificationTypes[0], selectedNotificationTypes == notificationTypes[0]))
+        list.add(ListItem("{0}", listOf(R.string.airing), notificationTypes[1], selectedNotificationTypes == notificationTypes[1]))
+        list.add(ListItem("{0}", listOf(R.string.activity), notificationTypes[2], selectedNotificationTypes == notificationTypes[2]))
+        list.add(ListItem("{0}", listOf(R.string.forum), notificationTypes[3], selectedNotificationTypes == notificationTypes[3]))
+        list.add(ListItem("{0}", listOf(R.string.follows), notificationTypes[4], selectedNotificationTypes == notificationTypes[4]))
+        list.add(ListItem("{0}", listOf(R.string.media), notificationTypes[5], selectedNotificationTypes == notificationTypes[5]))
         _notificationTypeList.onNext(list)
     }
 

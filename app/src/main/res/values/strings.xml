@@ -14,6 +14,8 @@
     <string name="reviews">Reviews</string>
     <string name="calendar">Calendar</string>
     <string name="random">Random</string>
+    <string name="collapse_series">Collapse Series</string>
+    <string name="expand_series">Expand Series</string>
     <string name="trending_anime_right_now">Trending Anime Right Now</string>
     <string name="trending_manga_right_now">Trending Manga Right Now</string>
     <string name="powered_by_anilist">Powered by AniList</string>
@@ -87,8 +89,6 @@
     <string name="show_recent_reviews_at_home">Show Recent Reviews at Home</string>
     <string name="follow_anilist_setting">Follow AniList setting</string>
     <string name="native_name">Native name (ex: 初音ミク, 宮崎駿, 花澤香菜)</string>
-    <string name="use_staff_first_middle_last_name_format">Use First Middle Last name format (ex: Miku Hatsune, Hayao Miyazaki, Kana Hanazawa)</string>
-    <string name="use_staff_last_middle_first_name_format">Use Last Middle First name format (ex: Hatsune Miku, Miyazaki Hayao, Hanazawa Kana)</string>
     <string name="use_media_english_name_format">Use English name (ex: Attack on Titan, Solo Leveling, The King\'s Avatar)</string>
     <string name="use_media_romaji_name_format">Use Romaji name (ex: Shingeki no Kyojin, Na Honjaman Level Up, Quanzhi Gaoshou)</string>
     <string name="use_media_native_name_format">Use Native name (ex: 進撃の巨人, 나 혼자만 레벨업, 全职高手)</string>
@@ -98,6 +98,9 @@
     <string name="send_forum_push_notifications">Send Forum push notifications</string>
     <string name="send_follows_push_notifications">Send Follows push notifications</string>
     <string name="send_relations_push_notifications">Send Media push notifications</string>
+    <string name="downloading">Downloading...</string>
+    <string name="failed_to_download">Failed to download</string>
+    <string name="download_cover">Download Cover</string>
     <string name="merge_activity_forum_follows_and_relations_push_notifications_into_one">Merge Activity, Forum, Follows, and Media push notifications into one</string>
     <string name="show_push_notifications_not_earlier_than_every">Show push notifications not earlier than every</string>
     <string name="important_to_know_n1_push_notifications_will_show_up_periodically_not_real_time_n2_depending_on_your_rom_and_phone_setting_it_might_not_show_up_at_all_reference_https_dontkillmyapp_com">Important to know:\n1. Push notifications will show up periodically, not real time.\n2. Depending on your ROM and phone setting, it might not show up at all. (reference: https://dontkillmyapp.com/)</string>
@@ -209,6 +212,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="the_privacy_policy_of_this_app_can_be_read_fully_here">The privacy policy of this app can be read fully here.</string>
     <string name="filter">Filter</string>
+    <string name="advanced_options">Advanced Options</string>
     <string name="customise_list">Customise List</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
@@ -351,7 +355,8 @@
     <string name="set_as_favorite">Set as Favorite</string>
     <string name="link_copied">Link copied</string>
     <string name="text_copied">Text copied</string>
-    <string name="stats_are_automatically_updated_every_24_hours_or_you_can_force_update_them_in_account_settings">Stats are automatically updated every 48 hours, or you can force update them in Account Settings.</string>
+    <string name="stats_auto_refresh_info">Stats are automatically updated every 48 hours.</string>
+    <string name="force_update">Force Update</string>
     <string name="unfollow">Unfollow</string>
     <string name="there_s_nothing_here">There\'s nothing here</string>
     <string name="did_you_just_try_to_follow_yourself">Did you just try to follow yourself?</string>

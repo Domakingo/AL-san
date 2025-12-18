@@ -41,6 +41,7 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         return LayoutInfiniteScrollingBinding.inflate(inflater, container, false)
     }
 
+    @Suppress("DEPRECATION")
     override fun setUpLayout() {
         val mediaType = arguments?.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
 

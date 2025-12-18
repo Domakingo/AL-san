@@ -126,10 +126,10 @@ class ReaderFragment : BaseFragment<FragmentReaderBinding, ReaderViewModel>() {
             viewModel.isLiked.subscribe {
                 val (likeIconColor, dislikeIconColor) = when (it.data) {
                     true -> {
-                        ContextCompat.getColor(requireContext(), R.color.green) to requireContext().getThemeTextColor()
+                        ContextCompat.getColor(requireContext(), R.color.brightGreen) to requireContext().getThemeTextColor()
                     }
                     false -> {
-                        requireContext().getThemeTextColor() to ContextCompat.getColor(requireContext(), R.color.red)
+                        requireContext().getThemeTextColor() to ContextCompat.getColor(requireContext(), R.color.brightRed)
                     }
                     null -> {
                         requireContext().getThemeTextColor() to requireContext().getThemeTextColor()

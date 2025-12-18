@@ -1,106 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?themeBackgroundColor"
-    android:focusable="true"
     android:clickable="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:focusable="true">
 
-    <include layout="@layout/toolbar_default"
-        android:id="@+id/defaultToolbar"/>
+    <include
+        android:id="@+id/defaultToolbar"
+        layout="@layout/toolbar_default" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/userStatsSwipeRefresh"
-        app:layout_constraintTop_toBottomOf="@+id/defaultToolbar"
-        app:layout_constraintBottom_toTopOf="@id/userStatsFilterLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/userStatsFilterCard"
+        app:layout_constraintTop_toBottomOf="@+id/defaultToolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/userStatsRecyclerView"
-            android:paddingTop="@dimen/marginPageNormal"
-            android:clipToPadding="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/marginPageNormal"
+            android:paddingBottom="@dimen/marginPageNormal" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/layout_empty"
-        android:id="@+id/emptyLayout"/>
+    <include
+        android:id="@+id/emptyLayout"
+        layout="@layout/layout_empty" />
 
+    <!-- Filter Bar - flat design with divider -->
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/userStatsFilterLayout"
-        android:background="?themeBackgroundColor"
-        android:paddingTop="@dimen/lineWidth"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/userStatsFilterCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?themeBackgroundColor"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <include layout="@layout/divider"/>
+        <include layout="@layout/divider" />
 
         <HorizontalScrollView
-            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:padding="@dimen/marginPageNormal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/marginNormal">
 
                 <com.google.android.material.textview.MaterialTextView
                     style="?themeSmallFont"
-                    android:maxLines="1"
-                    android:text="@string/stats"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/stats" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userStatsStatsText"
                     style="?themeRegularClickableFont"
-                    android:maxLines="1"
-                    android:foreground="?selectableItemBackground"
-                    android:layout_marginStart="@dimen/marginNormal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginNormal"
+                    android:foreground="?selectableItemBackground"
+                    android:maxLines="1" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userStatsMediaLabel"
                     style="?themeSmallFont"
-                    android:maxLines="1"
-                    android:text="@string/media"
-                    android:layout_marginStart="@dimen/marginPageBig"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginPageBig"
+                    android:maxLines="1"
+                    android:text="@string/media" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userStatsMediaText"
                     style="?themeRegularClickableFont"
-                    android:maxLines="1"
-                    android:foreground="?selectableItemBackground"
-                    android:layout_marginStart="@dimen/marginNormal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginNormal"
+                    android:foreground="?selectableItemBackground"
+                    android:maxLines="1" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userStatsSortLabel"
                     style="?themeSmallFont"
-                    android:maxLines="1"
-                    android:text="@string/sort"
-                    android:layout_marginStart="@dimen/marginPageBig"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginPageBig"
+                    android:maxLines="1"
+                    android:text="@string/sort" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userStatsSortText"
                     style="?themeRegularClickableFont"
-                    android:maxLines="1"
-                    android:foreground="?selectableItemBackground"
-                    android:layout_marginStart="@dimen/marginNormal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginNormal"
+                    android:foreground="?selectableItemBackground"
+                    android:maxLines="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/itemCollapse"
+        android:title="@string/collapse_series"
+        android:icon="@drawable/ic_layers"
+        android:iconTint="?themeContentColor"
+        app:showAsAction="always"/>
     <item android:id="@+id/itemRandom"
         android:title="@string/random"
         android:icon="@drawable/ic_shuffle"
         android:iconTint="?themeContentColor"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item android:id="@+id/itemSearch"
         android:title="@string/search"
         android:icon="@drawable/ic_search"
@@ -16,8 +21,5 @@
         app:showAsAction="never"/>
     <item android:id="@+id/itemChangeListType"
         android:title="@string/change_list_type"
-        app:showAsAction="never"/>
-    <item android:id="@+id/itemFilter"
-        android:title="@string/filter"
         app:showAsAction="never"/>
 </menu>

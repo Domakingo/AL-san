@@ -22,7 +22,11 @@ enum class AppTheme(val colors: Triple<Int, Int, Int>) {
     
     // Pink Theme - Pastel for Dark, Deep for Light
     DARK_PINK(Triple(R.color.pastelPink, R.color.pastelPinkSecondary, R.color.dangerRed)),
-    LIGHT_PINK(Triple(R.color.deepPink, R.color.deepPinkSecondary, R.color.dangerRed))
+    LIGHT_PINK(Triple(R.color.deepPink, R.color.deepPinkSecondary, R.color.dangerRed)),
+    
+    // Yellow Theme - Pastel for Dark, Deep for Light
+    DARK_YELLOW(Triple(R.color.pastelYellow, R.color.pastelYellowSecondary, R.color.dangerRed)),
+    LIGHT_YELLOW(Triple(R.color.deepYellow, R.color.deepYellowSecondary, R.color.dangerRed))
 }
 
 fun AppTheme.getColorName(): String {

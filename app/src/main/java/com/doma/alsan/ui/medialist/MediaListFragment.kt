@@ -31,7 +31,7 @@ import com.doma.alsan.helper.pojo.MediaListItem
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.ScoreFormat
@@ -39,15 +39,15 @@ import com.doma.alsan.type.ScoreFormat
 class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewModel>() {
 
     override val viewModel: MediaListViewModel by viewModel()
-    private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
+    private val sharedViewModel by activityViewModel<SharedMainViewModel>()
 
     private var adapter: BaseMediaListRvAdapter? = null
 
     private var menuItemSearch: MenuItem? = null
     private var menuItemCustomiseList: MenuItem? = null
     private var menuItemChangeListType: MenuItem? = null
-    private var menuItemFilter: MenuItem? = null
     private var menuItemRandom: MenuItem? = null
+    private var menuItemCollapse: MenuItem? = null
 
     private var searchView: SearchView? = null
 
@@ -77,8 +77,9 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemSearch = menu.findItem(R.id.itemSearch)
                 menuItemCustomiseList = menu.findItem(R.id.itemCustomiseList)
                 menuItemChangeListType = menu.findItem(R.id.itemChangeListType)
-                menuItemFilter = menu.findItem(R.id.itemFilter)
                 menuItemRandom = menu.findItem(R.id.itemRandom)
+                menuItemCollapse = menu.findItem(R.id.itemCollapse)
+                menuItemCollapse?.isVisible = viewModel.mediaType != MediaType.MANGA
             }
 
             searchView = menuItemSearch?.actionView as? SearchView
@@ -117,28 +118,18 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 true
             }
 
-            menuItemFilter?.setOnMenuItemClickListener {
-                searchView?.clearFocus()
-                navigation.navigateToFilter(
-                    viewModel.mediaFilter,
-                    viewModel.mediaType,
-                    viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
-                    true,
-                    viewModel.hasBigList,
-                    viewModel.isViewer
-                ) { filterResult ->
-                    viewModel.updateMediaFilter(filterResult)
-                }
-                true
-            }
-
             menuItemRandom?.setOnMenuItemClickListener {
                 viewModel.pickRandomPlanningMedia()
                 true
             }
 
+            menuItemCollapse?.setOnMenuItemClickListener {
+                viewModel.toggleCollapsedMode()
+                true
+            }
+
             mediaListSwitchListButton.clicks {
-                viewModel.loadListSections()
+                viewModel.loadFabOptions()
             }
 
             mediaListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -201,6 +192,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             },
             viewModel.scoreValues.subscribe { (mediaList: MediaList, scoreFormat: ScoreFormat) ->
                 val currentScore = mediaList.score
+                @Suppress("UNCHECKED_CAST")
                 val advancedScores = if (viewModel.user.mediaListOptions.animeList.advancedScoringEnabled) mediaList.advancedScores as? LinkedHashMap<String, Double> else null
                 dialog.showScoreDialog(scoreFormat, currentScore, advancedScores) { newScore, newAdvancedScores ->
                     viewModel.updateScore(mediaList, newScore, newAdvancedScores)
@@ -256,6 +248,34 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             },
             viewModel.randomMedia.subscribe {
                 navigation.navigateToMedia(it.getId())
+            },
+            viewModel.isCollapsedMode.subscribe { isCollapsed ->
+                menuItemCollapse?.title = getString(
+                    if (isCollapsed) R.string.expand_series else R.string.collapse_series
+                )
+            },
+            viewModel.fabOptions.subscribe { options ->
+                dialog.showListDialog(options) { data, index ->
+                    when (data) {
+                        "advanced_options" -> {
+                            searchView?.clearFocus()
+                            navigation.navigateToFilter(
+                                viewModel.mediaFilter,
+                                viewModel.mediaType,
+                                viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
+                                true,
+                                viewModel.hasBigList,
+                                viewModel.isViewer
+                            ) { filterResult ->
+                                viewModel.updateMediaFilter(filterResult)
+                            }
+                        }
+                        else -> {
+                            // It's a section, use the index directly
+                            viewModel.showSelectedSectionMediaList(index)
+                        }
+                    }
+                }
             }
         )
 
@@ -396,8 +416,8 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
         menuItemSearch = null
         menuItemCustomiseList = null
         menuItemChangeListType = null
-        menuItemFilter = null
         menuItemRandom = null
+        menuItemCollapse = null
         searchView = null
     }
 

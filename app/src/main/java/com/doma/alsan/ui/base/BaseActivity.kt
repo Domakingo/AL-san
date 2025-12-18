@@ -33,6 +33,7 @@ abstract class BaseActivity<T: ViewBinding> : AppCompatActivity(), ViewContract 
 
     abstract fun generateViewBinding(): T
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

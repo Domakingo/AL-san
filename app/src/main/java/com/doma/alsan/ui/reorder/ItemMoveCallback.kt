@@ -27,7 +27,7 @@ class ItemMoveCallback(private val adapter: BaseReorderRecyclerViewAdapter<*, *>
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        adapter?.onRowMoved(viewHolder.adapterPosition, target.adapterPosition)
+        adapter?.onRowMoved(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
         return true
     }
 

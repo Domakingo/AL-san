@@ -13,6 +13,7 @@ import com.doma.alsan.data.repository.BrowseRepository
 import com.doma.alsan.helper.enums.*
 import com.doma.alsan.helper.pojo.MediaListAdapterComponent
 import com.doma.alsan.helper.pojo.MediaListItem
+import com.doma.alsan.helper.pojo.CollapsedSeriesGroup
 import com.doma.alsan.helper.service.clipboard.ClipboardService
 import com.doma.alsan.helper.utils.TimeUtil
 import com.doma.alsan.ui.base.BaseViewModel
@@ -84,6 +85,14 @@ class MediaListViewModel(
     val randomMedia: Observable<Media>
         get() = _randomMedia
 
+    private val _isCollapsedMode = BehaviorSubject.createDefault(false)
+    val isCollapsedMode: Observable<Boolean>
+        get() = _isCollapsedMode
+
+    private val _fabOptions = PublishSubject.create<List<ListItem<String>>>()
+    val fabOptions: Observable<List<ListItem<String>>>
+        get() = _fabOptions
+
     var mediaType: MediaType = MediaType.ANIME
     var userId = 0
 
@@ -102,6 +111,7 @@ class MediaListViewModel(
     private var selectedSectionIndex = 0
     private var searchKeyword = ""
 
+    @Suppress("UNCHECKED_CAST")
     override fun loadData(param: Unit) {
         loadOnce {
             isViewer = userId == 0
@@ -306,6 +316,41 @@ class MediaListViewModel(
 
             _listSections.onNext(sections)
         }
+    }
+
+    fun loadFabOptions() {
+        val options = ArrayList<ListItem<String>>()
+        
+        // Add list sections
+        currentMediaListCollection?.lists?.let { groups ->
+            var totalEntries = 0
+            val listFromCurrentGroups = groups.mapIndexed { index, group ->
+                totalEntries += group.entries.size
+                val formattedTitle = "${group.name} (${group.entries.size})"
+                // Calculate expected index: if "All" is at top, section indices are offset by 1
+                val expectedIndex = if (isAllListPositionAtTop) index + 1 else index
+                val isSelected = selectedSectionIndex == expectedIndex
+                ListItem(formattedTitle, "section:$index", isSelected)
+            }
+            
+            // Check if "All" is selected
+            val allSelectedIndex = if (isAllListPositionAtTop) 0 else groups.size
+            val isAllSelected = selectedSectionIndex == allSelectedIndex
+            val allListItem = ListItem("All ($totalEntries)", "section:all", isAllSelected)
+            
+            if (isAllListPositionAtTop) {
+                options.add(allListItem)
+                options.addAll(listFromCurrentGroups)
+            } else {
+                options.addAll(listFromCurrentGroups)
+                options.add(allListItem)
+            }
+        }
+        
+        // Add Advanced Options at the end (in a centered card)
+        options.add(ListItem(R.string.advanced_options, "advanced_options", isHighlighted = true, useCardLayout = true))
+        
+        _fabOptions.onNext(options)
     }
 
     fun showSelectedSectionMediaList(index: Int) {
@@ -738,6 +783,7 @@ class MediaListViewModel(
 
     private fun getMediaListItems(groups: List<MediaListGroup>, index: Int = 0): List<MediaListItem> {
         val list = ArrayList<MediaListItem>()
+        val isCollapsed = _isCollapsedMode.value ?: false
 
         val isAllList = if (isAllListPositionAtTop) {
             index == 0
@@ -749,11 +795,25 @@ class MediaListViewModel(
             groups.forEach { group ->
                 if (group.entries.isNotEmpty()) {
                     list.add(MediaListItem(title = group.name, viewType = MediaListItem.VIEW_TYPE_TITLE))
-                    list.addAll(group.entries.map { MediaListItem(mediaList = it, viewType = MediaListItem.VIEW_TYPE_MEDIA_LIST) })
+                    
+                    // Apply collapse grouping only to Completed section
+                    val isCompletedSection = group.status == MediaListStatus.COMPLETED ||
+                        group.name.equals("Completed", ignoreCase = true) ||
+                        group.name.contains("Completed", ignoreCase = true)
+                    
+                    if (isCollapsed && isCompletedSection) {
+                        list.addAll(groupMediaByFranchise(group.entries))
+                    } else {
+                        list.addAll(group.entries.map { MediaListItem(mediaList = it, viewType = MediaListItem.VIEW_TYPE_MEDIA_LIST) })
+                    }
                 }
             }
 
-            _toolbarSubtitle.onNext("All (${list.count { it.viewType == MediaListItem.VIEW_TYPE_MEDIA_LIST }})")
+            val itemCount = list.count { 
+                it.viewType == MediaListItem.VIEW_TYPE_MEDIA_LIST || 
+                it.viewType == MediaListItem.VIEW_TYPE_COLLAPSED_GROUP 
+            }
+            _toolbarSubtitle.onNext("All ($itemCount)")
         } else {
             // "All" list is just for display, not actually stored
             // It does not exist in "groups"
@@ -761,9 +821,21 @@ class MediaListViewModel(
             var selectedIndex = if (isAllListPositionAtTop) index - 1 else index
             if (selectedIndex >= groups.size)
                 selectedIndex = groups.lastIndex
-            list.addAll(groups[selectedIndex].entries.map { MediaListItem(mediaList = it, viewType = MediaListItem.VIEW_TYPE_MEDIA_LIST) })
+            
+            val selectedGroup = groups[selectedIndex]
+            
+            // Apply collapse grouping only to Completed section
+            val isCompletedSection = selectedGroup.status == MediaListStatus.COMPLETED ||
+                selectedGroup.name.equals("Completed", ignoreCase = true) ||
+                selectedGroup.name.contains("Completed", ignoreCase = true)
+            
+            if (isCollapsed && isCompletedSection) {
+                list.addAll(groupMediaByFranchise(selectedGroup.entries))
+            } else {
+                list.addAll(selectedGroup.entries.map { MediaListItem(mediaList = it, viewType = MediaListItem.VIEW_TYPE_MEDIA_LIST) })
+            }
 
-            _toolbarSubtitle.onNext("${groups[selectedIndex].name} (${list.size})")
+            _toolbarSubtitle.onNext("${selectedGroup.name} (${list.size})")
         }
 
         currentMediaListItems = list
@@ -899,5 +971,226 @@ class MediaListViewModel(
                     _success.onNext(R.string.text_copied)
                 }
         )
+    }
+
+    /**
+     * Toggles between collapsed and expanded view for the Completed section.
+     * In collapsed mode, related series (sequels, prequels, etc.) are grouped together
+     * and show the average score across all entries.
+     */
+    fun toggleCollapsedMode() {
+        val newValue = !(_isCollapsedMode.value ?: false)
+        _isCollapsedMode.onNext(newValue)
+        
+        rawMediaListCollection?.let {
+            val filteredAndSortedList = getFilteredAndSortedList(it)
+            _mediaListItems.onNext(filteredAndSortedList)
+            
+            if (searchKeyword.isNotBlank())
+                filterByText(searchKeyword)
+        }
+    }
+
+    /**
+     * Groups related media entries by their franchise using the relations data.
+     * Uses a Union-Find approach to group all related media together.
+     */
+    private fun groupMediaByFranchise(entries: List<MediaList>): List<MediaListItem> {
+        if (entries.isEmpty()) return listOf()
+        
+        val mediaMap = entries.associateBy { it.media.idAniList }
+        val parent = mutableMapOf<Int, Int>()
+        
+        fun find(id: Int): Int {
+            if (parent[id] == null) parent[id] = id
+            if (parent[id] != id) parent[id] = find(parent[id]!!)
+            return parent[id]!!
+        }
+        
+        fun union(id1: Int, id2: Int) {
+            val root1 = find(id1)
+            val root2 = find(id2)
+            if (root1 != root2) {
+                parent[root1] = root2
+            }
+        }
+        
+        entries.forEach { parent[it.media.idAniList] = it.media.idAniList }
+        
+        entries.forEach { mediaList ->
+            mediaList.media.relations.edges.forEach { edge ->
+                val relatedId = edge.node.idAniList
+                if (mediaMap.containsKey(relatedId)) {
+                    union(mediaList.media.idAniList, relatedId)
+                }
+            }
+        }
+        
+        val groups = mutableMapOf<Int, MutableList<MediaList>>()
+        entries.forEach { mediaList ->
+            val root = find(mediaList.media.idAniList)
+            groups.getOrPut(root) { mutableListOf() }.add(mediaList)
+        }
+        
+        val result = mutableListOf<MediaListItem>()
+        groups.values.forEach { groupEntries ->
+            if (groupEntries.size == 1) {
+                result.add(MediaListItem(
+                    mediaList = groupEntries.first(),
+                    viewType = MediaListItem.VIEW_TYPE_MEDIA_LIST
+                ))
+            } else {
+                val scoredEntries = groupEntries.filter { it.score > 0 }
+                val averageScore = if (scoredEntries.isNotEmpty()) {
+                    scoredEntries.map { it.score }.average()
+                } else {
+                    0.0
+                }
+                
+                // Use the earliest entry as representative (usually the first season)
+                val representative = groupEntries.minByOrNull { 
+                    it.media.startDate?.let { date -> 
+                        (date.year ?: 9999) * 10000 + (date.month ?: 12) * 100 + (date.day ?: 31)
+                    } ?: Int.MAX_VALUE
+                } ?: groupEntries.first()
+                
+                val franchiseName = representative.media.getTitle(appSetting)
+                    .replace(Regex("\\s*(Season|Part|Cour|S)\\s*\\d+.*", RegexOption.IGNORE_CASE), "")
+                    .replace(Regex("\\s*\\d+(st|nd|rd|th)\\s*(Season|Part|Cour).*", RegexOption.IGNORE_CASE), "")
+                    .replace(Regex("\\s*[IVX]+$"), "") // Roman numerals at end
+                    .trim()
+                
+                val collapsedGroup = CollapsedSeriesGroup(
+                    mediaLists = groupEntries.sortedBy { 
+                        it.media.startDate?.let { date -> 
+                            (date.year ?: 9999) * 10000 + (date.month ?: 12) * 100 + (date.day ?: 31)
+                        } ?: Int.MAX_VALUE
+                    },
+                    franchiseName = if (franchiseName.isNotBlank()) franchiseName else representative.media.getTitle(appSetting),
+                    averageScore = averageScore,
+                    totalEntries = groupEntries.size,
+                    representativeMedia = representative
+                )
+                
+                result.add(MediaListItem(
+                    mediaList = representative,
+                    viewType = MediaListItem.VIEW_TYPE_COLLAPSED_GROUP,
+                    collapsedGroup = collapsedGroup
+                ))
+            }
+        }
+        
+        // Apply sorting based on user's selected sort option
+        val isDescending = mediaFilter.orderByDescending
+        
+        return when (mediaFilter.sort) {
+            Sort.SCORE -> {
+                val sorted = result.sortedBy { item ->
+                    item.collapsedGroup?.averageScore ?: item.mediaList.score
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.PROGRESS -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.sumOf { it.progress }
+                    } else {
+                        item.mediaList.progress
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.LAST_UPDATED -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.maxOf { it.updatedAt }
+                    } else {
+                        item.mediaList.updatedAt
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.LAST_ADDED -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.maxOf { it.id ?: 0 }
+                    } else {
+                        item.mediaList.id ?: 0
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.START_DATE -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.mapNotNull { TimeUtil.getMillisFromFuzzyDate(it.startedAt) }.minOrNull() ?: Long.MAX_VALUE
+                    } else {
+                        TimeUtil.getMillisFromFuzzyDate(item.mediaList.startedAt)
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.COMPLETED_DATE -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.mapNotNull { TimeUtil.getMillisFromFuzzyDate(it.completedAt) }.maxOrNull() ?: Long.MIN_VALUE
+                    } else {
+                        TimeUtil.getMillisFromFuzzyDate(item.mediaList.completedAt)
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.RELEASE_DATE -> {
+                val sorted = result.sortedBy { item ->
+                    TimeUtil.getMillisFromFuzzyDate(item.mediaList.media.startDate)
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.AVERAGE_SCORE -> {
+                val sorted = result.sortedBy { item ->
+                    item.mediaList.media.averageScore
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.POPULARITY -> {
+                val sorted = result.sortedBy { item ->
+                    item.mediaList.media.popularity
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.FAVORITES -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.sumOf { it.media.favourites }
+                    } else {
+                        item.mediaList.media.favourites
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.TRENDING -> {
+                val sorted = result.sortedBy { item ->
+                    item.mediaList.media.trending
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            Sort.PRIORITY -> {
+                val sorted = result.sortedBy { item ->
+                    if (item.collapsedGroup != null) {
+                        item.collapsedGroup.mediaLists.maxOf { it.priority }
+                    } else {
+                        item.mediaList.priority
+                    }
+                }
+                if (isDescending) sorted.reversed() else sorted
+            }
+            else -> {
+                // Default: sort by title/franchise name
+                result.sortedBy { 
+                    it.collapsedGroup?.franchiseName?.lowercase() 
+                        ?: it.mediaList.media.getTitle(appSetting).lowercase() 
+                }
+            }
+        }
     }
 }
