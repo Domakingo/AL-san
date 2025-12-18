@@ -261,7 +261,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats_auto_refresh_info"
-            android:textColor="?themeDividerColor" />
+            android:textColor="?themeContentColor" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profileStatsForceUpdateText"

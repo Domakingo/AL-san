@@ -11,4 +11,5 @@ data class ListItem<T>(
     constructor(text: String, data: T) : this(text, listOf(), data)
     constructor(text: String, data: T, isHighlighted: Boolean) : this(text, listOf(), data, isHighlighted)
     constructor(text: String, data: T, isHighlighted: Boolean, useCardLayout: Boolean) : this(text, listOf(), data, isHighlighted, useCardLayout)
+    constructor(stringResource: Int, data: T, isHighlighted: Boolean, useCardLayout: Boolean) : this("{0}", listOf(stringResource), data, isHighlighted, useCardLayout)
 }

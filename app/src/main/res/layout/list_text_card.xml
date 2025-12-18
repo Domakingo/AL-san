@@ -23,7 +23,8 @@
             style="?themeRegularFont"
             android:textColor="?themePrimaryColor"
             android:paddingVertical="@dimen/marginNormal"
-            android:paddingHorizontal="@dimen/marginPageNormal"
+            android:paddingStart="@dimen/marginPageNormal"
+            android:paddingEnd="@dimen/marginPageNormal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

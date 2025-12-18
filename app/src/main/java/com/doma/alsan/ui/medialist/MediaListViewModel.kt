@@ -347,7 +347,7 @@ class MediaListViewModel(
         }
         
         // Add Advanced Options at the end (in a centered card)
-        options.add(ListItem("Advanced Options", "advanced_options", isHighlighted = true, useCardLayout = true))
+        options.add(ListItem(R.string.advanced_options, "advanced_options", isHighlighted = true, useCardLayout = true))
         
         _fabOptions.onNext(options)
     }

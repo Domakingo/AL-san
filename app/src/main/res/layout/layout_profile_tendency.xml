@@ -156,6 +156,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginBig"
         android:text="@string/tendency_is_generated_automatically_based_on_user_stats_it_might_or_might_not_be_accurate"
-        android:textColor="?themeDividerColor" />
+        android:textColor="?themeContentColor" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
