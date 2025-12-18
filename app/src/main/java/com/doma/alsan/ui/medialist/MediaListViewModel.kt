@@ -323,13 +323,20 @@ class MediaListViewModel(
         // Add list sections
         currentMediaListCollection?.lists?.let { groups ->
             var totalEntries = 0
-            val listFromCurrentGroups = groups.map {
-                totalEntries += it.entries.size
-                val formattedTitle = "${it.name} (${it.entries.size})"
-                ListItem(formattedTitle, "section:${groups.indexOf(it)}")
+            val listFromCurrentGroups = groups.mapIndexed { index, group ->
+                totalEntries += group.entries.size
+                val formattedTitle = "${group.name} (${group.entries.size})"
+                // Calculate expected index: if "All" is at top, section indices are offset by 1
+                val expectedIndex = if (isAllListPositionAtTop) index + 1 else index
+                val isSelected = selectedSectionIndex == expectedIndex
+                ListItem(formattedTitle, "section:$index", isSelected)
             }
             
-            val allListItem = ListItem("All ($totalEntries)", "section:all")
+            // Check if "All" is selected
+            val allSelectedIndex = if (isAllListPositionAtTop) 0 else groups.size
+            val isAllSelected = selectedSectionIndex == allSelectedIndex
+            val allListItem = ListItem("All ($totalEntries)", "section:all", isAllSelected)
+            
             if (isAllListPositionAtTop) {
                 options.add(allListItem)
                 options.addAll(listFromCurrentGroups)
@@ -339,8 +346,8 @@ class MediaListViewModel(
             }
         }
         
-        // Add Advanced Options at the end (highlighted with theme color)
-        options.add(ListItem("Advanced Options", "advanced_options", isHighlighted = true))
+        // Add Advanced Options at the end (in a centered card)
+        options.add(ListItem("Advanced Options", "advanced_options", isHighlighted = true, useCardLayout = true))
         
         _fabOptions.onNext(options)
     }
