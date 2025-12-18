@@ -1,7 +1,6 @@
 package com.doma.alsan.ui.notifications
 
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +23,6 @@ class NotificationsFragment : BaseFragment<LayoutInfiniteScrollingBinding, Notif
     override val viewModel: NotificationsViewModel by viewModel()
     private val sharedViewModel by sharedViewModel<SharedMainViewModel>()
 
-    private var itemFilter: MenuItem? = null
-
     override fun generateViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -35,15 +32,13 @@ class NotificationsFragment : BaseFragment<LayoutInfiniteScrollingBinding, Notif
 
     override fun setUpLayout() {
         binding.apply {
-            defaultToolbar.defaultToolbar.apply {
-                title = getString(R.string.notifications)
-                inflateMenu(R.menu.menu_notifications)
-                itemFilter = menu.findItem(R.id.itemFilter)
-            }
+            defaultToolbar.defaultToolbar.title = getString(R.string.notifications)
 
-            itemFilter?.setOnMenuItemClickListener {
+            // Show FAB with filter icon
+            infiniteScrollingActionButtonLayout.visibility = android.view.View.VISIBLE
+            infiniteScrollingActionButton.setImageResource(R.drawable.ic_filter)
+            infiniteScrollingActionButton.setOnClickListener {
                 viewModel.loadNotificationTypes()
-                true
             }
 
             adapter = NotificationsAdapter(requireContext(), listOf(), AppSetting(), getNotificationsListener())
@@ -143,7 +138,6 @@ class NotificationsFragment : BaseFragment<LayoutInfiniteScrollingBinding, Notif
     override fun onDestroyView() {
         super.onDestroyView()
         adapter = null
-        itemFilter = null
     }
 
     companion object {
