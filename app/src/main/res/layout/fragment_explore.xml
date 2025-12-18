@@ -20,12 +20,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/exploreBarLayout"
-            app:contentPadding="@dimen/marginSmall"
+            app:contentPadding="@dimen/marginNormal"
             app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/cornerLarge"
+            app:cardElevation="@dimen/elevationNone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/exploreCategoryButton"
-            android:layout_marginEnd="@dimen/marginPageNormal"
+            android:layout_marginEnd="@dimen/marginNormal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
@@ -63,12 +65,15 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/exploreCategoryButton"
             app:cardBackgroundColor="?themePrimaryColor"
+            app:cardCornerRadius="@dimen/cornerNormal"
+            app:cardElevation="@dimen/elevationNone"
             app:layout_constraintEnd_toStartOf="@id/exploreSettingButton"
             app:layout_constraintTop_toTopOf="@id/exploreBarLayout"
             app:layout_constraintBottom_toBottomOf="@id/exploreBarLayout"
             app:layout_constraintDimensionRatio="1:1"
-            android:layout_marginEnd="@dimen/marginPageNormal"
+            android:layout_marginEnd="@dimen/marginSmall"
             app:layout_goneMarginEnd="0dp"
+            android:foreground="?selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="0dp">
 
@@ -84,10 +89,13 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/exploreSettingButton"
             app:cardBackgroundColor="?themePrimaryColor"
+            app:cardCornerRadius="@dimen/cornerNormal"
+            app:cardElevation="@dimen/elevationNone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/exploreBarLayout"
             app:layout_constraintBottom_toBottomOf="@id/exploreBarLayout"
             app:layout_constraintDimensionRatio="1:1"
+            android:foreground="?selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="0dp">
 

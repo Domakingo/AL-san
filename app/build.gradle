@@ -29,8 +29,8 @@ android {
         applicationId "com.doma.alsan"
         minSdkVersion 23
         targetSdk 35
-        versionCode 300000
-        versionName "3.0.0"
+        versionCode 310000
+        versionName "3.1.0-dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // API Keys configuration - use empty strings if apikey.properties doesn't exist
@@ -164,7 +164,7 @@ dependencies {
     implementation 'com.jaredrummler:colorpicker:1.1.0'
     implementation 'com.github.stfalcon-studio:StfalconImageViewer:1.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.27'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
     implementation 'com.github.zend10:OverlapImageListView:v1.0.1'
 
     def markwon_version = "4.6.2"

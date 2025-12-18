@@ -65,16 +65,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/aboutSettingsForkLayout"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/aboutSettingsDescriptionText"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:text="@string/al_san_is_a_fork"
+                    style="?themeRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/aboutSettingsAlchanLink"
+                    android:text="@string/al_chan"
+                    style="?themeRegularClickableFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/aboutSettingsImportantLinkTitle"
                 android:text="@string/important_links"
                 style="?themeRegularBoldFont"
-                app:layout_constraintTop_toBottomOf="@id/aboutSettingsDescriptionText"
+                app:layout_constraintTop_toBottomOf="@id/aboutSettingsForkLayout"
                 android:layout_marginTop="@dimen/marginPageBig"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <!-- AniList link - Commented out for now
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/aboutSettingsAniListLink"
                 app:layout_constraintTop_toBottomOf="@+id/aboutSettingsImportantLinkTitle"
@@ -98,10 +123,11 @@
                     android:layout_height="wrap_content"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+            -->
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/aboutSettingsGitHubLink"
-                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsAniListLink"
+                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsImportantLinkTitle"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="@dimen/marginNormal"
                 android:gravity="center_vertical"
@@ -123,84 +149,11 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/aboutSettingsGmailLink"
-                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsGitHubLink"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="@dimen/marginNormal"
-                android:gravity="center_vertical"
-                android:foreground="?selectableItemBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    app:srcCompat="@drawable/ic_gmail"
-                    android:layout_width="@dimen/iconSize"
-                    android:layout_height="@dimen/iconSize"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/alchanapp_gmail_com"
-                    style="?themeSmallClickableFont"
-                    android:layout_marginStart="@dimen/marginClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/aboutSettingsPlayStoreLink"
-                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsImportantLinkTitle"
-                app:layout_constraintStart_toEndOf="@id/aboutSettingsGmailLink"
-                android:layout_marginTop="@dimen/marginNormal"
-                android:layout_marginStart="@dimen/marginPageBig"
-                android:gravity="center_vertical"
-                android:foreground="?selectableItemBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    app:srcCompat="@drawable/ic_google_play"
-                    android:layout_width="@dimen/iconSize"
-                    android:layout_height="@dimen/iconSize"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/play_store"
-                    style="?themeSmallClickableFont"
-                    android:layout_marginStart="@dimen/marginClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <LinearLayout
-                android:id="@+id/aboutSettingsTwitterLink"
-                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsPlayStoreLink"
-                app:layout_constraintStart_toStartOf="@id/aboutSettingsPlayStoreLink"
-                android:layout_marginTop="@dimen/marginNormal"
-                android:gravity="center_vertical"
-                android:foreground="?selectableItemBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    app:srcCompat="@drawable/ic_twitter"
-                    android:layout_width="@dimen/iconSize"
-                    android:layout_height="@dimen/iconSize"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/alchan_app"
-                    style="?themeSmallClickableFont"
-                    android:layout_marginStart="@dimen/marginClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/aboutSettingsPrivacyPolicyLink"
                 android:text="@string/privacy_policy"
                 style="?themeRegularBoldFont"
-                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsGmailLink"
+                app:layout_constraintTop_toBottomOf="@+id/aboutSettingsGitHubLink"
                 android:layout_marginTop="@dimen/marginPageBig"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayout"
     android:orientation="vertical"
+    android:background="?themeBackgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.MainFragment">
@@ -21,8 +22,10 @@
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/color_bottom_navigation"
         app:itemTextColor="@color/color_bottom_navigation"
-        android:foregroundTint="?themePrimaryColor"
-        android:layout_marginTop="@dimen/lineWidth"
+        app:itemActiveIndicatorStyle="@style/BottomNavIndicator"
+        app:elevation="0dp"
+        android:paddingTop="@dimen/marginSmall"
+        android:paddingBottom="@dimen/marginSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

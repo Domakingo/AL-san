@@ -21,6 +21,7 @@ object Constant {
     // AL-san specific URLs
     const val ALSAN_FORUM_THREAD_URL = "${ANILIST_WEBSITE_URL}/forum/thread/12889"
     const val ALSAN_GITHUB_URL = "https://github.com/Domakingo/AL-san"
+    const val ALCHAN_GITHUB_URL = "https://github.com/zend10/AL-chan"
     const val ALSAN_EMAIL_ADDRESS = "domakingtheking@gmail.com"
     const val ALSAN_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
     const val ALSAN_TWITTER_URL = "https://twitter.com/alchan_app"

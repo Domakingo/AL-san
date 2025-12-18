@@ -1,6 +1,7 @@
 package com.doma.alsan.ui.common
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 class BottomSheetListDialog : BaseDialogFragment<DialogBottomSheetListBinding>() {
 
     private var adapter: BaseRecyclerViewAdapter<*, *>? = null
+    private var onDismissListener: (() -> Unit)? = null
 
     override fun generateViewBinding(
         inflater: LayoutInflater,
@@ -32,15 +34,22 @@ class BottomSheetListDialog : BaseDialogFragment<DialogBottomSheetListBinding>()
         // do nothing
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onDismissListener?.invoke()
+        onDismissListener = null
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         adapter = null
     }
 
     companion object {
-        fun newInstance(adapter: BaseRecyclerViewAdapter<*, *>) =
+        fun newInstance(adapter: BaseRecyclerViewAdapter<*, *>, onDismiss: (() -> Unit)? = null) =
             BottomSheetListDialog().apply {
                 this.adapter = adapter
+                this.onDismissListener = onDismiss
             }
     }
 }

@@ -47,6 +47,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
     private var menuItemCustomiseList: MenuItem? = null
     private var menuItemChangeListType: MenuItem? = null
     private var menuItemFilter: MenuItem? = null
+    private var menuItemRandom: MenuItem? = null
 
     private var searchView: SearchView? = null
 
@@ -77,6 +78,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemCustomiseList = menu.findItem(R.id.itemCustomiseList)
                 menuItemChangeListType = menu.findItem(R.id.itemChangeListType)
                 menuItemFilter = menu.findItem(R.id.itemFilter)
+                menuItemRandom = menu.findItem(R.id.itemRandom)
             }
 
             searchView = menuItemSearch?.actionView as? SearchView
@@ -127,6 +129,11 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 ) { filterResult ->
                     viewModel.updateMediaFilter(filterResult)
                 }
+                true
+            }
+
+            menuItemRandom?.setOnMenuItemClickListener {
+                viewModel.pickRandomPlanningMedia()
                 true
             }
 
@@ -246,6 +253,9 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 dialog.showListDialog(it) { data, _ ->
                     viewModel.updateListType(data)
                 }
+            },
+            viewModel.randomMedia.subscribe {
+                navigation.navigateToMedia(it.getId())
             }
         )
 
@@ -265,6 +275,10 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             val textColor = listStyle.getTextColor(requireContext())
             defaultToolbar.defaultToolbar.setTitleTextColor(textColor)
             defaultToolbar.defaultToolbar.setSubtitleTextColor(textColor)
+
+            val randomDrawable = menuItemRandom?.icon
+            randomDrawable?.mutate()
+            randomDrawable?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(textColor, BlendModeCompat.SRC_ATOP)
 
             val searchDrawable = menuItemSearch?.icon
             searchDrawable?.mutate()
@@ -383,6 +397,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
         menuItemCustomiseList = null
         menuItemChangeListType = null
         menuItemFilter = null
+        menuItemRandom = null
         searchView = null
     }
 

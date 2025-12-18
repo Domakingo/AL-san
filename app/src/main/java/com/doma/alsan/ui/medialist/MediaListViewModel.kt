@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import com.doma.alsan.type.MediaListStatus
+import com.doma.alsan.type.MediaStatus
 import com.doma.alsan.type.ScoreFormat
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
@@ -78,6 +79,10 @@ class MediaListViewModel(
     private val _listTypes = PublishSubject.create<List<ListItem<ListType>>>()
     val listTypes: Observable<List<ListItem<ListType>>>
         get() = _listTypes
+
+    private val _randomMedia = PublishSubject.create<Media>()
+    val randomMedia: Observable<Media>
+        get() = _randomMedia
 
     var mediaType: MediaType = MediaType.ANIME
     var userId = 0
@@ -340,6 +345,26 @@ class MediaListViewModel(
         }
 
         _mediaListItems.onNext(filteredMediaListItems)
+    }
+
+    fun pickRandomPlanningMedia() {
+        val collection = rawMediaListCollection
+        if (collection == null) return
+
+        val planningEntries = ArrayList<MediaList>()
+        collection.lists.forEach { group ->
+            group.entries.forEach { entry ->
+                if (entry.status == MediaListStatus.PLANNING && entry.media.status != MediaStatus.NOT_YET_RELEASED) {
+                    planningEntries.add(entry)
+                }
+            }
+        }
+
+        if (planningEntries.isNotEmpty()) {
+            _randomMedia.onNext(planningEntries.random().media)
+        } else {
+            // Optional: notify error
+        }
     }
 
     private fun getMediaListCollection(isReloading: Boolean = false) {

@@ -199,7 +199,7 @@ class CustomiseViewModel(private val userRepository: UserRepository, private val
         get() = _floatingIconColorAndHasAlpha
 
     private var mediaType: MediaType = MediaType.ANIME
-    private var appTheme = AppTheme.DEFAULT_THEME_YELLOW
+    private var appTheme = AppTheme.ANILIST_DARK_BLUE
     private var currentListStyle = ListStyle()
 
     private var isBackgroundImageChanged = false

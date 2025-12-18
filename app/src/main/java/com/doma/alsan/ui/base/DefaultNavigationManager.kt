@@ -255,8 +255,8 @@ class DefaultNavigationManager(
         pushBrowseScreenPage(ReviewFragment.newInstance(media, null))
     }
 
-    override fun navigateToMediaCharacters(id: Int) {
-        pushBrowseScreenPage(MediaCharacterListFragment.newInstance(id))
+    override fun navigateToMediaCharacters(id: Int, mediaType: MediaType) {
+        pushBrowseScreenPage(MediaCharacterListFragment.newInstance(id, mediaType))
     }
 
     override fun navigateToMediaStaff(id: Int) {
@@ -342,6 +342,7 @@ class DefaultNavigationManager(
                     NavigationManager.Url.ANLIST_ACTIVITY -> Constant.ANILIST_ACTIVITY + id
                     NavigationManager.Url.ALSAN_FORUM_THREAD -> Constant.ALSAN_FORUM_THREAD_URL
                     NavigationManager.Url.ALSAN_GITHUB -> Constant.ALSAN_GITHUB_URL
+                    NavigationManager.Url.ALCHAN_GITHUB -> Constant.ALCHAN_GITHUB_URL
                     NavigationManager.Url.ALSAN_PLAY_STORE -> Constant.ALSAN_PLAY_STORE_URL
                     NavigationManager.Url.ALSAN_TWITTER -> Constant.ALSAN_TWITTER_URL
                     NavigationManager.Url.ALSAN_PRIVACY_POLICY -> Constant.ALSAN_PRIVACY_POLICY_URL

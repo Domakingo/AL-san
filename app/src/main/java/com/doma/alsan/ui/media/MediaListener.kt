@@ -25,6 +25,8 @@ interface MediaListener {
     interface MediaCharacterListener {
         fun navigateToMediaCharacters(media: Media)
         fun navigateToCharacter(character: Character)
+        fun navigateToStaff(staff: Staff)
+        fun openLanguageDialog()
     }
 
     interface MediaStudioListener {

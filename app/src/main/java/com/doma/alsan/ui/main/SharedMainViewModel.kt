@@ -25,7 +25,15 @@ class SharedMainViewModel : BaseViewModel<Unit>() {
     val bottomSheetNavigation: Observable<Int>
         get() = _bottomSheetNavigation
 
+    private val _viewPagerSwipeEnabled = PublishSubject.create<Boolean>()
+    val viewPagerSwipeEnabled: Observable<Boolean>
+        get() = _viewPagerSwipeEnabled
+
     override fun loadData(param: Unit) = Unit
+
+    fun setViewPagerSwipeEnabled(enabled: Boolean) {
+        _viewPagerSwipeEnabled.onNext(enabled)
+    }
 
     fun scrollToTop(pageIndex: Int) {
         scrollEvents.toList()[pageIndex].second.onNext(Unit)

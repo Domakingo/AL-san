@@ -33,25 +33,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- Theme Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsThemeLayout"
                 app:layout_constraintTop_toBottomOf="@+id/appSettingsInfoText"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsThemeTitle"
-                    android:text="@string/theme"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsThemeTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_dark_mode"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsThemeTitle"
+                        android:text="@string/theme"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsSelectedThemeLayout"
-                    app:layout_constraintTop_toBottomOf="@id/appSettingsThemeTitle"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsThemeTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -76,25 +93,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Appearance Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsAppearanceLayout"
                 app:layout_constraintTop_toBottomOf="@id/appSettingsThemeLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsAppearanceTitle"
-                    android:text="@string/appearance"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsAppearanceTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_image"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsAppearanceTitle"
+                        android:text="@string/appearance"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsCircularAvatarLayout"
-                    app:layout_constraintTop_toBottomOf="@id/appSettingsAppearanceTitle"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsAppearanceTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -118,25 +152,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- List Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsListLayout"
                 app:layout_constraintTop_toBottomOf="@id/appSettingsAppearanceLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsListTitle"
-                    android:text="@string/list"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsListTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_format_list_bulleted"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsListTitle"
+                        android:text="@string/list"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsAllAnimeLayout"
-                    app:layout_constraintTop_toBottomOf="@id/appSettingsListTitle"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsListTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -210,25 +261,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Naming Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsNamingLayout"
                 app:layout_constraintTop_toBottomOf="@id/appSettingsListLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsNamingTitle"
-                    android:text="@string/naming"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsNamingTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_title"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsNamingTitle"
+                        android:text="@string/naming"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsJapaneseMediaLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/appSettingsNamingTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/appSettingsNamingTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -328,25 +396,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Push Notifications Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsPushNotificationsLayout"
                 app:layout_constraintTop_toBottomOf="@id/appSettingsNamingLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsPushNotificationsTitle"
-                    android:text="@string/push_notifications"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsPushNotificationsTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_notification"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsPushNotificationsTitle"
+                        android:text="@string/push_notifications"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsAiringPushNotificationsLayout"
-                    app:layout_constraintTop_toBottomOf="@id/appSettingsPushNotificationsTitle"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsPushNotificationsTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -499,25 +584,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Memory Saver Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsMemorySaverLayout"
                 app:layout_constraintTop_toBottomOf="@id/appSettingsPushNotificationsLayout"
-                android:layout_marginTop="@dimen/marginFar"
+                android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/appSettingsMemorySaverTitle"
-                    android:text="@string/memory_saver"
-                    style="?themeRegularBoldFont"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsMemorySaverTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_tune"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsMemorySaverTitle"
+                        android:text="@string/memory_saver"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appSettingsHighestQualityImageLayout"
-                    app:layout_constraintTop_toBottomOf="@id/appSettingsMemorySaverTitle"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsMemorySaverTitleLayout"
                     android:layout_marginTop="@dimen/marginNormal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"

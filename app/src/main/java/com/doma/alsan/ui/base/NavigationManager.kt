@@ -62,7 +62,7 @@ interface NavigationManager {
     fun navigateToMediaStats(media: Media) {}
     fun navigateToMediaSocial(media: Media) {}
     fun navigateToMediaReview(media: Media) {}
-    fun navigateToMediaCharacters(id: Int) {}
+    fun navigateToMediaCharacters(id: Int, mediaType: MediaType) {}
     fun navigateToMediaStaff(id: Int) {}
     fun navigateToCharacter(id: Int) {}
     fun navigateToCharacterMedia(id: Int) {}
@@ -108,6 +108,7 @@ interface NavigationManager {
         ANLIST_ACTIVITY,
         ALSAN_FORUM_THREAD,
         ALSAN_GITHUB,
+        ALCHAN_GITHUB,
         ALSAN_PLAY_STORE,
         ALSAN_TWITTER,
         ALSAN_PRIVACY_POLICY

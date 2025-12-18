@@ -88,7 +88,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
 
             profileToolbar.overflowIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_custom_more)
 
-            profileRecyclerView.addItemDecoration(SpaceItemDecoration(top = resources.getDimensionPixelSize(R.dimen.marginFar)))
+            profileRecyclerView.addItemDecoration(SpaceItemDecoration(top = resources.getDimensionPixelSize(R.dimen.marginNormal)))
+            
+            // Disable ViewPager2 swipe while scrolling to prevent scroll/swipe conflicts
+            profileRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (isViewer()) {
+                        when (newState) {
+                            androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING -> {
+                                sharedViewModel.setViewPagerSwipeEnabled(false)
+                            }
+                            androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE -> {
+                                sharedViewModel.setViewPagerSwipeEnabled(true)
+                            }
+                        }
+                    }
+                }
+            })
+            
             assignAdapter(appSetting)
 
             notLoggedInLayout.goToLoginButton.setOnClickListener {
@@ -139,18 +157,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
             profileAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 profileSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (profileBannerContentLayout.isVisible) {
-                        profileBannerContentLayout.startAnimation(scaleDownAnimation)
-                        profileBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (profileBannerContentLayout.isInvisible) {
-                        profileBannerContentLayout.startAnimation(scaleUpAnimation)
-                        profileBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Profile banner content always stays visible - no scale animation
             })
 
             profileSwipeRefresh.setOnRefreshListener {

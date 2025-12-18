@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- Profile Actions -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/accountSettingsUpdateProfileLayout"
                 app:layout_constraintTop_toBottomOf="@id/accountSettingsInfoText"
@@ -39,15 +40,37 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/update_profile"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_person"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/update_profile"
+                        style="?themeRegularFont"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeContentColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -58,15 +81,37 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/update_account"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_admin_settings_male"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/update_account"
+                        style="?themeRegularFont"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeContentColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -77,15 +122,37 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/force_update_stats"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_bar_chart"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/force_update_stats"
+                        style="?themeRegularFont"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeContentColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -96,15 +163,37 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/import_lists"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_format_list_bulleted"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/import_lists"
+                        style="?themeRegularFont"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeContentColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -115,15 +204,37 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/connect_account_with_twitter"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_twitter"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/connect_account_with_twitter"
+                        style="?themeRegularFont"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeContentColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -134,15 +245,38 @@
                 app:cardCornerRadius="@dimen/cornerNormal"
                 app:cardElevation="0dp"
                 app:contentPadding="@dimen/marginNormal"
-                android:layout_marginTop="@dimen/marginNormal"
+                android:layout_marginTop="@dimen/marginMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:text="@string/delete_account"
-                    style="?themeRegularFont"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_delete"
+                        app:tint="?themeNegativeColor"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/delete_account"
+                        style="?themeRegularFont"
+                        android:textColor="?themeNegativeColor"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="?themeNegativeColor"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </com.google.android.material.card.MaterialCardView>
 

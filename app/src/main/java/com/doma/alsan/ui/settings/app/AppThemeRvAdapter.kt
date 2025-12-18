@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.doma.alsan.databinding.LayoutHeaderBinding
-import com.doma.alsan.databinding.ListAppThemeBinding
+import com.doma.alsan.databinding.ListAppThemeGroupBinding
 import com.doma.alsan.helper.enums.AppTheme
-import com.doma.alsan.helper.enums.getColorName
 import com.doma.alsan.helper.extensions.clicks
-import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.pojo.AppThemeItem
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 
@@ -24,41 +21,42 @@ class AppThemeRvAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            VIEW_TYPE_HEADER -> {
-                val binding = LayoutHeaderBinding.inflate(inflater, parent, false)
-                HeaderViewHolder(binding)
-            }
-            else -> {
-                val binding = ListAppThemeBinding.inflate(inflater, parent, false)
-                AppThemeViewHolder(binding)
-            }
-        }
+        val binding = ListAppThemeGroupBinding.inflate(inflater, parent, false)
+        return ThemeGroupViewHolder(binding)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (list[position].header != null) VIEW_TYPE_HEADER else VIEW_TYPE_APP_THEME
-    }
-
-    inner class HeaderViewHolder(private val binding: LayoutHeaderBinding) : ViewHolder(binding) {
+    inner class ThemeGroupViewHolder(private val binding: ListAppThemeGroupBinding) : ViewHolder(binding) {
         override fun bind(item: AppThemeItem, index: Int) {
-            binding.headerText.text = item.header
-            binding.upperHeaderDivider.root.show(true)
-        }
-    }
-
-    inner class AppThemeViewHolder(private val binding: ListAppThemeBinding) : ViewHolder(binding) {
-        override fun bind(item: AppThemeItem, index: Int) {
-            val appTheme = item.appTheme ?: AppTheme.DEFAULT_THEME_YELLOW
+            val darkTheme = item.darkTheme ?: return
+            val lightTheme = item.lightTheme ?: return
+            val themeName = item.themeName ?: return
+            
             binding.apply {
-                appThemeText.text = appTheme.getColorName()
-
-                appThemePrimaryColor.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, appTheme.colors.first))
-                appThemeSecondaryColor.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, appTheme.colors.second))
-                appThemeNegativeColor.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, appTheme.colors.third))
-
-                appThemeLayout.clicks {
-                    listener?.getSelectedAppTheme(appTheme)
+                themeNameText.text = themeName
+                
+                // Dark theme colors
+                darkPrimaryColor.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, darkTheme.colors.first)
+                )
+                darkSecondaryColor.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, darkTheme.colors.second)
+                )
+                
+                // Light theme colors
+                lightPrimaryColor.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, lightTheme.colors.first)
+                )
+                lightSecondaryColor.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, lightTheme.colors.second)
+                )
+                
+                // Click listeners
+                darkThemeLayout.clicks {
+                    listener?.getSelectedAppTheme(darkTheme)
+                }
+                
+                lightThemeLayout.clicks {
+                    listener?.getSelectedAppTheme(lightTheme)
                 }
             }
         }
@@ -66,10 +64,5 @@ class AppThemeRvAdapter(
 
     interface AppThemeListener {
         fun getSelectedAppTheme(appTheme: AppTheme)
-    }
-
-    companion object {
-        private const val VIEW_TYPE_HEADER = 100
-        private const val VIEW_TYPE_APP_THEME = 200
     }
 }

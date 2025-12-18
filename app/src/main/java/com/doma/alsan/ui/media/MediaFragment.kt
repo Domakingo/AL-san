@@ -89,18 +89,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             mediaAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 mediaSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (mediaBannerContentLayout.isVisible) {
-                        mediaBannerContentLayout.startAnimation(scaleDownAnimation)
-                        mediaBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (mediaBannerContentLayout.isInvisible) {
-                        mediaBannerContentLayout.startAnimation(scaleUpAnimation)
-                        mediaBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Banner content always stays visible - no scale animation
             })
 
             mediaCoverImage.clicks {
@@ -166,6 +155,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.mediaTitle.subscribe {
                 binding.mediaTitleText.text = it
+                // Show media title in toolbar when scrolled
+                binding.mediaCollapsingToolbar.title = it
             },
             viewModel.mediaYear.subscribe {
                 binding.mediaYearText.text = it
@@ -227,6 +218,14 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.bannerImageUrlForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.mediaBannerImage)
+            },
+            viewModel.voiceActorLanguages.subscribe { languages ->
+                dialog.showListDialog(languages) { data, _ ->
+                    viewModel.updateVoiceActorLanguage(data)
+                }
+            },
+            viewModel.selectedLanguage.subscribe { language ->
+                mediaAdapter?.updateSelectedLanguage(language)
             }
         )
 
@@ -297,11 +296,24 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private fun getMediaCharacterListener(): MediaListener.MediaCharacterListener {
         return object : MediaListener.MediaCharacterListener {
             override fun navigateToMediaCharacters(media: Media) {
-                navigation.navigateToMediaCharacters(media.getId())
+                val mediaType = if (media.type == com.doma.alsan.type.MediaType.MANGA) {
+                    com.doma.alsan.helper.enums.MediaType.MANGA
+                } else {
+                    com.doma.alsan.helper.enums.MediaType.ANIME
+                }
+                navigation.navigateToMediaCharacters(media.getId(), mediaType)
             }
 
             override fun navigateToCharacter(character: Character) {
                 navigation.navigateToCharacter(character.id)
+            }
+
+            override fun navigateToStaff(staff: Staff) {
+                navigation.navigateToStaff(staff.id)
+            }
+
+            override fun openLanguageDialog() {
+                viewModel.loadVoiceActorLanguages()
             }
         }
     }

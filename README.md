@@ -1,9 +1,18 @@
 
 <h1 align="center">AL-san</h1>
 
+<p align="center">
+  <img src="assets/logo.webp" width="100" height="100" alt="AL-san Logo">
+</p>
+
 <p align="center">AL-san is an unofficial fork of AL-chan, an unofficial Android client for AniList, a place where you can track, share, discover, and experience Anime and Manga.</p>
 
-<br>
+<p align="center">
+  <img src="assets/screen1.png" width="30%" alt="Screen 1">
+  <img src="assets/screen2.png" width="30%" alt="Screen 2">
+  <img src="assets/screen3.png" width="30%" alt="Screen 3">
+</p>
+
 
 ## Features so far
 - Manage your anime and manga lists.

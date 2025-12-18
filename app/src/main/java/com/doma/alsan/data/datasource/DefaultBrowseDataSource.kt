@@ -45,9 +45,9 @@ class DefaultBrowseDataSource(
     override fun getMediaCharactersQuery(
         id: Int,
         page: Int,
-        language: StaffLanguage
+        language: StaffLanguage?
     ): Observable<ApolloResponse<MediaCharactersQuery.Data>> {
-        val query = MediaCharactersQuery(id = Optional.present(id), page = Optional.present(page), language = Optional.present(language))
+        val query = MediaCharactersQuery(id = Optional.present(id), page = Optional.present(page), language = Optional.presentIfNotNull(language))
         return apolloHandler.apolloClient.query(query).rxSingle().toObservable()
     }
 

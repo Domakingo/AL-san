@@ -1,9 +1,12 @@
 package com.doma.alsan.ui.media.character
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.doma.alsan.R
@@ -16,6 +19,7 @@ import com.doma.alsan.helper.extensions.applyTopPaddingInsets
 import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.utils.GridSpacingItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
+import com.doma.alsan.helper.enums.MediaType
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -26,6 +30,8 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
     private var adapter: MediaCharacterListRvAdapter? = null
 
     private var menuItemChangeVaLanguage: MenuItem? = null
+    private var menuItemSearch: MenuItem? = null
+    private var searchView: SearchView? = null
     private var appSetting = AppSetting()
 
     override fun generateViewBinding(
@@ -36,15 +42,72 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
     }
 
     override fun setUpLayout() {
+        val mediaType = arguments?.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
+
         binding.apply {
             setUpToolbar(defaultToolbar.defaultToolbar, getString(R.string.character_list))
             defaultToolbar.defaultToolbar.inflateMenu(R.menu.menu_character_list)
 
+            // Search menu item
+            menuItemSearch = defaultToolbar.defaultToolbar.menu.findItem(R.id.itemSearch)
+            searchView = menuItemSearch?.actionView as? SearchView
+            
+            if (mediaType == MediaType.MANGA) {
+                searchView?.queryHint = getString(R.string.search_characters)
+            } else {
+                searchView?.queryHint = getString(R.string.search_character_or_voice_actor)
+            }
+
+            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    viewModel.searchCharacters(newText ?: "")
+                    return true
+                }
+            })
+
+            // Change language menu item
             menuItemChangeVaLanguage = defaultToolbar.defaultToolbar.menu.findItem(R.id.itemChangeLanguage)
+            
+            // Apply theme color to icon programmatically
+            menuItemChangeVaLanguage?.icon?.let { icon ->
+                val typedValue = TypedValue()
+                requireContext().theme.resolveAttribute(R.attr.themeContentColor, typedValue, true)
+                val wrappedIcon = DrawableCompat.wrap(icon.mutate())
+                DrawableCompat.setTint(wrappedIcon, typedValue.data)
+                menuItemChangeVaLanguage?.icon = wrappedIcon
+            }
+
+            if (mediaType == MediaType.MANGA) {
+                menuItemChangeVaLanguage?.isVisible = false
+            }
+            
             menuItemChangeVaLanguage?.setOnMenuItemClickListener {
                 viewModel.loadVoiceActorLanguages()
                 true
             }
+
+            // Hide language button when search is expanded
+            menuItemSearch?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    if (mediaType != MediaType.MANGA) {
+                        menuItemChangeVaLanguage?.isVisible = false
+                    }
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    if (mediaType != MediaType.MANGA) {
+                        menuItemChangeVaLanguage?.isVisible = true
+                    }
+                    // Clear the search when collapsing
+                    viewModel.searchCharacters("")
+                    return true
+                }
+            })
 
             adapter = MediaCharacterListRvAdapter(requireContext(), listOf(), appSetting, getMediaCharacterListListener())
             infiniteScrollingRecyclerView.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.gridSpan))
@@ -52,6 +115,8 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
             infiniteScrollingRecyclerView.adapter = adapter
 
             infiniteScrollingSwipeRefresh.setOnRefreshListener {
+                searchView?.setQuery("", false)
+                searchView?.isIconified = true
                 viewModel.reloadData()
             }
 
@@ -72,6 +137,8 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
     }
 
     override fun setUpObserver() {
+        val mediaType = arguments?.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
+
         disposables.addAll(
             viewModel.loading.subscribe {
                 binding.infiniteScrollingSwipeRefresh.isRefreshing = it
@@ -98,7 +165,7 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         )
 
         arguments?.getInt(MEDIA_ID)?.let {
-            viewModel.loadData(MediaCharacterListParam(it))
+            viewModel.loadData(MediaCharacterListParam(it, mediaType))
         }
     }
 
@@ -118,15 +185,19 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         super.onDestroyView()
         adapter = null
         menuItemChangeVaLanguage = null
+        menuItemSearch = null
+        searchView = null
     }
 
     companion object {
         private const val MEDIA_ID = "mediaId"
+        private const val MEDIA_TYPE = "mediaType"
         @JvmStatic
-        fun newInstance(mediaId: Int) =
+        fun newInstance(mediaId: Int, mediaType: MediaType = MediaType.ANIME) =
             MediaCharacterListFragment().apply {
                 arguments = Bundle().apply {
                     putInt(MEDIA_ID, mediaId)
+                    putSerializable(MEDIA_TYPE, mediaType)
                 }
             }
     }

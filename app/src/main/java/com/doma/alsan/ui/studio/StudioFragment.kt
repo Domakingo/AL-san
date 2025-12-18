@@ -74,18 +74,7 @@ class StudioFragment : BaseFragment<FragmentStudioBinding, StudioViewModel>() {
             studioAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 isToolbarExpanded = verticalOffset == 0
                 studioSwipeRefresh.isEnabled = isToolbarExpanded
-
-                if (abs(verticalOffset) - appBarLayout.totalScrollRange >= -50) {
-                    if (studioBannerContentLayout.isVisible) {
-                        studioBannerContentLayout.startAnimation(scaleDownAnimation)
-                        studioBannerContentLayout.visibility = View.INVISIBLE
-                    }
-                } else {
-                    if (studioBannerContentLayout.isInvisible) {
-                        studioBannerContentLayout.startAnimation(scaleUpAnimation)
-                        studioBannerContentLayout.visibility = View.VISIBLE
-                    }
-                }
+                // Banner content always stays visible - no scale animation
             })
 
             studioSetAsFavoriteButton.clicks {
@@ -133,6 +122,8 @@ class StudioFragment : BaseFragment<FragmentStudioBinding, StudioViewModel>() {
             },
             viewModel.studioName.subscribe {
                 binding.studioNameText.text = it
+                // Show studio name in toolbar when scrolled
+                binding.studioCollapsingToolbar.title = it
             },
             viewModel.mediaCount.subscribe {
                 binding.studioMediaText.text = it.getNumberFormatting()
