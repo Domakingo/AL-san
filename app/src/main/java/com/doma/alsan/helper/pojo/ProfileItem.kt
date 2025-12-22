@@ -13,6 +13,7 @@ data class ProfileItem(
     val favoriteStudios: List<Studio>? = null,
     val animeStats: UserStatistics? = null,
     val mangaStats: UserStatistics? = null,
+    val activityHistory: List<UserActivityHistory>? = null,
     val headerData: ProfileHeaderData? = null,
     val viewType: Int = 0
 ) {
@@ -21,6 +22,7 @@ data class ProfileItem(
         const val VIEW_TYPE_BIO = 100
         const val VIEW_TYPE_AFFINITY = 200
         const val VIEW_TYPE_TENDENCY = 300
+        const val VIEW_TYPE_ACTIVITY_HISTORY = 350 
         const val VIEW_TYPE_FAVORITE_ANIME = 400
         const val VIEW_TYPE_FAVORITE_MANGA = 401
         const val VIEW_TYPE_FAVORITE_CHARACTER = 402

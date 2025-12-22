@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/marginBig"
+    android:paddingBottom="@dimen/marginPageNormal"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/historyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?themeRegularBoldFont"
+        android:text="@string/history"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/marginNormal" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginNormal"
+        app:cardBackgroundColor="?themeCardColor"
+        app:cardCornerRadius="@dimen/cornerNormal"
+        app:cardElevation="@dimen/elevationLow"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@id/historyTitle"
+        app:strokeWidth="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+            <com.doma.alsan.ui.profile.ActivityHeatmap
+                android:id="@+id/activityHeatmap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/cardPadding"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

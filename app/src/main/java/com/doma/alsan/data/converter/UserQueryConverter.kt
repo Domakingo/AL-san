@@ -3,6 +3,7 @@ package com.doma.alsan.data.converter
 import com.doma.alsan.UserQuery
 import com.doma.alsan.data.response.anilist.*
 
+@Suppress("DEPRECATION")
 fun UserQuery.Data.convert(): User {
     return User(
         id = User?.id ?: 0,
@@ -65,6 +66,15 @@ fun UserQuery.Data.convert(): User {
         statistics = UserStatisticTypes(
             anime = User?.statistics?.anime?.userStatistics?.convert() ?: UserStatistics(),
             manga = User?.statistics?.manga?.userStatistics?.convert() ?: UserStatistics()
+        ),
+        stats = UserStats(
+            activityHistory = User?.stats?.activityHistory?.mapNotNull {
+                UserActivityHistory(
+                    date = it?.date ?: 0,
+                    amount = it?.amount ?: 0,
+                    level = it?.level ?: 0
+                )
+            } ?: listOf()
         ),
         unreadNotificationCount = User?.unreadNotificationCount ?: 0,
         siteUrl = User?.siteUrl ?: "",

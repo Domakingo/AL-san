@@ -6,7 +6,7 @@
     app:cardBackgroundColor="?themeCardColor"
     app:cardElevation="@dimen/elevationNormal"
     app:contentPadding="@dimen/marginSmall"
-    android:layout_marginEnd="@dimen/marginSmall"
+    android:layout_marginHorizontal="@dimen/marginSmall"
     android:layout_marginBottom="@dimen/marginSmall">
 
     <androidx.appcompat.widget.LinearLayoutCompat

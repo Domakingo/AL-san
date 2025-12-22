@@ -40,6 +40,7 @@
     <string name="favorites">Favorites</string>
     <string name="stats">Stats</string>
     <string name="activities">Activities</string>
+    <string name="history">Activity History</string>
     <string name="anime_tendencies">Anime Tendencies</string>
     <string name="manga_tendencies">Manga Tendencies</string>
     <string name="seems_to_love_x">Seems to love %1$s</string>
