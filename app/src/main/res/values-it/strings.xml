@@ -126,7 +126,7 @@
     <string name="title_language">Lingua titolo</string>
     <string name="default_media_title_language">Lingua predefinita titolo media</string>
     <string name="activity_merge_time">Intervallo unione attività</string>
-    <string name="progress_activity_created_within_this_time_period_will_be_merged_together">Le attività di progresso create in questo periodo verranno unite</string>
+    <string name="progress_activity_created_within_this_time_period_will_be_merged_together">Le attività di progresso create in questo lasso di tempo verranno unite</string>
     <string name="_18_content">Contenuti 18+</string>
     <string name="show_18_content_because_i_m_a_responsible_adult">Mostra contenuti 18+ perché sono un adulto responsabile</string>
     <string name="receive_airing_anime_notifications">Ricevi notifiche nuovi episodi</string>
@@ -303,8 +303,8 @@
     <string name="chapter">Capitolo</string>
     <string name="volume">Volume</string>
     <string name="finish_date">Data fine</string>
-    <string name="total_rewatches">Totale rewatch</string>
-    <string name="total_rereads">Totale riletture</string>
+    <string name="total_rewatches">Rewatch totali</string>
+    <string name="total_rereads">Riletture totali</string>
     <string name="notes">Note</string>
     <string name="custom_lists">Liste personalizzate</string>
     <string name="hide_from_status_lists">Nascondi dalle liste di stato</string>
@@ -348,7 +348,7 @@
     <string name="chapters_read">Capitoli letti</string>
     <string name="manga_mean_score">Voto medio Manga</string>
     <string name="volumes_read">Volumi letti</string>
-    <string name="view_detail_statistics">Visualizza statistiche dettagliate</string>
+    <string name="view_detail_statistics">Statistiche dettagliate</string>
     <string name="add_to_list">Aggiungi alla lista</string>
     <string name="synopsis">Trama</string>
     <string name="characters">Personaggi</string>
@@ -356,7 +356,7 @@
     <string name="set_as_favorite">Imposta come preferito</string>
     <string name="link_copied">Link copiato</string>
     <string name="text_copied">Testo copiato</string>
-    <string name="stats_auto_refresh_info">Le statistiche vengono aggiornate automaticamente ogni 48 ore.</string>
+    <string name="stats_auto_refresh_info">Le statistiche vengono aggiornate ogni 48 ore.</string>
     <string name="force_update">Forza aggiornamento</string>
     <string name="unfollow">Smetti di seguire</string>
     <string name="there_s_nothing_here">Non c\'è niente qui</string>
@@ -429,7 +429,7 @@
     <string name="when_one_or_more_anime_or_manga_in_my_list_are_merged_into_another">Quando uno o più anime o manga nella mia lista vengono uniti ad un altro</string>
     <string name="when_an_anime_or_manga_in_my_list_is_deleted_from_the_site">Quando un anime o manga nella mia lista viene eliminato dal sito</string>
     <string name="view_detail">Visualizza dettagli</string>
-    <string name="airing">In onda</string>
+    <string name="airing">Nuove uscite</string>
     <string name="activity">Attività</string>
     <string name="forum">Forum</string>
     <string name="follows">Seguiti</string>
