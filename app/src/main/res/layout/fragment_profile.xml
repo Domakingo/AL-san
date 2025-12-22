@@ -7,6 +7,7 @@
     android:background="?themeBackgroundColor"
     android:focusable="true"
     android:clickable="true"
+    android:fitsSystemWindows="true"
     tools:context=".ui.profile.ProfileFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -30,7 +31,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:elevation="0dp"
-        android:minHeight="@dimen/toolbarBigHeight"
+        android:minHeight="?attr/actionBarSize"
         app:menu="@menu/menu_profile"
         app:popupTheme="@style/PopupTheme" />
 

@@ -16,7 +16,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.graphics.drawable.GradientDrawable
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 class ActivityHeatmap @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
