@@ -9,6 +9,6 @@
     app:subtitleTextAppearance="?themeRegularFont"
     app:popupTheme="@style/PopupTheme"
     android:minHeight="?attr/actionBarSize"
-    android:paddingBottom="@dimen/marginNormal"
+    android:paddingBottom="@dimen/marginMedium"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
