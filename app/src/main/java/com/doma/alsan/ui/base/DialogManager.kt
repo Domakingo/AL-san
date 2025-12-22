@@ -1,9 +1,11 @@
 package com.doma.alsan.ui.base
 
+import com.doma.alsan.data.entity.MediaFilter
 import com.doma.alsan.data.response.AnimeTheme
 import com.doma.alsan.data.response.AnimeThemeEntry
 import com.doma.alsan.data.response.anilist.Media
 import com.doma.alsan.data.response.anilist.MediaList
+import com.doma.alsan.data.response.anilist.MediaListGroup
 import com.doma.alsan.data.response.anilist.MediaTag
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.pojo.ListItem
@@ -64,4 +66,17 @@ interface DialogManager {
     fun showMediaListQuickDetailDialog(userId: Int, mediaList: MediaList)
 
     fun showAnimeThemesDialog(media: Media, animeTheme: AnimeTheme, animeThemeEntry: AnimeThemeEntry?, action: (url: String?, videoId: String?, usePlayer: Boolean) -> Unit)
+
+    fun showMediaFilterDialog(
+        mediaFilter: MediaFilter,
+        mediaType: MediaType,
+        scoreFormat: ScoreFormat,
+        isUserList: Boolean,
+        hasBigList: Boolean,
+        isViewer: Boolean,
+        listSections: List<MediaListGroup>,
+        selectedSectionIndex: Int,
+        isAllListPositionAtTop: Boolean,
+        action: (mediaFilter: MediaFilter, sectionIndex: Int) -> Unit
+    )
 }

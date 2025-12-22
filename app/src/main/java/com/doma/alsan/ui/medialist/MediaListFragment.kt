@@ -129,7 +129,21 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             }
 
             mediaListSwitchListButton.clicks {
-                viewModel.loadFabOptions()
+                searchView?.clearFocus()
+                dialog.showMediaFilterDialog(
+                    mediaFilter = viewModel.mediaFilter,
+                    mediaType = viewModel.mediaType,
+                    scoreFormat = viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
+                    isUserList = true,
+                    hasBigList = viewModel.hasBigList,
+                    isViewer = viewModel.isViewer,
+                    listSections = viewModel.currentMediaListCollection?.lists ?: listOf(),
+                    selectedSectionIndex = viewModel.selectedSectionIndex,
+                    isAllListPositionAtTop = viewModel.isAllListPositionAtTop
+                ) { filterResult, sectionIndex ->
+                    viewModel.updateMediaFilter(filterResult)
+                    viewModel.showSelectedSectionMediaList(sectionIndex)
+                }
             }
 
             mediaListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -253,29 +267,6 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemCollapse?.title = getString(
                     if (isCollapsed) R.string.expand_series else R.string.collapse_series
                 )
-            },
-            viewModel.fabOptions.subscribe { options ->
-                dialog.showListDialog(options) { data, index ->
-                    when (data) {
-                        "advanced_options" -> {
-                            searchView?.clearFocus()
-                            navigation.navigateToFilter(
-                                viewModel.mediaFilter,
-                                viewModel.mediaType,
-                                viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
-                                true,
-                                viewModel.hasBigList,
-                                viewModel.isViewer
-                            ) { filterResult ->
-                                viewModel.updateMediaFilter(filterResult)
-                            }
-                        }
-                        else -> {
-                            // It's a section, use the index directly
-                            viewModel.showSelectedSectionMediaList(index)
-                        }
-                    }
-                }
             }
         )
 

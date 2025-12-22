@@ -123,8 +123,18 @@ class ExploreFragment : BaseFragment<FragmentExploreBinding, ExploreViewModel>()
                 binding.exploreSettingButton.show(it)
             },
             viewModel.mediaFilterComponent.subscribe {
-                navigation.navigateToFilter(it.mediaFilter, it.mediaType, it.scoreFormat, it.isUserList, it.hasBigList, it.isViewer) {
-                    viewModel.updateMediaFilter(it)
+                dialog.showMediaFilterDialog(
+                    mediaFilter = it.mediaFilter,
+                    mediaType = it.mediaType,
+                    scoreFormat = it.scoreFormat,
+                    isUserList = it.isUserList,
+                    hasBigList = it.hasBigList,
+                    isViewer = it.isViewer,
+                    listSections = listOf(), // No sections for explore
+                    selectedSectionIndex = 0,
+                    isAllListPositionAtTop = true
+                ) { filterResult, _ ->
+                    viewModel.updateMediaFilter(filterResult)
                 }
             },
             viewModel.scrollToTopTrigger.subscribe {

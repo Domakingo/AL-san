@@ -8,8 +8,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.doma.alsan.data.response.AnimeTheme
 import com.doma.alsan.data.response.AnimeThemeEntry
+import com.doma.alsan.data.entity.MediaFilter
 import com.doma.alsan.data.response.anilist.Media
 import com.doma.alsan.data.response.anilist.MediaList
+import com.doma.alsan.data.response.anilist.MediaListGroup
 import com.doma.alsan.data.response.anilist.MediaTag
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.pojo.ListItem
@@ -22,6 +24,7 @@ import com.doma.alsan.ui.editor.BottomSheetProgressDialog
 import com.doma.alsan.ui.editor.BottomSheetScoreDialog
 import com.doma.alsan.ui.media.MediaListener
 import com.doma.alsan.ui.media.themes.BottomSheetMediaThemesDialog
+import com.doma.alsan.ui.medialist.BottomSheetMediaFilterDialog
 import com.doma.alsan.ui.medialist.BottomSheetMediaListQuickDetailDialog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
@@ -34,15 +37,7 @@ import kotlin.collections.LinkedHashMap
 class DefaultDialogManager(private val context: Context) : DialogManager {
 
     private var bottomSheetListDialog: BottomSheetListDialog? = null
-    private var bottomSheetTextInputDialog: BottomSheetTextInputDialog? = null
-    private var bottomSheetSliderDialog: BottomSheetSliderDialog? = null
-    private var bottomSheetTagDialog: BottomSheetTagDialog? = null
-    private var bottomSheetProgressDialog: BottomSheetProgressDialog? = null
-    private var bottomSheetScoreDialog: BottomSheetScoreDialog? = null
-    private var bottomSheetSpoilerDialog: BottomSheetSpoilerDialog? = null
-    private var bottomSheetMediaQuickDetailDialog: BottomSheetMediaQuickDetailDialog? = null
-    private var bottomSheetMediaListQuickDetailDialog: BottomSheetMediaListQuickDetailDialog? = null
-    private var bottomSheetMediaThemesDialog: BottomSheetMediaThemesDialog? = null
+    // removed unused dialog references to prevent leaks
 
     private var datePickerDialog: DatePickerDialog? = null
 
@@ -106,7 +101,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButton) { _, _ -> positiveAction() }
-            .setCancelable(false)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
@@ -121,6 +116,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         thirdAction: (() -> Unit)?
     ) {
         val builder = AlertDialog.Builder(context)
+
         builder.apply {
             setTitle(title)
             setMessage(message)
@@ -130,7 +126,6 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
             setCancelable(false)
             show()
         }
-
     }
 
     override fun showConfirmationDialog(
@@ -144,6 +139,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         thirdAction: (() -> Unit)?
     ) {
         val builder = AlertDialog.Builder(context)
+
         builder.apply {
             setTitle(title)
             setMessage(message)
@@ -153,7 +149,6 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
             setCancelable(false)
             show()
         }
-
     }
 
     override fun <T> showListDialog(
@@ -193,16 +188,13 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         textInputSetting: TextInputSetting,
         action: (newText: String) -> Unit
     ) {
-        bottomSheetTextInputDialog = BottomSheetTextInputDialog.newInstance(currentText, textInputSetting, object : BottomSheetTextInputDialog.BottomSheetTextInputListener {
+        val dialog = BottomSheetTextInputDialog.newInstance(currentText, textInputSetting, object : BottomSheetTextInputDialog.BottomSheetTextInputListener {
             override fun getNewText(newText: String) {
                 action(newText)
             }
         })
-        bottomSheetTextInputDialog?.dialog?.setOnCancelListener {
-            bottomSheetTextInputDialog = null
-        }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetTextInputDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
@@ -211,16 +203,13 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         useSingleSlider: Boolean,
         action: (minValue: Int?, maxValue: Int?) -> Unit
     ) {
-        bottomSheetSliderDialog = BottomSheetSliderDialog.newInstance(sliderItem, useSingleSlider, object : BottomSheetSliderDialog.BottomSheetSliderListener {
+        val dialog = BottomSheetSliderDialog.newInstance(sliderItem, useSingleSlider, object : BottomSheetSliderDialog.BottomSheetSliderListener {
             override fun getNewValues(minValue: Int?, maxValue: Int?) {
                 action(minValue, maxValue)
             }
         })
-        bottomSheetSliderDialog?.dialog?.setOnCancelListener {
-            bottomSheetSliderDialog = null
-        }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetSliderDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
@@ -247,16 +236,13 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         selectedIndex: ArrayList<Int>,
         action: (data: List<MediaTag>) -> Unit
     ) {
-        bottomSheetTagDialog = BottomSheetTagDialog.newInstance(list, selectedIndex, object : BottomSheetTagDialog.TagDialogListener {
+        val dialog = BottomSheetTagDialog.newInstance(list, selectedIndex, object : BottomSheetTagDialog.TagDialogListener {
             override fun getSelectedTags(list: List<MediaTag>) {
                 action(list)
             }
         })
-        bottomSheetTagDialog?.dialog?.setOnCancelListener {
-            bottomSheetTagDialog = null
-        }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetTagDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
@@ -267,16 +253,13 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         isProgressVolume: Boolean,
         action: (newProgress: Int) -> Unit
     ) {
-        bottomSheetProgressDialog = BottomSheetProgressDialog.newInstance(mediaType, currentProgress, maxProgress, isProgressVolume, object : BottomSheetProgressDialog.BottomSheetProgressListener {
+        val dialog = BottomSheetProgressDialog.newInstance(mediaType, currentProgress, maxProgress, isProgressVolume, object : BottomSheetProgressDialog.BottomSheetProgressListener {
             override fun getNewProgress(newProgress: Int) {
                 action(newProgress)
             }
         })
-        bottomSheetProgressDialog?.dialog?.setOnCancelListener {
-            bottomSheetProgressDialog = null
-        }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetProgressDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
@@ -286,16 +269,13 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         advancedScores: LinkedHashMap<String, Double>?,
         action: (newScore: Double, newAdvancedScores: LinkedHashMap<String, Double>?) -> Unit
     ) {
-        bottomSheetScoreDialog = BottomSheetScoreDialog.newInstance(scoreFormat, currentScore, advancedScores, object : BottomSheetScoreDialog.BottomSheetScoreListener {
+        val dialog = BottomSheetScoreDialog.newInstance(scoreFormat, currentScore, advancedScores, object : BottomSheetScoreDialog.BottomSheetScoreListener {
             override fun getNewScore(newScore: Double, newAdvancedScores: LinkedHashMap<String, Double>?) {
                 action(newScore, newAdvancedScores)
             }
         })
-        bottomSheetScoreDialog?.dialog?.setOnCancelListener {
-            bottomSheetScoreDialog = null
-        }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetScoreDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
@@ -303,16 +283,12 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         datePickerDialog = DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                action(year, month + 1, dayOfMonth)
+                action(year, month, dayOfMonth)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
-//        datePickerDialog?.datePicker?.minDate =
-        datePickerDialog?.setOnCancelListener {
-            datePickerDialog = null
-        }
         datePickerDialog?.show()
     }
 
@@ -321,29 +297,21 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         spoilerText: String,
         onLinkClickAction: ((link: String) -> Unit)?
     ) {
-        if (onLinkClickAction != null) {
-            bottomSheetSpoilerDialog = BottomSheetSpoilerDialog.newInstance(spoilerText, object : BottomSheetSpoilerDialog.SpoilerListener {
-                override fun onLinkClick(link: String) {
-                    onLinkClickAction(link)
-                }
-            })
-        } else {
-            bottomSheetSpoilerDialog = BottomSheetSpoilerDialog.newInstance(spoilerText, null)
-        }
-
-        bottomSheetSpoilerDialog?.dialog?.setOnCancelListener {
-            bottomSheetSpoilerDialog = null
-        }
+        val dialog = BottomSheetSpoilerDialog.newInstance(spoilerText, object : BottomSheetSpoilerDialog.SpoilerListener {
+            override fun onLinkClick(link: String) {
+                onLinkClickAction?.invoke(link)
+            }
+        })
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
-            bottomSheetSpoilerDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 
     override fun showShareSheet(text: String) {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
+        val sendIntent: Intent = Intent().apply {
+            this.action = Intent.ACTION_SEND
+            this.putExtra(Intent.EXTRA_TEXT, text)
+            this.type = "text/plain"
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
@@ -351,22 +319,16 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
     }
 
     override fun showMediaQuickDetailDialog(media: Media) {
-        bottomSheetMediaQuickDetailDialog = BottomSheetMediaQuickDetailDialog.newInstance(media)
-        bottomSheetMediaQuickDetailDialog?.dialog?.setOnCancelListener {
-            bottomSheetMediaQuickDetailDialog = null
-        }
-        (context as? AppCompatActivity?)?.supportFragmentManager?.let {
-            bottomSheetMediaQuickDetailDialog?.show(it, null)
+        val dialog = BottomSheetMediaQuickDetailDialog.newInstance(media)
+        (context as? AppCompatActivity)?.supportFragmentManager?.let {
+            dialog.show(it, null)
         }
     }
 
     override fun showMediaListQuickDetailDialog(userId: Int, mediaList: MediaList) {
-        bottomSheetMediaListQuickDetailDialog = BottomSheetMediaListQuickDetailDialog.newInstance(userId, mediaList)
-        bottomSheetMediaListQuickDetailDialog?.dialog?.setOnCancelListener {
-            bottomSheetMediaListQuickDetailDialog = null
-        }
-        (context as? AppCompatActivity?)?.supportFragmentManager?.let {
-            bottomSheetMediaListQuickDetailDialog?.show(it, null)
+        val dialog = BottomSheetMediaListQuickDetailDialog.newInstance(userId, mediaList)
+        (context as? AppCompatActivity)?.supportFragmentManager?.let {
+            dialog.show(it, null)
         }
     }
 
@@ -376,7 +338,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
         animeThemeEntry: AnimeThemeEntry?,
         action: (url: String?, videoId: String?, usePlayer: Boolean) -> Unit
     ) {
-        bottomSheetMediaThemesDialog = BottomSheetMediaThemesDialog.newInstance(media, animeTheme, animeThemeEntry, object : BottomSheetMediaThemesDialog.BottomSheetMediaThemeListener {
+        val dialog = BottomSheetMediaThemesDialog.newInstance(media, animeTheme, animeThemeEntry, object : BottomSheetMediaThemesDialog.BottomSheetMediaThemeListener {
             override fun playWithPlayer(url: String) {
                 action(url, null, true)
             }
@@ -389,11 +351,41 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
                 action(url, null, false)
             }
         })
-        bottomSheetMediaThemesDialog?.dialog?.setOnCancelListener {
-            bottomSheetMediaThemesDialog = null
+        (context as? AppCompatActivity)?.supportFragmentManager?.let {
+            dialog.show(it, null)
         }
+    }
+
+    override fun showMediaFilterDialog(
+        mediaFilter: MediaFilter,
+        mediaType: MediaType,
+        scoreFormat: ScoreFormat,
+        isUserList: Boolean,
+        hasBigList: Boolean,
+        isViewer: Boolean,
+        listSections: List<MediaListGroup>,
+        selectedSectionIndex: Int,
+        isAllListPositionAtTop: Boolean,
+        action: (mediaFilter: MediaFilter, sectionIndex: Int) -> Unit
+    ) {
+        val dialog = BottomSheetMediaFilterDialog.newInstance(
+            mediaFilter,
+            mediaType,
+            scoreFormat,
+            isUserList,
+            hasBigList,
+            isViewer,
+            listSections,
+            selectedSectionIndex,
+            isAllListPositionAtTop,
+            object : BottomSheetMediaFilterDialog.MediaFilterListener {
+                override fun onFilterApplied(mediaFilter: MediaFilter, sectionIndex: Int) {
+                    action(mediaFilter, sectionIndex)
+                }
+            }
+        )
         (context as? AppCompatActivity?)?.supportFragmentManager?.let {
-            bottomSheetMediaThemesDialog?.show(it, null)
+            dialog.show(it, null)
         }
     }
 }

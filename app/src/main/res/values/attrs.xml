@@ -19,10 +19,6 @@
     <attr name="themeBackgroundTransparent50Color" format="reference"/>
     <attr name="themeBackgroundTransparent36Color" format="reference"/>
 
-
-
-
-
     <attr name="themeAppNameFont" format="reference"/>
     <attr name="themeTitleFont" format="reference"/>
     <attr name="themeRegularFont" format="reference"/>
