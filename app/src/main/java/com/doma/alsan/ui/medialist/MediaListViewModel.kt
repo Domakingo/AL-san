@@ -89,6 +89,9 @@ class MediaListViewModel(
     val isCollapsedMode: Observable<Boolean>
         get() = _isCollapsedMode
 
+    val isCollapsed: Boolean
+        get() = _isCollapsedMode.value ?: false
+
     var mediaType: MediaType = MediaType.ANIME
     var userId = 0
 
