@@ -17,6 +17,7 @@ import com.doma.alsan.helper.enums.ActivityListPage
 import com.doma.alsan.helper.enums.Favorite
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.extensions.applyBottomPaddingInsets
+import com.doma.alsan.helper.extensions.applyTopPaddingInsets
 import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
@@ -143,6 +144,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
 
     override fun setUpInsets() {
+        binding.root.applyTopPaddingInsets()
         if (!isViewer()) {
             binding.profileRecyclerView.applyBottomPaddingInsets()
         }

@@ -39,7 +39,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     }
 
     override fun setUpInsets() {
-
+        binding.root.applyTopPaddingInsets()
     }
 
     override fun setUpObserver() {
