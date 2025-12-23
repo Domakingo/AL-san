@@ -63,8 +63,10 @@ class FavoriteAdapter(
 
                 rectangleItemText.show(false)
 
-                // Show name overlay for characters and staff
+                // Show name/title overlay for all types
                 val name = when (item.favorite) {
+                    Favorite.ANIME -> item.anime?.getTitle(appSetting)
+                    Favorite.MANGA -> item.manga?.getTitle(appSetting)
                     Favorite.CHARACTERS -> item.character?.name?.userPreferred
                     Favorite.STAFF -> item.staff?.name?.userPreferred
                     else -> null

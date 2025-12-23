@@ -31,6 +31,12 @@ class FavoriteMediaRvAdapter(
                 val image = item.getCoverImage(appSetting)
                 ImageUtil.loadImage(context, image, rectangleItemImage)
                 rectangleItemText.show(false)
+                
+                // Show title overlay
+                val title = item.getTitle(appSetting)
+                rectangleItemNameOverlay.show(!title.isNullOrBlank())
+                rectangleItemNameText.text = title ?: ""
+                
                 root.clicks { listener.navigateToMedia(item, mediaType) }
             }
         }
