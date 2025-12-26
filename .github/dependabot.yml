@@ -1,11 +1,22 @@
 version: 2
+
+registries:
+  jitpack:
+    type: maven-repository
+    url: https://jitpack.io
+
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
+    registries:
+      - jitpack
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "com.github.*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
     groups:
       dependencies:
         patterns:
