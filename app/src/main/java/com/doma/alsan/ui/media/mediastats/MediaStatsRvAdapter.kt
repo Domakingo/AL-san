@@ -205,7 +205,7 @@ class MediaStatsRvAdapter(
                     chart.add(Chart(hexColor, label, amount))
                 }
 
-                val useStringLabel = chart.any{ it.label.toDoubleOrNull() == null } ?: false
+                val useStringLabel = chart.any { it.label.toDoubleOrNull() == null }
 
                 val newValueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
