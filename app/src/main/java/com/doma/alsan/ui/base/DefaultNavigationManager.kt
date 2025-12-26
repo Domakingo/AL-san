@@ -34,7 +34,6 @@ import com.doma.alsan.ui.customise.CustomiseFragment
 import com.doma.alsan.ui.editor.EditorFragment
 import com.doma.alsan.ui.explore.ExploreFragment
 import com.doma.alsan.ui.favorite.FavoriteFragment
-import com.doma.alsan.ui.filter.FilterFragment
 import com.doma.alsan.ui.follow.FollowFragment
 import com.doma.alsan.ui.landing.LandingFragment
 import com.doma.alsan.ui.login.LoginFragment
@@ -203,22 +202,6 @@ class DefaultNavigationManager(
         stackPage(ReorderFragment.newInstance(itemList, object : ReorderFragment.ReorderListener {
             override fun getReorderResult(reorderResult: List<String>) {
                 action(reorderResult)
-            }
-        }))
-    }
-
-    override fun navigateToFilter(
-        mediaFilter: MediaFilter?,
-        mediaType: MediaType,
-        scoreFormat: ScoreFormat,
-        isUserList: Boolean,
-        hasBigList: Boolean,
-        isCurrentUser: Boolean,
-        action: (filterResult: MediaFilter) -> Unit
-    ) {
-        stackPage(FilterFragment.newInstance(mediaFilter, mediaType, scoreFormat, isUserList, hasBigList, isCurrentUser, object : FilterFragment.FilterListener {
-            override fun getFilterResult(filterResult: MediaFilter) {
-                action(filterResult)
             }
         }))
     }

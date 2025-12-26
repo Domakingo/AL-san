@@ -18,14 +18,12 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/mainBottomNavigation"
         app:menu="@menu/menu_bottom_navigation"
-        app:backgroundTint="?themeCardColor"
+        android:background="?themeCardColor"
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/color_bottom_navigation"
         app:itemTextColor="@color/color_bottom_navigation"
         app:itemActiveIndicatorStyle="@style/BottomNavIndicator"
         app:elevation="0dp"
-        android:paddingTop="@dimen/marginSmall"
-        android:paddingBottom="@dimen/marginSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

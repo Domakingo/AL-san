@@ -30,6 +30,11 @@ class FavoriteCharacterRvAdapter(
                 val image = item.getImage(appSetting)
                 ImageUtil.loadImage(context, image, rectangleItemImage)
                 rectangleItemText.show(false)
+                
+                // Show name overlay
+                rectangleItemNameOverlay.show(true)
+                rectangleItemNameText.text = item.name.userPreferred
+                
                 root.clicks { listener.navigateToCharacter(item) }
             }
         }

@@ -63,6 +63,17 @@ class FavoriteAdapter(
 
                 rectangleItemText.show(false)
 
+                // Show name/title overlay for all types
+                val name = when (item.favorite) {
+                    Favorite.ANIME -> item.anime?.getTitle(appSetting)
+                    Favorite.MANGA -> item.manga?.getTitle(appSetting)
+                    Favorite.CHARACTERS -> item.character?.name?.userPreferred
+                    Favorite.STAFF -> item.staff?.name?.userPreferred
+                    else -> null
+                }
+                rectangleItemNameOverlay.show(!name.isNullOrBlank())
+                rectangleItemNameText.text = name ?: ""
+
                 root.clicks {
                     when (item.favorite) {
                         Favorite.ANIME -> listener.navigateToAnime(item.anime?.getId() ?: 0)

@@ -41,9 +41,8 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         return LayoutInfiniteScrollingBinding.inflate(inflater, container, false)
     }
 
-    @Suppress("DEPRECATION")
     override fun setUpLayout() {
-        val mediaType = arguments?.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
+        val mediaType = getMediaTypeFromArgs()
 
         binding.apply {
             setUpToolbar(defaultToolbar.defaultToolbar, getString(R.string.character_list))
@@ -138,7 +137,7 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
     }
 
     override fun setUpObserver() {
-        val mediaType = arguments?.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
+        val mediaType = getMediaTypeFromArgs()
 
         disposables.addAll(
             viewModel.loading.subscribe {
@@ -188,6 +187,16 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         menuItemChangeVaLanguage = null
         menuItemSearch = null
         searchView = null
+    }
+
+    private fun getMediaTypeFromArgs(): MediaType {
+        val args = arguments ?: return MediaType.ANIME
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            args.getSerializable(MEDIA_TYPE, MediaType::class.java) ?: MediaType.ANIME
+        } else {
+            @Suppress("DEPRECATION")
+            args.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.ANIME
+        }
     }
 
     companion object {

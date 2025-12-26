@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="@string/bottom_sheet_behavior"
+    android:paddingBottom="@dimen/marginPageBig"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:paddingBottom="@dimen/marginPageBig"
+    <View
+        android:id="@+id/dragIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/shape_bottom_sheet_handle"
+        android:layout_marginTop="@dimen/marginMedium"
+        android:layout_width="32dp"
+        android:layout_height="4dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dialogRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/dragIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_marginTop="@dimen/marginPageBig"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintHeight_max="@dimen/bottomSheetPeekHeight"/>
 
-        <View
-            android:id="@+id/dragIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/shape_bottom_sheet_handle"
-            android:layout_marginTop="@dimen/marginMedium"
-            android:layout_width="32dp"
-            android:layout_height="4dp"/>
+    <include layout="@layout/layout_loading"
+        android:id="@+id/loadingLayout"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dialogRecyclerView"
-            app:layout_constraintTop_toBottomOf="@+id/dragIcon"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_marginTop="@dimen/marginPageBig"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <include layout="@layout/layout_loading"
-            android:id="@+id/loadingLayout"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

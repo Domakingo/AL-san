@@ -13,6 +13,31 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/rectangleItemNameOverlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rectangleItemImage"
+        app:layout_constraintEnd_toEndOf="@id/rectangleItemImage"
+        app:cardBackgroundColor="?themeCardTransparentColor"
+        app:cardCornerRadius="@dimen/cornerSmall"
+        app:cardElevation="0dp"
+        android:layout_margin="@dimen/marginClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/rectangleItemNameText"
+            style="?themeSmallFont"
+            android:textColor="?themeContentColor"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:paddingHorizontal="@dimen/marginClose"
+            android:paddingVertical="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/rectangleItemText"
         style="?themeSmallClickableFont"

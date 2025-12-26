@@ -40,6 +40,7 @@
     <string name="favorites">Favorites</string>
     <string name="stats">Stats</string>
     <string name="activities">Activities</string>
+    <string name="history">Activity History</string>
     <string name="anime_tendencies">Anime Tendencies</string>
     <string name="manga_tendencies">Manga Tendencies</string>
     <string name="seems_to_love_x">Seems to love %1$s</string>
@@ -554,6 +555,13 @@
     <string name="purple_theme">Purple</string>
     <string name="green_theme">Green</string>
     <string name="pink_theme">Pink</string>
+    <string name="genres_include">Genres +</string>
+    <string name="genres_exclude">Genres -</string>
+    <string name="persist_filter">Persist</string>
+    <string name="persist_filter_explanation">When enabled, the filter settings will be saved and automatically applied the next time you open this list. Disable to use a one-time filter.</string>
+    <string name="ascending_short">ASC</string>
+    <string name="descending_short">DESC</string>
+    <string name="none">None</string>
 
 
     <plurals name="minute">

@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:elevation="0dp"
-        android:minHeight="@dimen/toolbarBigHeight"
+        android:minHeight="?attr/actionBarSize"
         app:menu="@menu/menu_profile"
         app:popupTheme="@style/PopupTheme" />
 

@@ -89,9 +89,8 @@ class MediaListViewModel(
     val isCollapsedMode: Observable<Boolean>
         get() = _isCollapsedMode
 
-    private val _fabOptions = PublishSubject.create<List<ListItem<String>>>()
-    val fabOptions: Observable<List<ListItem<String>>>
-        get() = _fabOptions
+    val isCollapsed: Boolean
+        get() = _isCollapsedMode.value ?: false
 
     var mediaType: MediaType = MediaType.ANIME
     var userId = 0
@@ -102,13 +101,16 @@ class MediaListViewModel(
     var listStyle = ListStyle()
     var mediaFilter = MediaFilter()
     var hasBigList = false
-    private var isAllListPositionAtTop = true
+    var isAllListPositionAtTop = true
+        private set
 
     private var rawMediaListCollection: MediaListCollection? = null // needed when applying filter
-    private var currentMediaListCollection: MediaListCollection? = null // needed to show number of entries in each section
+    var currentMediaListCollection: MediaListCollection? = null // needed to show number of entries in each section
+        private set
     private var currentMediaListItems: List<MediaListItem> = listOf() // needed for search
 
-    private var selectedSectionIndex = 0
+    var selectedSectionIndex = 0
+        private set
     private var searchKeyword = ""
 
     @Suppress("UNCHECKED_CAST")
@@ -283,6 +285,12 @@ class MediaListViewModel(
     fun updateMediaFilter(newFilter: MediaFilter) {
         mediaFilter = newFilter
 
+        if (newFilter.persistFilter) {
+            mediaListRepository.setMediaFilter(mediaType, newFilter)
+        } else {
+            mediaListRepository.setMediaFilter(mediaType, MediaFilter(persistFilter = false))
+        }
+
         rawMediaListCollection?.let {
             val filteredAndSortedList = getFilteredAndSortedList(it)
             _mediaListItems.onNext(filteredAndSortedList)
@@ -316,41 +324,6 @@ class MediaListViewModel(
 
             _listSections.onNext(sections)
         }
-    }
-
-    fun loadFabOptions() {
-        val options = ArrayList<ListItem<String>>()
-        
-        // Add list sections
-        currentMediaListCollection?.lists?.let { groups ->
-            var totalEntries = 0
-            val listFromCurrentGroups = groups.mapIndexed { index, group ->
-                totalEntries += group.entries.size
-                val formattedTitle = "${group.name} (${group.entries.size})"
-                // Calculate expected index: if "All" is at top, section indices are offset by 1
-                val expectedIndex = if (isAllListPositionAtTop) index + 1 else index
-                val isSelected = selectedSectionIndex == expectedIndex
-                ListItem(formattedTitle, "section:$index", isSelected)
-            }
-            
-            // Check if "All" is selected
-            val allSelectedIndex = if (isAllListPositionAtTop) 0 else groups.size
-            val isAllSelected = selectedSectionIndex == allSelectedIndex
-            val allListItem = ListItem("All ($totalEntries)", "section:all", isAllSelected)
-            
-            if (isAllListPositionAtTop) {
-                options.add(allListItem)
-                options.addAll(listFromCurrentGroups)
-            } else {
-                options.addAll(listFromCurrentGroups)
-                options.add(allListItem)
-            }
-        }
-        
-        // Add Advanced Options at the end (in a centered card)
-        options.add(ListItem(R.string.advanced_options, "advanced_options", isHighlighted = true, useCardLayout = true))
-        
-        _fabOptions.onNext(options)
     }
 
     fun showSelectedSectionMediaList(index: Int) {

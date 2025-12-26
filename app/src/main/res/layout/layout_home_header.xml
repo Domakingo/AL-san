@@ -22,9 +22,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="244dp"
+        android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/marginPageNormal"
-        android:paddingBottom="@dimen/marginPageBig"
+        android:paddingBottom="0dp"
         app:layout_constraintTop_toTopOf="@+id/headerImage">
 
         <com.google.android.material.textview.MaterialTextView
@@ -32,7 +32,7 @@
             style="?themeTitleFont"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="70dp"
             android:layout_marginEnd="@dimen/marginPageNormal"
             android:text="@string/hello"
             app:layout_constraintEnd_toStartOf="@id/homeHeaderAvatar"

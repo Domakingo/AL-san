@@ -16,6 +16,7 @@ data class User(
     val mediaListOptions: MediaListOptions = MediaListOptions(),
     var favourites: Favourites = Favourites(),
     val statistics: UserStatisticTypes = UserStatisticTypes(),
+    val stats: UserStats = UserStats(),
     val unreadNotificationCount: Int = 0,
     val siteUrl: String = "",
     val donatorTier: Int = 0,

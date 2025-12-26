@@ -137,6 +137,13 @@ query UserQuery($id: Int, $name: String, $sort: [UserStatisticsSort]) {
         ...UserStatistics
       }
     }
+    stats {
+      activityHistory {
+        date
+        amount
+        level
+      }
+    }
     unreadNotificationCount
     donatorTier
     donatorBadge

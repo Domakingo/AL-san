@@ -129,7 +129,21 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             }
 
             mediaListSwitchListButton.clicks {
-                viewModel.loadFabOptions()
+                searchView?.clearFocus()
+                dialog.showMediaFilterDialog(
+                    mediaFilter = viewModel.mediaFilter,
+                    mediaType = viewModel.mediaType,
+                    scoreFormat = viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
+                    isUserList = true,
+                    hasBigList = viewModel.hasBigList,
+                    isViewer = viewModel.isViewer,
+                    listSections = viewModel.currentMediaListCollection?.lists ?: listOf(),
+                    selectedSectionIndex = viewModel.selectedSectionIndex,
+                    isAllListPositionAtTop = viewModel.isAllListPositionAtTop
+                ) { filterResult, sectionIndex ->
+                    viewModel.updateMediaFilter(filterResult)
+                    viewModel.showSelectedSectionMediaList(sectionIndex)
+                }
             }
 
             mediaListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -253,29 +267,16 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 menuItemCollapse?.title = getString(
                     if (isCollapsed) R.string.expand_series else R.string.collapse_series
                 )
-            },
-            viewModel.fabOptions.subscribe { options ->
-                dialog.showListDialog(options) { data, index ->
-                    when (data) {
-                        "advanced_options" -> {
-                            searchView?.clearFocus()
-                            navigation.navigateToFilter(
-                                viewModel.mediaFilter,
-                                viewModel.mediaType,
-                                viewModel.user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
-                                true,
-                                viewModel.hasBigList,
-                                viewModel.isViewer
-                            ) { filterResult ->
-                                viewModel.updateMediaFilter(filterResult)
-                            }
-                        }
-                        else -> {
-                            // It's a section, use the index directly
-                            viewModel.showSelectedSectionMediaList(index)
-                        }
-                    }
+                val icon = menuItemCollapse?.icon
+                icon?.mutate()
+                val color = if (isCollapsed) {
+                    val typedValue = android.util.TypedValue()
+                    requireContext().theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                    typedValue.data
+                } else {
+                    viewModel.listStyle.getTextColor(requireContext())
                 }
+                icon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
             }
         )
 
@@ -312,6 +313,20 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             val overflowDrawable = defaultToolbar.defaultToolbar.overflowIcon
             overflowDrawable?.mutate()
             overflowDrawable?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(textColor, BlendModeCompat.SRC_ATOP)
+
+            val collapseDrawable = menuItemCollapse?.icon
+            if (collapseDrawable != null) {
+                collapseDrawable.mutate()
+                val isCollapsed = viewModel.isCollapsed
+                val collapseColor = if (isCollapsed) {
+                    val typedValue = android.util.TypedValue()
+                    requireContext().theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                    typedValue.data
+                } else {
+                    textColor
+                }
+                collapseDrawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(collapseColor, BlendModeCompat.SRC_ATOP)
+            }
 
             val toolbarColor = listStyle.getToolbarColor(requireContext())
             defaultToolbar.defaultToolbar.setBackgroundColor(toolbarColor)

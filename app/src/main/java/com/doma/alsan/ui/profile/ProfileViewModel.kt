@@ -327,6 +327,10 @@ class ProfileViewModel(
             profileItemList.add(ProfileItem(affinity = Pair(Affinity(status = Affinity.AFFINITY_STATUS_LOADING), Affinity(status = Affinity.AFFINITY_STATUS_LOADING)), viewType = ProfileItem.VIEW_TYPE_AFFINITY))
 
         profileItemList.add(ProfileItem(animeStats = user.statistics.anime, mangaStats = user.statistics.manga, viewType = ProfileItem.VIEw_TYPE_STATS))
+        
+        if (user.stats.activityHistory.isNotEmpty()) {
+            profileItemList.add(ProfileItem(activityHistory = user.stats.activityHistory, viewType = ProfileItem.VIEW_TYPE_ACTIVITY_HISTORY))
+        }
 
         if (user.favourites.anime.nodes.isNotEmpty())
             profileItemList.add(ProfileItem(favoriteMedia = user.favourites.anime.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_ANIME))

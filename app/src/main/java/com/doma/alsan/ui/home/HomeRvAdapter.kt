@@ -30,6 +30,28 @@ class HomeRvAdapter(
     private val listener: HomeListener
 ) : BaseRecyclerViewAdapter<HomeItem, ViewBinding>(list) {
 
+    private val carouselTouchListener = object : RecyclerView.OnItemTouchListener {
+        private var startX = 0f
+        private var startY = 0f
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: android.view.MotionEvent): Boolean {
+            when (e.action) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    startX = e.x
+                    startY = e.y
+                    rv.parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                android.view.MotionEvent.ACTION_MOVE -> {
+                    val dx = kotlin.math.abs(e.x - startX)
+                    val dy = kotlin.math.abs(e.y - startY)
+                    if (dy > dx) rv.parent?.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            return false
+        }
+        override fun onTouchEvent(rv: RecyclerView, e: android.view.MotionEvent) {}
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -101,18 +123,7 @@ class HomeRvAdapter(
         }
     }
 
-    private val carouselTouchListener = object : RecyclerView.OnItemTouchListener {
-        override fun onInterceptTouchEvent(rv: RecyclerView, e: android.view.MotionEvent): Boolean {
-            if (e.action == android.view.MotionEvent.ACTION_DOWN) {
-                rv.canScrollHorizontally(1) || rv.canScrollHorizontally(-1)
-                rv.parent?.requestDisallowInterceptTouchEvent(true)
-            }
-            return false
-        }
 
-        override fun onTouchEvent(rv: RecyclerView, e: android.view.MotionEvent) {}
-        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-    }
 
     inner class ReleasingTodayViewHolder(private val binding: LayoutHomeReleasingTodayBinding) : ViewHolder(binding) {
         override fun bind(item: HomeItem, index: Int) {

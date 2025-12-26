@@ -45,15 +45,6 @@ interface NavigationManager {
     fun navigateToAbout() {}
 
     fun navigateToReorder(itemList: List<String>, action: (reorderResult: List<String>) -> Unit) {}
-    fun navigateToFilter(
-        mediaFilter: MediaFilter?,
-        mediaType: MediaType,
-        scoreFormat: ScoreFormat,
-        isUserList: Boolean,
-        hasBigList: Boolean,
-        isCurrentUser: Boolean,
-        action: (filterResult: MediaFilter) -> Unit
-    ) {}
     fun navigateToCustomise(mediaType: MediaType, action: (customiseResult: ListStyle) -> Unit) {}
 
     fun navigateToEditor(mediaId: Int, fromMediaList: Boolean, action: (() -> Unit)? = null) {}

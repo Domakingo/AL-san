@@ -97,6 +97,10 @@ class ProfileRvAdapter(
                 val view = LayoutProfileStatsBinding.inflate(inflater, parent, false)
                 return StatsViewHolder(view)
             }
+            ProfileItem.VIEW_TYPE_ACTIVITY_HISTORY -> {
+                val view = ItemProfileActivityHistoryBinding.inflate(inflater, parent, false)
+                return ActivityHistoryViewHolder(view)
+            }
             else -> {
                 val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
                 return BioViewHolder(view)
@@ -361,9 +365,14 @@ class ProfileRvAdapter(
                 profileStatsVolumesReadText.text = item.mangaStats?.volumesRead?.toString()
                 profileStatsMangaMeanScoreText.text = item.mangaStats?.meanScore?.roundToTwoDecimal()
 
-                profileStatsDetailText.clicks { listener.statsListener.navigateToStatsDetail() }
                 profileStatsForceUpdateText.clicks { listener.statsListener.navigateToForceUpdate() }
             }
+        }
+    }
+
+    inner class ActivityHistoryViewHolder(private val binding: ItemProfileActivityHistoryBinding) : ViewHolder(binding) {
+        override fun bind(item: ProfileItem, index: Int) {
+            binding.activityHeatmap.setData(item.activityHistory ?: listOf())
         }
     }
 }

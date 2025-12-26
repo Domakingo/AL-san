@@ -30,7 +30,6 @@ import com.doma.alsan.ui.customise.CustomiseViewModel
 import com.doma.alsan.ui.editor.EditorViewModel
 import com.doma.alsan.ui.explore.ExploreViewModel
 import com.doma.alsan.ui.favorite.FavoriteViewModel
-import com.doma.alsan.ui.filter.FilterViewModel
 import com.doma.alsan.ui.follow.FollowViewModel
 import com.doma.alsan.ui.home.HomeViewModel
 import com.doma.alsan.ui.landing.LandingViewModel
@@ -44,6 +43,7 @@ import com.doma.alsan.ui.media.mediastats.MediaStatsViewModel
 import com.doma.alsan.ui.media.staff.MediaStaffListViewModel
 import com.doma.alsan.ui.media.themes.BottomSheetMediaThemesViewModel
 import com.doma.alsan.ui.medialist.BottomSheetMediaListQuickDetailViewModel
+import com.doma.alsan.ui.medialist.BottomSheetMediaFilterViewModel
 import com.doma.alsan.ui.medialist.MediaListViewModel
 import com.doma.alsan.ui.notifications.NotificationsViewModel
 import com.doma.alsan.ui.profile.ProfileViewModel
@@ -175,6 +175,7 @@ class AlsanApplication : Application() {
         viewModel { ReaderViewModel(get(), get(), get()) }
 
         viewModel { MediaListViewModel(get(), get(), get(), get()) }
+        viewModel { BottomSheetMediaFilterViewModel(get()) }
 
         viewModel { NotificationsViewModel(get()) }
 
@@ -192,7 +193,6 @@ class AlsanApplication : Application() {
 
         viewModel { ReorderViewModel() }
 
-        viewModel { FilterViewModel(get(), get()) }
         viewModel { CustomiseViewModel(get(), get()) }
 
         viewModel { EditorViewModel(get(), get()) }
