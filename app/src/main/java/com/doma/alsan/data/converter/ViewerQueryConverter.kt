@@ -87,19 +87,19 @@ fun ViewerQuery.Data.convert(): User {
 
 private fun ViewerQuery.Node.convert(): Media {
     return Media(
-        idAniList = this?.id ?: 0,
+        idAniList = id ?: 0,
         title = MediaTitle(
-            romaji = this?.title?.romaji ?: "",
-            english = this?.title?.english ?: "",
-            native = this?.title?.native ?: "",
-            userPreferred = this?.title?.userPreferred ?: "",
+            romaji = title?.romaji ?: "",
+            english = title?.english ?: "",
+            native = title?.native ?: "",
+            userPreferred = title?.userPreferred ?: "",
         ),
         coverImage = MediaCoverImage(
-            extraLarge = this?.coverImage?.extraLarge ?: "",
-            large = this?.coverImage?.large ?: "",
-            medium = this?.coverImage?.medium ?: "",
+            extraLarge = coverImage?.extraLarge ?: "",
+            large = coverImage?.large ?: "",
+            medium = coverImage?.medium ?: "",
         ),
-        siteUrl = this?.siteUrl ?: ""
+        siteUrl = siteUrl ?: ""
     )
 }
 

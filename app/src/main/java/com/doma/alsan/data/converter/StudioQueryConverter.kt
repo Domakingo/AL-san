@@ -10,34 +10,34 @@ fun StudioQuery.Data.convert(): Studio {
             name = it.name,
             isAnimationStudio = it.isAnimationStudio,
             media = MediaConnection(
-                edges = it.media?.edges?.map {
+                edges = it.media?.edges?.mapNotNull { edge ->
+                    val node = edge?.node ?: return@mapNotNull null
                     MediaEdge(
                         node = Media(
-                            idAniList = it?.node?.id ?: 0,
+                            idAniList = node.id,
                             title = MediaTitle(
-                                romaji = it?.node?.title?.romaji ?: "",
-                                english = it?.node?.title?.english ?: "",
-                                native = it?.node?.title?.native ?: "",
-                                userPreferred = it?.node?.title?.userPreferred ?: ""
+                                romaji = node.title?.romaji ?: "",
+                                english = node.title?.english ?: "",
+                                native = node.title?.native ?: "",
+                                userPreferred = node.title?.userPreferred ?: ""
                             ),
-                            type = it?.node?.type,
-                            format = it?.node?.format,
+                            type = node.type,
+                            format = node.format,
                             coverImage = MediaCoverImage(
-                                extraLarge = it?.node?.coverImage?.extraLarge ?: "",
-                                large = it?.node?.coverImage?.large ?: "",
-                                medium = it?.node?.coverImage?.medium ?: ""
+                                extraLarge = node.coverImage?.extraLarge ?: "",
+                                large = node.coverImage?.large ?: "",
+                                medium = node.coverImage?.medium ?: ""
                             ),
-                            countryOfOrigin = it?.node?.countryOfOrigin,
-                            averageScore = it?.node?.averageScore ?: 0,
-                            meanScore = it?.node?.meanScore ?: 0,
-                            popularity = it?.node?.popularity ?: 0,
-                            favourites = it?.node?.favourites ?: 0,
-                            startDate = if (it?.node?.startDate != null)
-                                FuzzyDate(year = it?.node?.startDate?.year, month = it?.node?.startDate?.month, day = it?.node?.startDate?.day)
-                            else
-                                null
+                            countryOfOrigin = node.countryOfOrigin,
+                            averageScore = node.averageScore ?: 0,
+                            meanScore = node.meanScore ?: 0,
+                            popularity = node.popularity ?: 0,
+                            favourites = node.favourites ?: 0,
+                            startDate = node.startDate?.let { startDate ->
+                                FuzzyDate(year = startDate.year, month = startDate.month, day = startDate.day)
+                            }
                         ),
-                        isMainStudio = it?.isMainStudio ?: false
+                        isMainStudio = edge.isMainStudio
                     )
                 } ?: listOf(),
                 pageInfo = PageInfo(

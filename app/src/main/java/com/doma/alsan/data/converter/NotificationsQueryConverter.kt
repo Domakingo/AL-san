@@ -7,6 +7,7 @@ import com.doma.alsan.fragment.OnNotificationListActivity
 import com.doma.alsan.fragment.OnNotificationMessageActivity
 import com.doma.alsan.fragment.OnNotificationTextActivity
 
+@Suppress("UNNECESSARY_SAFE_CALL")
 fun NotificationsQuery.Data.convert() : NotificationData {
     return NotificationData(
         page = Page(

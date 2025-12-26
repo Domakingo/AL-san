@@ -150,14 +150,14 @@ class MediaCharacterListViewModel(
         // Filter locally
         val filteredCharacters = allCharacters.filter { edge ->
             edge.node.name.userPreferred.lowercase().contains(currentSearchQuery) ||
-            edge.node.name.full?.lowercase()?.contains(currentSearchQuery) == true ||
-            edge.node.name.native?.lowercase()?.contains(currentSearchQuery) == true ||
-            edge.node.name.first?.lowercase()?.contains(currentSearchQuery) == true ||
-            edge.node.name.last?.lowercase()?.contains(currentSearchQuery) == true ||
+            edge.node.name.full.lowercase().contains(currentSearchQuery) ||
+            edge.node.name.native.lowercase().contains(currentSearchQuery) ||
+            edge.node.name.first.lowercase().contains(currentSearchQuery) ||
+            edge.node.name.last.lowercase().contains(currentSearchQuery) ||
             (mediaType == MediaType.ANIME && edge.voiceActorRoles.any { vaRole -> 
                 vaRole.voiceActor.name.userPreferred.lowercase().contains(currentSearchQuery) ||
-                vaRole.voiceActor.name.full?.lowercase()?.contains(currentSearchQuery) == true ||
-                vaRole.voiceActor.name.native?.lowercase()?.contains(currentSearchQuery) == true
+                vaRole.voiceActor.name.full.lowercase().contains(currentSearchQuery) ||
+                vaRole.voiceActor.name.native.lowercase().contains(currentSearchQuery)
             })
         }
         

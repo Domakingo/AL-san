@@ -45,6 +45,7 @@ abstract class SecureSharedPreferencesHandler(
     )
 
     // Tink AEAD primitive for encryption/decryption
+    @Suppress("DEPRECATION")
     private val aead: Aead by lazy {
         try {
             AeadConfig.register()

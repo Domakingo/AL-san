@@ -201,15 +201,15 @@ class MediaListViewModel(
 
                             // reload if it's a new entry or when the status is changed or when the visibility is changed
                             if (previousMediaList == null ||
-                                previousMediaList?.status != newMediaList.status ||
-                                previousMediaList?.hiddenFromStatusLists != newMediaList.hiddenFromStatusLists
+                                previousMediaList.status != newMediaList.status ||
+                                previousMediaList.hiddenFromStatusLists != newMediaList.hiddenFromStatusLists
                             ) {
                                 reloadData()
                                 return@subscribe
                             }
 
                             // reload if the custom lists is changed
-                            val oldCustomLists = previousMediaList?.customLists as? LinkedHashMap<String, Boolean>
+                            val oldCustomLists = previousMediaList.customLists as? LinkedHashMap<String, Boolean>
                             val newCustomLists = newMediaList.customLists as? LinkedHashMap<String, Boolean>
                             newCustomLists?.forEach { (key, value) ->
                                 if (oldCustomLists?.get(key) != value) {

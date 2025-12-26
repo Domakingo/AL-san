@@ -49,7 +49,7 @@ class TextEditorViewModel(
                         .map { it.data!! }
                         .applyScheduler()
                         .subscribe {
-                            _mentionUser.onNext(it?.text ?: "")
+                            _mentionUser.onNext(it.text)
                             socialRepository.clearReplyToBeEdited()
                         }
                 )

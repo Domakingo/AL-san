@@ -188,7 +188,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             viewModel.airingSchedule.subscribe {
                 binding.mediaAiringLayout.show(it.data != null)
 
-                it?.data?.let { airingSchedule ->
+                it.data?.let { airingSchedule ->
                     binding.mediaAiringText.text = getString(R.string.ep_x_on_y, airingSchedule.episode, TimeUtil.displayInDayDateTimeFormat(airingSchedule.airingAt))
                 }
             },
