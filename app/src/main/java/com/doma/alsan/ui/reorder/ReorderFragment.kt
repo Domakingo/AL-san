@@ -13,7 +13,6 @@ import com.doma.alsan.helper.extensions.applyTopPaddingInsets
 import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReorderFragment : BaseFragment<FragmentReorderBinding, ReorderViewModel>() {
