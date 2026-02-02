@@ -117,7 +117,7 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // JUnit5 for Local Unit Test
-    def junit_jupiter_version = "6.0.1"
+    def junit_jupiter_version = "6.0.2"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
@@ -179,7 +179,7 @@ dependencies {
     implementation "io.noties.markwon:ext-strikethrough:$markwon_version"
     implementation "io.noties.markwon:inline-parser:$markwon_version"
 
-    def work_version = "2.11.0"
+    def work_version = "2.11.1"
     implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation "androidx.work:work-rxjava3:$work_version"
 
