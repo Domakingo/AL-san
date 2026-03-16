@@ -90,7 +90,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.core:core-ktx:1.18.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.browser:browser:1.9.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
@@ -98,7 +98,7 @@ dependencies {
     implementation "androidx.window:window:1.5.1"
 
     // Security: DataStore + Google Tink
-    implementation "androidx.datastore:datastore-preferences:1.2.0"
+    implementation "androidx.datastore:datastore-preferences:1.2.1"
     implementation "com.google.crypto.tink:tink-android:1.20.0"
 
     // Google Material
@@ -117,13 +117,13 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // JUnit5 for Local Unit Test
-    def junit_jupiter_version = "6.0.1"
+    def junit_jupiter_version = "6.0.3"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
 
     // Mockito
-    testImplementation 'org.mockito:mockito-core:5.21.0'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
 
     // Rx
     implementation "io.reactivex.rxjava3:rxjava:3.1.12"
@@ -169,7 +169,7 @@ dependencies {
     implementation 'com.jaredrummler:colorpicker:1.1.0'
     implementation 'com.github.stfalcon-studio:StfalconImageViewer:1.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.30'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.31'
     implementation 'com.github.zend10:OverlapImageListView:v1.0.1'
 
     def markwon_version = "4.6.2"
@@ -179,7 +179,7 @@ dependencies {
     implementation "io.noties.markwon:ext-strikethrough:$markwon_version"
     implementation "io.noties.markwon:inline-parser:$markwon_version"
 
-    def work_version = "2.11.0"
+    def work_version = "2.11.1"
     implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation "androidx.work:work-rxjava3:$work_version"
 
