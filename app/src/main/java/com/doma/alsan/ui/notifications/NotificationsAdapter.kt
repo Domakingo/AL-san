@@ -65,6 +65,9 @@ class NotificationsAdapter(
                 is MediaDataChangeNotification -> handleMediaDataChangeNotification(item)
                 is MediaMergeNotification -> handleMediaMergeNotification(item)
                 is MediaDeletionNotification -> handleMediaDeletionNotification(item)
+                is MediaSubmissionUpdateNotification -> handleMediaSubmissionUpdateNotification(item)
+                is StaffSubmissionUpdateNotification -> handleStaffSubmissionUpdateNotification(item)
+                is CharacterSubmissionUpdateNotification -> handleCharacterSubmissionUpdateNotification(item)
                 else -> {
                     binding.notificationsText.text = ""
                     ImageUtil.loadImage(context, 0, binding.notificationImage)
@@ -343,6 +346,48 @@ class NotificationsAdapter(
                 notificationViewDetail.makeVisible(true)
                 notificationViewDetail.clicks {
                     listener.showDetail(notification.reason)
+                }
+                root.isClickable = false
+            }
+        }
+
+        private fun handleMediaSubmissionUpdateNotification(notification: MediaSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
+                }
+                root.clicks {
+                    listener.navigateToMedia(notification.media)
+                }
+                root.isClickable = true
+            }
+        }
+
+        private fun handleStaffSubmissionUpdateNotification(notification: StaffSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.staff.getImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
+                }
+                root.isClickable = false
+            }
+        }
+
+        private fun handleCharacterSubmissionUpdateNotification(notification: CharacterSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.character.getImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
                 }
                 root.isClickable = false
             }

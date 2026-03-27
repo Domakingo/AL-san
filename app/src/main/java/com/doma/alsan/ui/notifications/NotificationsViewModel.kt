@@ -38,7 +38,7 @@ class NotificationsViewModel(private val userRepository: UserRepository) : BaseV
         listOf(NotificationType.ACTIVITY_REPLY_LIKE, NotificationType.ACTIVITY_REPLY, NotificationType.ACTIVITY_LIKE, NotificationType.ACTIVITY_MENTION, NotificationType.ACTIVITY_MESSAGE, NotificationType.ACTIVITY_REPLY_SUBSCRIBED),
         listOf(NotificationType.THREAD_LIKE, NotificationType.THREAD_SUBSCRIBED, NotificationType.THREAD_COMMENT_LIKE, NotificationType.THREAD_COMMENT_MENTION, NotificationType.THREAD_COMMENT_REPLY),
         listOf(NotificationType.FOLLOWING),
-        listOf(NotificationType.RELATED_MEDIA_ADDITION, NotificationType.MEDIA_DATA_CHANGE, NotificationType.MEDIA_MERGE, NotificationType.MEDIA_DELETION)
+        listOf(NotificationType.RELATED_MEDIA_ADDITION, NotificationType.MEDIA_DATA_CHANGE, NotificationType.MEDIA_MERGE, NotificationType.MEDIA_DELETION, NotificationType.MEDIA_SUBMISSION_UPDATE, NotificationType.STAFF_SUBMISSION_UPDATE, NotificationType.CHARACTER_SUBMISSION_UPDATE)
     )
 
     private var hasNextPage = false
