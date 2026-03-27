@@ -39,7 +39,7 @@ object MarkdownUtil {
                     plugin.defaultMediaDecoder(DefaultDownScalingMediaDecoder.create(maxWidth, maxWidth))
                     plugin.addMediaDecoder(GifMediaDecoder.create())
                     plugin.addSchemeHandler(OkHttpNetworkSchemeHandler.create())
-                    plugin.errorHandler { url, throwable ->
+                    plugin.errorHandler { _, _ ->
                         null
                     }
                 }
@@ -61,9 +61,7 @@ object MarkdownUtil {
                     registry.require(CorePlugin::class.java) {
                         it.addOnTextAddedListener(MentionTextAddedListener())
                     }
-                    registry.require(ImagesPlugin::class.java) {
-                        it.addSchemeHandler(OkHttpNetworkSchemeHandler.create())
-                    }
+
                 }
 
                 override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
@@ -110,8 +108,22 @@ object MarkdownUtil {
         val spoilerRegex = "(~!)[\\s\\S]+?(!~)".toRegex()
         val youtubeRegex = "youtube\\(.+?\\)".toRegex()
         val webmRegex = "webm\\(.+?\\)".toRegex()
+        
+        val brRegex = "<br\\s*/?>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlImgRegex = "<img\\s+[^>]*src=[\"']([^\"']+)[\"'][^>]*>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlLinkRegex = "<a\\s+[^>]*href=[\"']([^\"']+)[\"'][^>]*>([\\s\\S]*?)</a>".toRegex(RegexOption.IGNORE_CASE)
 
         return markdownText
+            .replace(brRegex, "\n\n")
+            .replace(htmlImgRegex) {
+                val src = it.groups[1]?.value ?: ""
+                "![img]($src)"
+            }
+            .replace(htmlLinkRegex) {
+                val href = it.groups[1]?.value ?: ""
+                val inner = it.groups[2]?.value?.trim() ?: ""
+                "[$inner]($href)"
+            }
             .replace(spoilerRegex) {
                 val spoilerText = it.value.substring(2, it.value.length - 2)
                 "[[Spoiler]](alsan://spoiler?data=${URLEncoder.encode(spoilerText, "utf-8")})"
