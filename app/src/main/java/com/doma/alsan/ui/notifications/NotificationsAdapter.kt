@@ -12,6 +12,7 @@ import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.helper.extensions.makeVisible
 import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.utils.ImageUtil
+import com.doma.alsan.helper.utils.MarkdownUtil
 import com.doma.alsan.helper.utils.TimeUtil
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 
@@ -41,6 +42,8 @@ class NotificationsAdapter(
     fun setUnreadNotificationCount(newUnreadNotificationCount: Int) {
         unreadNotificationCount = newUnreadNotificationCount
     }
+
+    private val markdownSetup = MarkdownUtil.getMarkdownSetup(context, 0, null)
 
     inner class ItemViewHolder(private val binding: ListNotificationBinding) : ViewHolder(binding) {
         override fun bind(item: Notification?, index: Int) {
@@ -75,7 +78,7 @@ class NotificationsAdapter(
                 }
             }
 
-            binding.notificationsText.text = item.getMessage(appSetting)
+            MarkdownUtil.applyMarkdown(context, markdownSetup, binding.notificationsText, item.getMessage(appSetting))
             binding.notificationDate.text = TimeUtil.displayInDayDateTimeFormat(item.createdAt)
             binding.notificationUnreadOverlay.show(index < unreadNotificationCount)
         }

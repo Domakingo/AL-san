@@ -21,6 +21,6 @@ data class MediaSubmissionUpdateNotification(
             else -> "⚪" to statusLower
         }
 
-        return "$emoji Your media submission for **${media.getTitle(appSetting)}** was **$statusText**"
+        return "$emoji Your media submission for <primary>${media.getTitle(appSetting)}</primary> was <primary>$statusText</primary>"
     }
 }

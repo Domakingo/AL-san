@@ -21,6 +21,6 @@ data class CharacterSubmissionUpdateNotification(
             else -> "⚪" to statusLower
         }
 
-        return "$emoji Your character submission for **${character.name.userPreferred}** was **$statusText**"
+        return "$emoji Your character submission for <primary>${character.name.userPreferred}</primary> was <primary>$statusText</primary>"
     }
 }

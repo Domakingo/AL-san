@@ -7,6 +7,10 @@ import android.text.method.LinkMovementMethod
 import android.text.style.AlignmentSpan
 import android.text.style.CharacterStyle
 import android.text.style.StrikethroughSpan
+import android.graphics.Typeface
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.util.TypedValue
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import com.doma.alsan.helper.Constant
@@ -57,6 +61,7 @@ object MarkdownUtil {
                     registry.require(HtmlPlugin::class.java) {
                         it.addHandler(StrikeTagHandler())
                         it.addHandler(AlignmentTagHandler())
+                        it.addHandler(PrimaryTagHandler(context))
                     }
                     registry.require(CorePlugin::class.java) {
                         it.addOnTextAddedListener(MentionTextAddedListener())
@@ -266,3 +271,21 @@ class MentionTextAddedListener : CorePlugin.OnTextAddedListener {
         )
     }
 }
+
+class PrimaryTagHandler(private val context: Context) : TagHandler() {
+    override fun handle(visitor: MarkwonVisitor, renderer: MarkwonHtmlRenderer, tag: HtmlTag) {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(com.doma.alsan.R.attr.themePrimaryColor, typedValue, true)
+        val color = typedValue.data
+
+        val builder = visitor.builder()
+        val start = tag.start()
+        val end = tag.end()
+        builder.setSpan(ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    override fun supportedTags(): MutableCollection<String> {
+        return mutableListOf("primary")
+    }
+}

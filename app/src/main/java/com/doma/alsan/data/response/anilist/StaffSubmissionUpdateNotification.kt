@@ -21,6 +21,6 @@ data class StaffSubmissionUpdateNotification(
             else -> "⚪" to statusLower
         }
 
-        return "$emoji Your staff submission for **${staff.name.userPreferred}** was **$statusText**"
+        return "$emoji Your staff submission for <primary>${staff.name.userPreferred}</primary> was <primary>$statusText</primary>"
     }
 }

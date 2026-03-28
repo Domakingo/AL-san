@@ -3,7 +3,7 @@ package com.doma.alsan.ui.notifications
 import com.doma.alsan.R
 import com.doma.alsan.data.entity.AppSetting
 import com.doma.alsan.data.repository.UserRepository
-import com.doma.alsan.data.response.anilist.Notification
+import com.doma.alsan.data.response.anilist.*
 import com.doma.alsan.helper.extensions.applyScheduler
 import com.doma.alsan.helper.extensions.getStringResource
 import com.doma.alsan.helper.pojo.ListItem
@@ -76,7 +76,7 @@ class NotificationsViewModel(private val userRepository: UserRepository) : BaseV
 
     fun loadNextPage() {
         if ((state == State.LOADED || state == State.ERROR) && hasNextPage) {
-            val currentNotifications = ArrayList(_notificationsAndUnreadCount.value?.first ?: listOf())
+            val currentNotifications = ArrayList(_notificationsAndUnreadCount.value?.first ?: listOf<Notification>())
             currentNotifications.add(null)
             _notificationsAndUnreadCount.onNext(currentNotifications to getUnreadNotificationCount())
 
@@ -85,20 +85,21 @@ class NotificationsViewModel(private val userRepository: UserRepository) : BaseV
     }
 
     private fun loadNotifications(isLoadingNextPage: Boolean = false) {
-        if (!isLoadingNextPage)
+        if (!isLoadingNextPage) {
             _loading.onNext(true)
-
-        state = State.LOADING
+            state = State.LOADING
+        }
 
         disposables.add(
             userRepository.getNotifications(if (isLoadingNextPage) currentPage + 1 else 1, selectedNotificationTypes, true)
-                .zipWith(userRepository.getLastNotificationId()) { notifications, lastNotificationId ->
-                    notifications.page.data.firstOrNull()?.let {
-                        if (it.id > lastNotificationId)
-                            userRepository.setLastNotificationId(it.id)
+                .flatMap { notifications ->
+                    userRepository.getLastNotificationId().map { lastNotificationId ->
+                        notifications.page.data.firstOrNull()?.let {
+                            if (it.id > lastNotificationId)
+                                userRepository.setLastNotificationId(it.id)
+                        }
+                        notifications
                     }
-
-                    notifications
                 }
                 .applyScheduler()
                 .doFinally {
