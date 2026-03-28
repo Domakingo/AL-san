@@ -13,9 +13,14 @@ data class MediaSubmissionUpdateNotification(
     val media: Media = Media()
 ) : Notification {
     override fun getMessage(appSetting: AppSetting): String {
-        return if (contexts.size >= 3)
-            "${contexts[0]}${media.getTitle(appSetting)}${contexts[1]}${status}${contexts[2]}"
-        else
-            "${media.getTitle(appSetting)} submission update"
+        val statusLower = status.lowercase()
+        val (emoji, statusText) = when {
+            statusLower.contains("partially") -> "🟡" to "partially accepted"
+            statusLower.contains("accepted") -> "🟢" to "accepted"
+            statusLower.contains("rejected") -> "🔴" to "rejected"
+            else -> "⚪" to statusLower
+        }
+
+        return "$emoji Your media submission for **${media.getTitle(appSetting)}** was **$statusText**"
     }
 }

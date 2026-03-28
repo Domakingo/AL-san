@@ -13,9 +13,14 @@ data class CharacterSubmissionUpdateNotification(
     val character: Character = Character()
 ) : Notification {
     override fun getMessage(appSetting: AppSetting): String {
-        return if (contexts.size >= 3)
-            "${contexts[0]}${character.name.userPreferred}${contexts[1]}${status}${contexts[2]}"
-        else
-            "${character.name.userPreferred} submission update"
+        val statusLower = status.lowercase()
+        val (emoji, statusText) = when {
+            statusLower.contains("partially") -> "🟡" to "partially accepted"
+            statusLower.contains("accepted") -> "🟢" to "accepted"
+            statusLower.contains("rejected") -> "🔴" to "rejected"
+            else -> "⚪" to statusLower
+        }
+
+        return "$emoji Your character submission for **${character.name.userPreferred}** was **$statusText**"
     }
 }

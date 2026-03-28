@@ -110,18 +110,22 @@ object MarkdownUtil {
         val webmRegex = "webm\\(.+?\\)".toRegex()
         
         val brRegex = "<br\\s*/?>".toRegex(RegexOption.IGNORE_CASE)
-        val htmlImgRegex = "<img\\s+[^>]*src=[\"']([^\"']+)[\"'][^>]*>".toRegex(RegexOption.IGNORE_CASE)
-        val htmlLinkRegex = "<a\\s+[^>]*href=[\"']([^\"']+)[\"'][^>]*>([\\s\\S]*?)</a>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlImgRegex = "<img\\b[^>]*>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlLinkRegex = "<a\\b[^>]*>([\\s\\S]*?)</a>".toRegex(RegexOption.IGNORE_CASE)
+        val srcRegex = "src\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
+        val hrefRegex = "href\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
 
         return markdownText
             .replace(brRegex, "\n\n")
             .replace(htmlImgRegex) {
-                val src = it.groups[1]?.value ?: ""
+                val srcMatch = srcRegex.find(it.value)
+                val src = srcMatch?.groups?.get(1)?.value ?: ""
                 "![img]($src)"
             }
             .replace(htmlLinkRegex) {
-                val href = it.groups[1]?.value ?: ""
-                val inner = it.groups[2]?.value?.trim() ?: ""
+                val hrefMatch = hrefRegex.find(it.value)
+                val href = hrefMatch?.groups?.get(1)?.value ?: ""
+                val inner = it.groups[1]?.value?.trim() ?: ""
                 "[$inner]($href)"
             }
             .replace(spoilerRegex) {

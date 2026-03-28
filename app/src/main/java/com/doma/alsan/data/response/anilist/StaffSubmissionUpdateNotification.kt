@@ -13,9 +13,14 @@ data class StaffSubmissionUpdateNotification(
     val staff: Staff = Staff()
 ) : Notification {
     override fun getMessage(appSetting: AppSetting): String {
-        return if (contexts.size >= 3)
-            "${contexts[0]}${staff.name.userPreferred}${contexts[1]}${status}${contexts[2]}"
-        else
-            "${staff.name.userPreferred} submission update"
+        val statusLower = status.lowercase()
+        val (emoji, statusText) = when {
+            statusLower.contains("partially") -> "🟡" to "partially accepted"
+            statusLower.contains("accepted") -> "🟢" to "accepted"
+            statusLower.contains("rejected") -> "🔴" to "rejected"
+            else -> "⚪" to statusLower
+        }
+
+        return "$emoji Your staff submission for **${staff.name.userPreferred}** was **$statusText**"
     }
 }
