@@ -20,6 +20,7 @@ fun NotificationsQuery.Data.convert() : NotificationData {
             ),
             data = Page?.notifications?.filterNotNull()?.mapNotNull { notification ->
                 when (notification.__typename) {
+                                        // General
                     "AiringNotification" -> {
                         notification.onAiringNotification?.let {
                             AiringNotification(
@@ -65,15 +66,54 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: FollowingNotification()
                     }
-                    "ActivityMessageNotification" -> {
-                        notification.onActivityMessageNotification?.let {
-                            ActivityMessageNotification(
+                    "RelatedMediaAdditionNotification" -> {
+                        notification.onRelatedMediaAdditionNotification?.let {
+                            RelatedMediaAdditionNotification(
+                                id = it.id,
+                                mediaId = it.mediaId,
+                                context = it.context ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                media = Media(
+                                    idAniList = it.media?.id ?: 0,
+                                    title = MediaTitle(
+                                        romaji = it.media?.title?.romaji ?: "",
+                                        english = it.media?.title?.english ?: "",
+                                        native = it.media?.title?.native ?: "",
+                                        userPreferred = it.media?.title?.userPreferred ?: ""
+                                    ),
+                                    coverImage = MediaCoverImage(
+                                        extraLarge = it.media?.coverImage?.extraLarge ?: "",
+                                        large = it.media?.coverImage?.large ?: "",
+                                        medium = it.media?.coverImage?.medium ?: ""
+                                    ),
+                                    countryOfOrigin = it.media?.countryOfOrigin,
+                                    type = it.media?.type
+                                )
+                            )
+                        } ?: RelatedMediaAdditionNotification()
+                    }
+
+                    // Activity
+                    "ActivityLikeNotification" -> {
+                        notification.onActivityLikeNotification?.let {
+                            ActivityLikeNotification(
                                 id = it.id,
                                 userId = it.userId,
                                 activityId = it.activityId,
                                 context = it.context ?: "",
                                 createdAt = it.createdAt ?: 0,
-                                message = it.message?.onNotificationMessageActivity?.convert(),
+                                activity = when (it.activity?.__typename) {
+                                    "TextActivity" -> {
+                                        it.activity?.onNotificationTextActivity?.convert()
+                                    }
+                                    "ListActivity" -> {
+                                        it.activity?.onNotificationListActivity?.convert()
+                                    }
+                                    "MessageActivity" -> {
+                                        it.activity?.onNotificationMessageActivity?.convert()
+                                    }
+                                    else -> null
+                                },
                                 user = User(
                                     id = it.user?.id ?: 0,
                                     name = it.user?.name ?: "",
@@ -83,7 +123,7 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                                     )
                                 )
                             )
-                        } ?: ActivityMessageNotification()
+                        } ?: ActivityLikeNotification()
                     }
                     "ActivityMentionNotification" -> {
                         notification.onActivityMentionNotification?.let {
@@ -115,6 +155,57 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                                 )
                             )
                         } ?: ActivityMentionNotification()
+                    }
+                    "ActivityMessageNotification" -> {
+                        notification.onActivityMessageNotification?.let {
+                            ActivityMessageNotification(
+                                id = it.id,
+                                userId = it.userId,
+                                activityId = it.activityId,
+                                context = it.context ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                message = it.message?.onNotificationMessageActivity?.convert(),
+                                user = User(
+                                    id = it.user?.id ?: 0,
+                                    name = it.user?.name ?: "",
+                                    avatar = UserAvatar(
+                                        large = it.user?.avatar?.large ?: "",
+                                        medium = it.user?.avatar?.medium ?: ""
+                                    )
+                                )
+                            )
+                        } ?: ActivityMessageNotification()
+                    }
+                    "ActivityReplyLikeNotification" -> {
+                        notification.onActivityReplyLikeNotification?.let {
+                            ActivityReplyLikeNotification(
+                                id = it.id,
+                                userId = it.userId,
+                                activityId = it.activityId,
+                                context = it.context ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                activity = when (it.activity?.__typename) {
+                                    "TextActivity" -> {
+                                        it.activity?.onNotificationTextActivity?.convert()
+                                    }
+                                    "ListActivity" -> {
+                                        it.activity?.onNotificationListActivity?.convert()
+                                    }
+                                    "MessageActivity" -> {
+                                        it.activity?.onNotificationMessageActivity?.convert()
+                                    }
+                                    else -> null
+                                },
+                                user = User(
+                                    id = it.user?.id ?: 0,
+                                    name = it.user?.name ?: "",
+                                    avatar = UserAvatar(
+                                        large = it.user?.avatar?.large ?: "",
+                                        medium = it.user?.avatar?.medium ?: ""
+                                    )
+                                )
+                            )
+                        } ?: ActivityReplyLikeNotification()
                     }
                     "ActivityReplyNotification" -> {
                         notification.onActivityReplyNotification?.let {
@@ -178,26 +269,27 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: ActivityReplySubscribedNotification()
                     }
-                    "ActivityLikeNotification" -> {
-                        notification.onActivityLikeNotification?.let {
-                            ActivityLikeNotification(
+
+                    // Thread
+                    "ThreadCommentLikeNotification" -> {
+                        notification.onThreadCommentLikeNotification?.let {
+                            ThreadCommentLikeNotification(
                                 id = it.id,
                                 userId = it.userId,
-                                activityId = it.activityId,
+                                commentId = it.commentId,
                                 context = it.context ?: "",
                                 createdAt = it.createdAt ?: 0,
-                                activity = when (it.activity?.__typename) {
-                                    "TextActivity" -> {
-                                        it.activity?.onNotificationTextActivity?.convert()
-                                    }
-                                    "ListActivity" -> {
-                                        it.activity?.onNotificationListActivity?.convert()
-                                    }
-                                    "MessageActivity" -> {
-                                        it.activity?.onNotificationMessageActivity?.convert()
-                                    }
-                                    else -> null
-                                },
+                                thread = Thread(
+                                    id = it.thread?.id ?: 0,
+                                    title = it.thread?.title ?: "",
+                                    siteUrl = it.thread?.siteUrl ?: ""
+                                ),
+                                comment = ThreadComment(
+                                    id = it.comment?.id ?: 0,
+                                    threadId = it.comment?.threadId ?: 0,
+                                    comment = it.comment?.comment ?: "",
+                                    siteUrl = it.comment?.siteUrl ?: ""
+                                ),
                                 user = User(
                                     id = it.user?.id ?: 0,
                                     name = it.user?.name ?: "",
@@ -207,38 +299,7 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                                     )
                                 )
                             )
-                        } ?: ActivityLikeNotification()
-                    }
-                    "ActivityReplyLikeNotification" -> {
-                        notification.onActivityReplyLikeNotification?.let {
-                            ActivityReplyLikeNotification(
-                                id = it.id,
-                                userId = it.userId,
-                                activityId = it.activityId,
-                                context = it.context ?: "",
-                                createdAt = it.createdAt ?: 0,
-                                activity = when (it.activity?.__typename) {
-                                    "TextActivity" -> {
-                                        it.activity?.onNotificationTextActivity?.convert()
-                                    }
-                                    "ListActivity" -> {
-                                        it.activity?.onNotificationListActivity?.convert()
-                                    }
-                                    "MessageActivity" -> {
-                                        it.activity?.onNotificationMessageActivity?.convert()
-                                    }
-                                    else -> null
-                                },
-                                user = User(
-                                    id = it.user?.id ?: 0,
-                                    name = it.user?.name ?: "",
-                                    avatar = UserAvatar(
-                                        large = it.user?.avatar?.large ?: "",
-                                        medium = it.user?.avatar?.medium ?: ""
-                                    )
-                                )
-                            )
-                        } ?: ActivityReplyLikeNotification()
+                        } ?: ThreadCommentLikeNotification()
                     }
                     "ThreadCommentMentionNotification" -> {
                         notification.onThreadCommentMentionNotification?.let {
@@ -330,36 +391,6 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: ThreadCommentSubscribedNotification()
                     }
-                    "ThreadCommentLikeNotification" -> {
-                        notification.onThreadCommentLikeNotification?.let {
-                            ThreadCommentLikeNotification(
-                                id = it.id,
-                                userId = it.userId,
-                                commentId = it.commentId,
-                                context = it.context ?: "",
-                                createdAt = it.createdAt ?: 0,
-                                thread = Thread(
-                                    id = it.thread?.id ?: 0,
-                                    title = it.thread?.title ?: "",
-                                    siteUrl = it.thread?.siteUrl ?: ""
-                                ),
-                                comment = ThreadComment(
-                                    id = it.comment?.id ?: 0,
-                                    threadId = it.comment?.threadId ?: 0,
-                                    comment = it.comment?.comment ?: "",
-                                    siteUrl = it.comment?.siteUrl ?: ""
-                                ),
-                                user = User(
-                                    id = it.user?.id ?: 0,
-                                    name = it.user?.name ?: "",
-                                    avatar = UserAvatar(
-                                        large = it.user?.avatar?.large ?: "",
-                                        medium = it.user?.avatar?.medium ?: ""
-                                    )
-                                )
-                            )
-                        } ?: ThreadCommentLikeNotification()
-                    }
                     "ThreadLikeNotification" -> {
                         notification.onThreadLikeNotification?.let {
                             ThreadLikeNotification(
@@ -390,32 +421,8 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: ThreadLikeNotification()
                     }
-                    "RelatedMediaAdditionNotification" -> {
-                        notification.onRelatedMediaAdditionNotification?.let {
-                            RelatedMediaAdditionNotification(
-                                id = it.id,
-                                mediaId = it.mediaId,
-                                context = it.context ?: "",
-                                createdAt = it.createdAt ?: 0,
-                                media = Media(
-                                    idAniList = it.media?.id ?: 0,
-                                    title = MediaTitle(
-                                        romaji = it.media?.title?.romaji ?: "",
-                                        english = it.media?.title?.english ?: "",
-                                        native = it.media?.title?.native ?: "",
-                                        userPreferred = it.media?.title?.userPreferred ?: ""
-                                    ),
-                                    coverImage = MediaCoverImage(
-                                        extraLarge = it.media?.coverImage?.extraLarge ?: "",
-                                        large = it.media?.coverImage?.large ?: "",
-                                        medium = it.media?.coverImage?.medium ?: ""
-                                    ),
-                                    countryOfOrigin = it.media?.countryOfOrigin,
-                                    type = it.media?.type
-                                )
-                            )
-                        } ?: RelatedMediaAdditionNotification()
-                    }
+
+                    // Media
                     "MediaDataChangeNotification" -> {
                         notification.onMediaDataChangeNotification?.let {
                             MediaDataChangeNotification(
@@ -442,6 +449,17 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                                 )
                             )
                         } ?: MediaDataChangeNotification()
+                    }
+                    "MediaDeletionNotification" -> {
+                        notification.onMediaDeletionNotification?.let {
+                            MediaDeletionNotification(
+                                id = it.id,
+                                deletedMediaTitle = it.deletedMediaTitle ?: "",
+                                context = it.context ?: "",
+                                reason = it.reason ?: "",
+                                createdAt = it.createdAt ?: 0
+                            )
+                        } ?: MediaDeletionNotification()
                     }
                     "MediaMergeNotification" -> {
                         notification.onMediaMergeNotification?.let {
@@ -471,16 +489,33 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: MediaMergeNotification()
                     }
-                    "MediaDeletionNotification" -> {
-                        notification.onMediaDeletionNotification?.let {
-                            MediaDeletionNotification(
+
+                    // Submission
+                    "CharacterSubmissionUpdateNotification" -> {
+                        notification.onCharacterSubmissionUpdateNotification?.let {
+                            CharacterSubmissionUpdateNotification(
                                 id = it.id,
-                                deletedMediaTitle = it.deletedMediaTitle ?: "",
-                                context = it.context ?: "",
-                                reason = it.reason ?: "",
-                                createdAt = it.createdAt ?: 0
+                                contexts = it.contexts?.filterNotNull() ?: listOf(),
+                                status = it.status ?: "",
+                                notes = it.notes ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                character = Character(
+                                    id = it.character?.id ?: 0,
+                                    name = CharacterName(
+                                        first = it.character?.name?.first ?: "",
+                                        middle = it.character?.name?.middle ?: "",
+                                        last = it.character?.name?.last ?: "",
+                                        full = it.character?.name?.full ?: "",
+                                        native = it.character?.name?.native ?: "",
+                                        userPreferred = it.character?.name?.userPreferred ?: ""
+                                    ),
+                                    image = CharacterImage(
+                                        large = it.character?.image?.large ?: "",
+                                        medium = it.character?.image?.medium ?: ""
+                                    )
+                                )
                             )
-                        } ?: MediaDeletionNotification()
+                        } ?: CharacterSubmissionUpdateNotification()
                     }
                     "MediaSubmissionUpdateNotification" -> {
                         notification.onMediaSubmissionUpdateNotification?.let {
@@ -534,32 +569,6 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                                 )
                             )
                         } ?: StaffSubmissionUpdateNotification()
-                    }
-                    "CharacterSubmissionUpdateNotification" -> {
-                        notification.onCharacterSubmissionUpdateNotification?.let {
-                            CharacterSubmissionUpdateNotification(
-                                id = it.id,
-                                contexts = it.contexts?.filterNotNull() ?: listOf(),
-                                status = it.status ?: "",
-                                notes = it.notes ?: "",
-                                createdAt = it.createdAt ?: 0,
-                                character = Character(
-                                    id = it.character?.id ?: 0,
-                                    name = CharacterName(
-                                        first = it.character?.name?.first ?: "",
-                                        middle = it.character?.name?.middle ?: "",
-                                        last = it.character?.name?.last ?: "",
-                                        full = it.character?.name?.full ?: "",
-                                        native = it.character?.name?.native ?: "",
-                                        userPreferred = it.character?.name?.userPreferred ?: ""
-                                    ),
-                                    image = CharacterImage(
-                                        large = it.character?.image?.large ?: "",
-                                        medium = it.character?.image?.medium ?: ""
-                                    )
-                                )
-                            )
-                        } ?: CharacterSubmissionUpdateNotification()
                     }
                     else -> null
                 }

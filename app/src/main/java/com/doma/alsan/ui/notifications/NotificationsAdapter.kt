@@ -51,26 +51,35 @@ class NotificationsAdapter(
                 return
 
             when (item) {
+                // General
                 is AiringNotification -> handleAiringNotification(item)
                 is FollowingNotification -> handleFollowingNotification(item)
-                is ActivityMessageNotification -> handleActivityMessageNotification(item)
+                is RelatedMediaAdditionNotification -> handleRelatedMediaAdditionNotification(item)
+
+                // Activity
+                is ActivityLikeNotification -> handleActivityLikeNotification(item)
                 is ActivityMentionNotification -> handleActivityMentionNotification(item)
+                is ActivityMessageNotification -> handleActivityMessageNotification(item)
+                is ActivityReplyLikeNotification -> handleActivityReplyLikeNotification(item)
                 is ActivityReplyNotification -> handleActivityReplyNotification(item)
                 is ActivityReplySubscribedNotification -> handleActivityReplySubscribedNotification(item)
-                is ActivityLikeNotification -> handleActivityLikeNotification(item)
-                is ActivityReplyLikeNotification -> handleActivityReplyLikeNotification(item)
+
+                // Thread
+                is ThreadCommentLikeNotification -> handleThreadCommentLikeNotification(item)
                 is ThreadCommentMentionNotification -> handleThreadCommentMentionNotification(item)
                 is ThreadCommentReplyNotification -> handleThreadCommentReplyNotification(item)
                 is ThreadCommentSubscribedNotification -> handleThreadCommentSubscribedNotification(item)
-                is ThreadCommentLikeNotification -> handleThreadCommentLikeNotification(item)
                 is ThreadLikeNotification -> handleThreadLikeNotification(item)
-                is RelatedMediaAdditionNotification -> handleRelatedMediaAdditionNotification(item)
+
+                // Media
                 is MediaDataChangeNotification -> handleMediaDataChangeNotification(item)
-                is MediaMergeNotification -> handleMediaMergeNotification(item)
                 is MediaDeletionNotification -> handleMediaDeletionNotification(item)
+                is MediaMergeNotification -> handleMediaMergeNotification(item)
+
+                // Submission
+                is CharacterSubmissionUpdateNotification -> handleCharacterSubmissionUpdateNotification(item)
                 is MediaSubmissionUpdateNotification -> handleMediaSubmissionUpdateNotification(item)
                 is StaffSubmissionUpdateNotification -> handleStaffSubmissionUpdateNotification(item)
-                is CharacterSubmissionUpdateNotification -> handleCharacterSubmissionUpdateNotification(item)
                 else -> {
                     binding.notificationsText.text = ""
                     ImageUtil.loadImage(context, 0, binding.notificationImage)
@@ -83,6 +92,7 @@ class NotificationsAdapter(
             binding.notificationUnreadOverlay.show(index < unreadNotificationCount)
         }
 
+        // region General
         private fun handleAiringNotification(notification: AiringNotification) {
             binding.apply {
                 ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
@@ -100,6 +110,57 @@ class NotificationsAdapter(
                 notificationViewDetail.makeVisible(false)
                 root.clicks {
                     listener.navigateToUser(notification.user)
+                }
+                root.isClickable = true
+            }
+        }
+
+        private fun handleRelatedMediaAdditionNotification(notification: RelatedMediaAdditionNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(false)
+                root.clicks {
+                    listener.navigateToMedia(notification.media)
+                }
+                root.isClickable = true
+            }
+        }
+        // endregion
+
+        // region Activity
+        private fun handleActivityLikeNotification(notification: ActivityLikeNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.activity != null)
+                notificationViewDetail.clicks {
+                    notification.activity?.let {
+                        listener.showDetail(notification.activity.message(appSetting))
+                    }
+                }
+                notificationImage.clicks {
+                    listener.navigateToUser(notification.user)
+                }
+                root.clicks {
+                    listener.navigateToActivity(notification.activity)
+                }
+                root.isClickable = true
+            }
+        }
+
+        private fun handleActivityMentionNotification(notification: ActivityMentionNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.activity != null)
+                notificationViewDetail.clicks {
+                    notification.activity?.let {
+                        listener.showDetail(notification.activity.message(appSetting))
+                    }
+                }
+                notificationImage.clicks {
+                    listener.navigateToUser(notification.user)
+                }
+                root.clicks {
+                    listener.navigateToActivity(notification.activity)
                 }
                 root.isClickable = true
             }
@@ -124,7 +185,7 @@ class NotificationsAdapter(
             }
         }
 
-        private fun handleActivityMentionNotification(notification: ActivityMentionNotification) {
+        private fun handleActivityReplyLikeNotification(notification: ActivityReplyLikeNotification) {
             binding.apply {
                 ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
                 notificationViewDetail.makeVisible(notification.activity != null)
@@ -180,40 +241,21 @@ class NotificationsAdapter(
                 root.isClickable = true
             }
         }
+        // endregion
 
-        private fun handleActivityLikeNotification(notification: ActivityLikeNotification) {
+        // region Thread
+        private fun handleThreadCommentLikeNotification(notification: ThreadCommentLikeNotification) {
             binding.apply {
                 ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(notification.activity != null)
+                notificationViewDetail.makeVisible(true)
                 notificationViewDetail.clicks {
-                    notification.activity?.let {
-                        listener.showDetail(notification.activity.message(appSetting))
-                    }
+                    listener.showDetail(notification.comment.comment)
                 }
                 notificationImage.clicks {
                     listener.navigateToUser(notification.user)
                 }
                 root.clicks {
-                    listener.navigateToActivity(notification.activity)
-                }
-                root.isClickable = true
-            }
-        }
-
-        private fun handleActivityReplyLikeNotification(notification: ActivityReplyLikeNotification) {
-            binding.apply {
-                ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(notification.activity != null)
-                notificationViewDetail.clicks {
-                    notification.activity?.let {
-                        listener.showDetail(notification.activity.message(appSetting))
-                    }
-                }
-                notificationImage.clicks {
-                    listener.navigateToUser(notification.user)
-                }
-                root.clicks {
-                    listener.navigateToActivity(notification.activity)
+                    listener.navigateToThreadComment(notification.comment)
                 }
                 root.isClickable = true
             }
@@ -260,26 +302,6 @@ class NotificationsAdapter(
                 notificationViewDetail.clicks {
                     listener.showDetail(notification.comment.comment)
                 }
-                notificationViewDetail.clicks {
-                    listener.showDetail(notification.comment.comment)
-                }
-                notificationImage.clicks {
-                    listener.navigateToUser(notification.user)
-                }
-                root.clicks {
-                    listener.navigateToThreadComment(notification.comment)
-                }
-                root.isClickable = true
-            }
-        }
-
-        private fun handleThreadCommentLikeNotification(notification: ThreadCommentLikeNotification) {
-            binding.apply {
-                ImageUtil.loadImage(context, notification.user.avatar.getImageUrl(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(true)
-                notificationViewDetail.clicks {
-                    listener.showDetail(notification.comment.comment)
-                }
                 notificationImage.clicks {
                     listener.navigateToUser(notification.user)
                 }
@@ -303,33 +325,10 @@ class NotificationsAdapter(
                 root.isClickable = true
             }
         }
+        // endregion
 
-        private fun handleRelatedMediaAdditionNotification(notification: RelatedMediaAdditionNotification) {
-            binding.apply {
-                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(false)
-                root.clicks {
-                    listener.navigateToMedia(notification.media)
-                }
-                root.isClickable = true
-            }
-        }
-
+        // region Media
         private fun handleMediaDataChangeNotification(notification: MediaDataChangeNotification) {
-            binding.apply {
-                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(true)
-                notificationViewDetail.clicks {
-                    listener.showDetail(notification.reason)
-                }
-                root.clicks {
-                    listener.navigateToMedia(notification.media)
-                }
-                root.isClickable = true
-            }
-        }
-
-        private fun handleMediaMergeNotification(notification: MediaMergeNotification) {
             binding.apply {
                 ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
                 notificationViewDetail.makeVisible(true)
@@ -349,6 +348,35 @@ class NotificationsAdapter(
                 notificationViewDetail.makeVisible(true)
                 notificationViewDetail.clicks {
                     listener.showDetail(notification.reason)
+                }
+                root.isClickable = false
+            }
+        }
+
+        private fun handleMediaMergeNotification(notification: MediaMergeNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(true)
+                notificationViewDetail.clicks {
+                    listener.showDetail(notification.reason)
+                }
+                root.clicks {
+                    listener.navigateToMedia(notification.media)
+                }
+                root.isClickable = true
+            }
+        }
+        // endregion
+
+        // region Submission
+        private fun handleCharacterSubmissionUpdateNotification(notification: CharacterSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.character.getImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
                 }
                 root.isClickable = false
             }
@@ -382,19 +410,7 @@ class NotificationsAdapter(
                 root.isClickable = false
             }
         }
-
-        private fun handleCharacterSubmissionUpdateNotification(notification: CharacterSubmissionUpdateNotification) {
-            binding.apply {
-                ImageUtil.loadImage(context, notification.character.getImage(appSetting), notificationImage)
-                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
-                if (notification.notes.isNotBlank()) {
-                    notificationViewDetail.clicks {
-                        listener.showDetail(notification.notes)
-                    }
-                }
-                root.isClickable = false
-            }
-        }
+        // endregion
     }
 
     inner class LoadingViewHolder(private val binding: ListLoadingBinding) : ViewHolder(binding) {
