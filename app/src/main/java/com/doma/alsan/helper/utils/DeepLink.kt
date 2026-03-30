@@ -38,7 +38,11 @@ class DeepLink(
     fun isListSettings() = isAlsanScheme() && getAuthority() == SETTINGS && getFirstPath() == LIST_SETTINGS
     fun isSpoiler() = isAlsanScheme() && getAuthority() == SPOILER
 
-    private fun isAniListAuthority() = getAuthority() == ANILIST_AUTHORITY
+    private fun isAniListAuthority(): Boolean {
+        val authority = getAuthority() ?: return false
+        return authority == ANILIST_AUTHORITY || authority == "www.$ANILIST_AUTHORITY"
+    }
+
     fun getAniListPageId() = getSecondPath()
 
     fun isAnime() = isAniListAuthority() && getFirstPath() == ANILIST_ANIME && getSecondPath() != null

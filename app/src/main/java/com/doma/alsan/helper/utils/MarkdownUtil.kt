@@ -7,6 +7,10 @@ import android.text.method.LinkMovementMethod
 import android.text.style.AlignmentSpan
 import android.text.style.CharacterStyle
 import android.text.style.StrikethroughSpan
+import android.graphics.Typeface
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.util.TypedValue
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import com.doma.alsan.helper.Constant
@@ -39,7 +43,7 @@ object MarkdownUtil {
                     plugin.defaultMediaDecoder(DefaultDownScalingMediaDecoder.create(maxWidth, maxWidth))
                     plugin.addMediaDecoder(GifMediaDecoder.create())
                     plugin.addSchemeHandler(OkHttpNetworkSchemeHandler.create())
-                    plugin.errorHandler { url, throwable ->
+                    plugin.errorHandler { _, _ ->
                         null
                     }
                 }
@@ -57,13 +61,12 @@ object MarkdownUtil {
                     registry.require(HtmlPlugin::class.java) {
                         it.addHandler(StrikeTagHandler())
                         it.addHandler(AlignmentTagHandler())
+                        it.addHandler(PrimaryTagHandler(context))
                     }
                     registry.require(CorePlugin::class.java) {
                         it.addOnTextAddedListener(MentionTextAddedListener())
                     }
-                    registry.require(ImagesPlugin::class.java) {
-                        it.addSchemeHandler(OkHttpNetworkSchemeHandler.create())
-                    }
+
                 }
 
                 override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
@@ -110,8 +113,26 @@ object MarkdownUtil {
         val spoilerRegex = "(~!)[\\s\\S]+?(!~)".toRegex()
         val youtubeRegex = "youtube\\(.+?\\)".toRegex()
         val webmRegex = "webm\\(.+?\\)".toRegex()
+        
+        val brRegex = "<br\\s*/?>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlImgRegex = "<img\\b[^>]*>".toRegex(RegexOption.IGNORE_CASE)
+        val htmlLinkRegex = "<a\\b[^>]*>([\\s\\S]*?)</a>".toRegex(RegexOption.IGNORE_CASE)
+        val srcRegex = "src\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
+        val hrefRegex = "href\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
 
         return markdownText
+            .replace(brRegex, "\n\n")
+            .replace(htmlImgRegex) {
+                val srcMatch = srcRegex.find(it.value)
+                val src = srcMatch?.groups?.get(1)?.value ?: ""
+                "![img]($src)"
+            }
+            .replace(htmlLinkRegex) {
+                val hrefMatch = hrefRegex.find(it.value)
+                val href = hrefMatch?.groups?.get(1)?.value ?: ""
+                val inner = it.groups[1]?.value?.trim() ?: ""
+                "[$inner]($href)"
+            }
             .replace(spoilerRegex) {
                 val spoilerText = it.value.substring(2, it.value.length - 2)
                 "[[Spoiler]](alsan://spoiler?data=${URLEncoder.encode(spoilerText, "utf-8")})"
@@ -250,3 +271,21 @@ class MentionTextAddedListener : CorePlugin.OnTextAddedListener {
         )
     }
 }
+
+class PrimaryTagHandler(private val context: Context) : TagHandler() {
+    override fun handle(visitor: MarkwonVisitor, renderer: MarkwonHtmlRenderer, tag: HtmlTag) {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(com.doma.alsan.R.attr.themePrimaryColor, typedValue, true)
+        val color = typedValue.data
+
+        val builder = visitor.builder()
+        val start = tag.start()
+        val end = tag.end()
+        builder.setSpan(ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    override fun supportedTags(): MutableCollection<String> {
+        return mutableListOf("primary")
+    }
+}

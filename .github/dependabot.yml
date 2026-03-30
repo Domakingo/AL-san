@@ -17,6 +17,15 @@ updates:
     ignore:
       - dependency-name: "com.github.*"
         update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
+      # AGP 9 is incompatible with Apollo 3 (removes kotlin-android plugin, breaks Apollo config)
+      - dependency-name: "com.android.tools.build:gradle"
+        update-types: ["version-update:semver-major"]
+      # Gradle 9 is incompatible with Apollo 3 (apolloUsedCoordinates attributes API removed)
+      - dependency-name: "gradle-wrapper"
+        update-types: ["version-update:semver-major"]
+      # Kotlin compiler updates can break RxJava SAM conversions - update manually
+      - dependency-name: "org.jetbrains.kotlin:*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
     groups:
       dependencies:
         patterns:
