@@ -12,6 +12,7 @@ import com.doma.alsan.databinding.FragmentAppSettingsBinding
 import com.doma.alsan.helper.enums.*
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.ui.base.BaseFragment
+import com.doma.alsan.ui.base.NavigationManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.utils.DeepLink
@@ -233,20 +234,27 @@ class AppSettingsFragment : BaseFragment<FragmentAppSettingsBinding, AppSettings
         val startIndex = pushNotificationsInfoText.indexOf(dontKillMyAppText)
         val endIndex = startIndex + dontKillMyAppText.length
 
-        val clickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                navigation.openWebView(dontKillMyAppText)
-            }
-        }
-
+        val clickableSpan = UrlClickableSpan(navigation, dontKillMyAppText)
         pushNotificationsInfoText.setSpan(clickableSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.appSettingsPushNotificationsInfoText.movementMethod = LinkMovementMethod.getInstance()
         binding.appSettingsPushNotificationsInfoText.text = pushNotificationsInfoText
     }
 
     override fun onDestroyView() {
+        binding.appSettingsPushNotificationsInfoText.text = null
         super.onDestroyView()
         appThemeAdapter = null
+    }
+
+    private class UrlClickableSpan(
+        navigation: NavigationManager,
+        private val url: String
+    ) : ClickableSpan() {
+        private val navigationRef = java.lang.ref.WeakReference(navigation)
+
+        override fun onClick(widget: View) {
+            navigationRef.get()?.openWebView(url)
+        }
     }
 
     companion object {

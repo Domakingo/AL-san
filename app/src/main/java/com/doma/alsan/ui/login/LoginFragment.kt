@@ -50,15 +50,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
             val noticeText= SpannableString(getString(R.string.you_ll_be_redirected_to_anilist_co_to_login_register_make_sure_the_url_is_anilist_co_before_entering_your_email_and_password))
             val startIndex = noticeText.indexOf(aniListText)
             val endIndex = startIndex + aniListText.length
-            val clickableSpan = object : ClickableSpan() {
-                override fun onClick(p0: View) {
-                    navigation.openWebView(NavigationManager.Url.ANILIST_WEBSITE)
-                }
-            }
+            val clickableSpan = NoticeClickableSpan(navigation)
             noticeText.setSpan(clickableSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             loginNoticeText.movementMethod = LinkMovementMethod.getInstance()
             loginNoticeText.text = noticeText
         }
+    }
+
+    override fun onDestroyView() {
+        binding.loginNoticeText.text = null
+        super.onDestroyView()
     }
 
     override fun setUpInsets() {
@@ -82,6 +83,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
             it.getString(BEARER_TOKEN)?.let { bearerToken ->
                 viewModel.login(bearerToken)
             }
+        }
+    }
+
+    private class NoticeClickableSpan(navigation: NavigationManager) : ClickableSpan() {
+        private val navigationRef = java.lang.ref.WeakReference(navigation)
+
+        override fun onClick(view: View) {
+            navigationRef.get()?.openWebView(NavigationManager.Url.ANILIST_WEBSITE)
         }
     }
 
