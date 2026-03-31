@@ -368,7 +368,9 @@
     <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetModalTheme</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:navigationBarColor">?themeCardColor</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" if-api="v28">shortEdges</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 

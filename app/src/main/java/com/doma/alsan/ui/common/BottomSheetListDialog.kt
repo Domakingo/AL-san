@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.doma.alsan.databinding.DialogBottomSheetListBinding
 import com.doma.alsan.ui.base.BaseDialogFragment
+import com.doma.alsan.helper.extensions.applyBottomPaddingInsets
 
 class BottomSheetListDialog : BaseDialogFragment<DialogBottomSheetListBinding>() {
 

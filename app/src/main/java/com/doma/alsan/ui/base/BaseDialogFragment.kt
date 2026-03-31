@@ -51,9 +51,40 @@ abstract class BaseDialogFragment<VB: ViewBinding> : BottomSheetDialogFragment()
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog
+            
+            // Fix for floating menu: allow drawing behind navigation bar
+            bottomSheetDialog.window?.let { window ->
+                androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
+                window.navigationBarColor = android.graphics.Color.TRANSPARENT
+                window.addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.setFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                
+                // Nuclear window level clean
+                window.decorView.setPadding(0, 0, 0, 0)
+                window.setLayout(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT)
+            }
+
+            // Target the internal Material dialog structure
+            val container = bottomSheetDialog.findViewById<android.view.View>(com.google.android.material.R.id.container)
+            val coordinator = bottomSheetDialog.findViewById<android.view.View>(com.google.android.material.R.id.coordinator)
             val bottomSheet = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            
+            // Remove any hidden padding that the Material library adds to the container
+            container?.setPadding(0, 0, 0, 0)
+            coordinator?.setPadding(0, 0, 0, 0)
+            
             bottomSheet?.let {
-                BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
+                it.fitsSystemWindows = false
+                it.setPadding(0, 0, 0, 0)
+                (it.layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.setMargins(0, 0, 0, 0)
+                
+                // Force the FrameLayout to physically occupy the bottom
+                androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(it) { _, insets -> insets }
+                
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.isFitToContents = true
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.isGestureInsetBottomIgnored = true
             }
         }
         return dialog
