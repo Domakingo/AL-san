@@ -12,6 +12,7 @@ import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.helper.extensions.makeVisible
 import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.utils.ImageUtil
+import com.doma.alsan.helper.utils.MarkdownUtil
 import com.doma.alsan.helper.utils.TimeUtil
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 
@@ -42,6 +43,8 @@ class NotificationsAdapter(
         unreadNotificationCount = newUnreadNotificationCount
     }
 
+    private val markdownSetup = MarkdownUtil.getMarkdownSetup(context, 0, null)
+
     inner class ItemViewHolder(private val binding: ListNotificationBinding) : ViewHolder(binding) {
         override fun bind(item: Notification?, index: Int) {
             if (item == null)
@@ -65,6 +68,9 @@ class NotificationsAdapter(
                 is MediaDataChangeNotification -> handleMediaDataChangeNotification(item)
                 is MediaMergeNotification -> handleMediaMergeNotification(item)
                 is MediaDeletionNotification -> handleMediaDeletionNotification(item)
+                is MediaSubmissionUpdateNotification -> handleMediaSubmissionUpdateNotification(item)
+                is StaffSubmissionUpdateNotification -> handleStaffSubmissionUpdateNotification(item)
+                is CharacterSubmissionUpdateNotification -> handleCharacterSubmissionUpdateNotification(item)
                 else -> {
                     binding.notificationsText.text = ""
                     ImageUtil.loadImage(context, 0, binding.notificationImage)
@@ -72,7 +78,7 @@ class NotificationsAdapter(
                 }
             }
 
-            binding.notificationsText.text = item.getMessage(appSetting)
+            MarkdownUtil.applyMarkdown(context, markdownSetup, binding.notificationsText, item.getMessage(appSetting))
             binding.notificationDate.text = TimeUtil.displayInDayDateTimeFormat(item.createdAt)
             binding.notificationUnreadOverlay.show(index < unreadNotificationCount)
         }
@@ -343,6 +349,48 @@ class NotificationsAdapter(
                 notificationViewDetail.makeVisible(true)
                 notificationViewDetail.clicks {
                     listener.showDetail(notification.reason)
+                }
+                root.isClickable = false
+            }
+        }
+
+        private fun handleMediaSubmissionUpdateNotification(notification: MediaSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.media.getCoverImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
+                }
+                root.clicks {
+                    listener.navigateToMedia(notification.media)
+                }
+                root.isClickable = true
+            }
+        }
+
+        private fun handleStaffSubmissionUpdateNotification(notification: StaffSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.staff.getImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
+                }
+                root.isClickable = false
+            }
+        }
+
+        private fun handleCharacterSubmissionUpdateNotification(notification: CharacterSubmissionUpdateNotification) {
+            binding.apply {
+                ImageUtil.loadImage(context, notification.character.getImage(appSetting), notificationImage)
+                notificationViewDetail.makeVisible(notification.notes.isNotBlank())
+                if (notification.notes.isNotBlank()) {
+                    notificationViewDetail.clicks {
+                        listener.showDetail(notification.notes)
+                    }
                 }
                 root.isClickable = false
             }

@@ -33,6 +33,9 @@ query NotificationsQuery(
             ... onMediaDataChangeNotification
             ... onMediaMergeNotification
             ... onMediaDeletionNotification
+            ... onMediaSubmissionUpdateNotification
+            ... onStaffSubmissionUpdateNotification
+            ... onCharacterSubmissionUpdateNotification
         }
     }
 }
@@ -464,4 +467,77 @@ fragment onNotificationMessageActivity on MessageActivity {
   id
   message(asHtml:false)
   siteUrl
+}
+
+fragment onMediaSubmissionUpdateNotification on MediaSubmissionUpdateNotification {
+    id
+    type
+    contexts
+    status
+    notes
+    createdAt
+    media {
+        id
+        title {
+            romaji
+            english
+            native
+            userPreferred
+        }
+        coverImage {
+            extraLarge
+            large
+            medium
+        }
+        type
+        countryOfOrigin
+    }
+}
+
+fragment onStaffSubmissionUpdateNotification on StaffSubmissionUpdateNotification {
+    id
+    type
+    contexts
+    status
+    notes
+    createdAt
+    staff {
+        id
+        name {
+            first
+            middle
+            last
+            full
+            native
+            userPreferred
+        }
+        image {
+            large
+            medium
+        }
+    }
+}
+
+fragment onCharacterSubmissionUpdateNotification on CharacterSubmissionUpdateNotification {
+    id
+    type
+    contexts
+    status
+    notes
+    createdAt
+    character {
+        id
+        name {
+            first
+            middle
+            last
+            full
+            native
+            userPreferred
+        }
+        image {
+            large
+            medium
+        }
+    }
 }

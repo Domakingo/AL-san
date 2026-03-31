@@ -18,7 +18,7 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                 lastPage = Page?.pageInfo?.lastPage ?: 0,
                 hasNextPage = Page?.pageInfo?.hasNextPage ?: false
             ),
-            data = Page?.notifications?.filterNotNull()?.map { notification ->
+            data = Page?.notifications?.filterNotNull()?.mapNotNull { notification ->
                 when (notification.__typename) {
                     "AiringNotification" -> {
                         notification.onAiringNotification?.let {
@@ -482,7 +482,86 @@ fun NotificationsQuery.Data.convert() : NotificationData {
                             )
                         } ?: MediaDeletionNotification()
                     }
-                    else -> AiringNotification()
+                    "MediaSubmissionUpdateNotification" -> {
+                        notification.onMediaSubmissionUpdateNotification?.let {
+                            MediaSubmissionUpdateNotification(
+                                id = it.id,
+                                contexts = it.contexts?.filterNotNull() ?: listOf(),
+                                status = it.status ?: "",
+                                notes = it.notes ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                media = Media(
+                                    idAniList = it.media?.id ?: 0,
+                                    title = MediaTitle(
+                                        romaji = it.media?.title?.romaji ?: "",
+                                        english = it.media?.title?.english ?: "",
+                                        native = it.media?.title?.native ?: "",
+                                        userPreferred = it.media?.title?.userPreferred ?: ""
+                                    ),
+                                    coverImage = MediaCoverImage(
+                                        extraLarge = it.media?.coverImage?.extraLarge ?: "",
+                                        large = it.media?.coverImage?.large ?: "",
+                                        medium = it.media?.coverImage?.medium ?: ""
+                                    ),
+                                    countryOfOrigin = it.media?.countryOfOrigin,
+                                    type = it.media?.type
+                                )
+                            )
+                        } ?: MediaSubmissionUpdateNotification()
+                    }
+                    "StaffSubmissionUpdateNotification" -> {
+                        notification.onStaffSubmissionUpdateNotification?.let {
+                            StaffSubmissionUpdateNotification(
+                                id = it.id,
+                                contexts = it.contexts?.filterNotNull() ?: listOf(),
+                                status = it.status ?: "",
+                                notes = it.notes ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                staff = Staff(
+                                    id = it.staff?.id ?: 0,
+                                    name = StaffName(
+                                        first = it.staff?.name?.first ?: "",
+                                        middle = it.staff?.name?.middle ?: "",
+                                        last = it.staff?.name?.last ?: "",
+                                        full = it.staff?.name?.full ?: "",
+                                        native = it.staff?.name?.native ?: "",
+                                        userPreferred = it.staff?.name?.userPreferred ?: ""
+                                    ),
+                                    image = StaffImage(
+                                        large = it.staff?.image?.large ?: "",
+                                        medium = it.staff?.image?.medium ?: ""
+                                    )
+                                )
+                            )
+                        } ?: StaffSubmissionUpdateNotification()
+                    }
+                    "CharacterSubmissionUpdateNotification" -> {
+                        notification.onCharacterSubmissionUpdateNotification?.let {
+                            CharacterSubmissionUpdateNotification(
+                                id = it.id,
+                                contexts = it.contexts?.filterNotNull() ?: listOf(),
+                                status = it.status ?: "",
+                                notes = it.notes ?: "",
+                                createdAt = it.createdAt ?: 0,
+                                character = Character(
+                                    id = it.character?.id ?: 0,
+                                    name = CharacterName(
+                                        first = it.character?.name?.first ?: "",
+                                        middle = it.character?.name?.middle ?: "",
+                                        last = it.character?.name?.last ?: "",
+                                        full = it.character?.name?.full ?: "",
+                                        native = it.character?.name?.native ?: "",
+                                        userPreferred = it.character?.name?.userPreferred ?: ""
+                                    ),
+                                    image = CharacterImage(
+                                        large = it.character?.image?.large ?: "",
+                                        medium = it.character?.image?.medium ?: ""
+                                    )
+                                )
+                            )
+                        } ?: CharacterSubmissionUpdateNotification()
+                    }
+                    else -> null
                 }
             } ?: listOf()
         )
