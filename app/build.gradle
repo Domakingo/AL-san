@@ -76,8 +76,8 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
         freeCompilerArgs += [
-            '-Xsuppress-warning=PLATFORM_CLASS_MAPPED_TO_KOTLIN',
-            '-Xsuppress-warning=DEPRECATION'
+            '-Xwarning-level=PLATFORM_CLASS_MAPPED_TO_KOTLIN:disabled',
+            '-Xwarning-level=DEPRECATION:disabled'
         ]
     }
     buildFeatures {

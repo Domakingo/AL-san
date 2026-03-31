@@ -174,9 +174,10 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
             }
 
             val availableLanguages = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                @Suppress("UNCHECKED_CAST")
                 arguments?.getSerializable(AVAILABLE_LANGUAGES, ArrayList::class.java) as? ArrayList<StaffLanguage>
             } else {
-                @Suppress("DEPRECATION")
+                @Suppress("DEPRECATION", "UNCHECKED_CAST")
                 arguments?.getSerializable(AVAILABLE_LANGUAGES) as? ArrayList<StaffLanguage>
             }
 

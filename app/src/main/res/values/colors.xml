@@ -6,13 +6,7 @@
     <color name="pureBlack">#000000</color>
     
     <!-- Surface Colors -->
-    <color name="surfaceLight">#FEF7FF</color>
-    <color name="surfaceDark">#1C1B1F</color>
-    <color name="surfaceContainerLight">#F3EDF7</color>
-    <color name="surfaceContainerDark">#211F26</color>
-    <color name="surfaceContainerHighLight">#ECE6F0</color>
-    <color name="surfaceContainerHighDark">#2B2930</color>
-    
+
     <!-- AniList Brand Colors -->
     <color name="anilistPaleWhite">#F3F4F6</color>
     <color name="anilistDarkBlue">#1F2937</color>
@@ -22,19 +16,10 @@
     <color name="anilistDarkWhiteTransparent36">#FAFFFFFF</color>
 
     <!-- Transparency Variants - Black -->
-    <color name="blackTransparent86">#DB1C1B1F</color>
-    <color name="blackTransparent50">#801C1B1F</color>
-    <color name="blackTransparent36">#FA1C1B1F</color>
 
     <!-- Transparency Variants - White -->
-    <color name="whiteTransparent86">#DBFFFBFE</color>
-    <color name="whiteTransparent50">#80FFFBFE</color>
-    <color name="whiteTransparent36">#FAFFFBFE</color>
 
     <!-- Transparency Variants - Pure Black -->
-    <color name="pureBlackTransparent86">#DB000000</color>
-    <color name="pureBlackTransparent50">#80000000</color>
-    <color name="pureBlackTransparent36">#FA000000</color>
 
     <!-- AniList Pale White Transparency -->
     <color name="anilistPaleWhiteTransparent86">#DBF3F4F6</color>
@@ -108,12 +93,7 @@
     <color name="deepYellowSecondaryTransparent20">#33F59E0B</color>
 
     <!-- Card Background - Modern Elevated Surfaces -->
-    <color name="blackLight">#2B2930</color>
     <color name="blackLightTransparent80">#EB2B2930</color>
-    <color name="whiteLight">#F3EDF7</color>
-    <color name="whiteLightTransparent80">#EBF3EDF7</color>
-    <color name="pureBlackLight">#121212</color>
-    <color name="pureBlackLightTransparent80">#EB121212</color>
     <color name="anilistWhite">#F9FAFB</color>
     <color name="anilistWhiteTransparent80">#EBF9FAFB</color>
     <color name="anilistDeepBlue">#1E293B</color>
@@ -124,12 +104,8 @@
     <color name="pureBlackTransparent70">#B3000000</color>
 
     <!-- Divider -->
-    <color name="whiteTransparent12">#1FFFFBFE</color>
-    <color name="blackTransparent12">#1F1C1B1F</color>
     <color name="anilistDarkBlueTransparent12">#1F1F2937</color>
     <color name="anilistDarkWhiteTransparent12">#1F9CA3AF</color>
 
     <!-- Ripple/Overlay Colors -->
-    <color name="rippleLight">#1F000000</color>
-    <color name="rippleDark">#1FFFFFFF</color>
 </resources>

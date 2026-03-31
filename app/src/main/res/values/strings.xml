@@ -6,7 +6,6 @@
     <string name="social">Social</string>
     <string name="profile">Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="what_are_you_looking_for">What are you looking for?</string>
     <string name="hello">Hello!</string>
     <string name="seasonal">Seasonal</string>
@@ -22,7 +21,6 @@
     <string name="welcome_to_al_chan">Welcome to AL-san</string>
     <string name="al_chan_is_an_unofficial_client_for_anilist_a_place_where_you_can_track_share_discover_and_experience_anime_manga"><![CDATA[AL-san is an unofficial client for AniList, a place where you can track, share, discover, and experience Anime & Manga.]]></string>
     <string name="get_started">Get Started</string>
-    <string name="back">Back</string>
     <string name="important_to_know">Important to Know</string>
     <string name="you_ll_be_redirected_to_anilist_co_to_login_register_make_sure_the_url_is_anilist_co_before_entering_your_email_and_password">You\'ll be redirected to anilist.co to login/register. Make sure the URL is anilist.co before entering your email and password.</string>
     <string name="login">Login</string>
@@ -79,7 +77,6 @@
     <string name="quot_all_quot_manga_list_position">\"All\" Manga list position</string>
     <string name="naming">Naming</string>
     <string name="use_relative_date_for_next_airing_episode">Use relative date for next airing episode</string>
-    <string name="display_japanese_staff_name">Display Japanese staff name</string>
     <string name="display_japanese_media_title">Display Japanese media title</string>
     <string name="display_korean_media_title">Display Korean media title</string>
     <string name="display_chinese_media_title">Display Chinese media title</string>
@@ -87,9 +84,7 @@
     <string name="top_of_the_list">Top of the list</string>
     <string name="bottom_of_the_list">Bottom of the list</string>
     <string name="use_circular_avatar_for_profile">Use circular avatar for Profile</string>
-    <string name="show_recent_reviews_at_home">Show Recent Reviews at Home</string>
     <string name="follow_anilist_setting">Follow AniList setting</string>
-    <string name="native_name">Native name (ex: 初音ミク, 宮崎駿, 花澤香菜)</string>
     <string name="use_media_english_name_format">Use English name (ex: Attack on Titan, Solo Leveling, The King\'s Avatar)</string>
     <string name="use_media_romaji_name_format">Use Romaji name (ex: Shingeki no Kyojin, Na Honjaman Level Up, Quanzhi Gaoshou)</string>
     <string name="use_media_native_name_format">Use Native name (ex: 進撃の巨人, 나 혼자만 레벨업, 全职高手)</string>
@@ -103,13 +98,9 @@
     <string name="failed_to_download">Failed to download</string>
     <string name="download_cover">Download Cover</string>
     <string name="merge_activity_forum_follows_and_relations_push_notifications_into_one">Merge Activity, Forum, Follows, and Media push notifications into one</string>
-    <string name="show_push_notifications_not_earlier_than_every">Show push notifications not earlier than every</string>
     <string name="important_to_know_n1_push_notifications_will_show_up_periodically_not_real_time_n2_depending_on_your_rom_and_phone_setting_it_might_not_show_up_at_all_reference_https_dontkillmyapp_com">Important to know:\n1. Push notifications will show up periodically, not real time.\n2. Depending on your ROM and phone setting, it might not show up at all. (reference: https://dontkillmyapp.com/)</string>
     <string name="memory_saver">Memory Saver</string>
     <string name="use_the_highest_quality_image">Use the highest quality image</string>
-    <string name="enable_social_feature">Enable Social feature</string>
-    <string name="show_bio_automatically">Show Bio automatically</string>
-    <string name="these_features_are_not_suitable_for_devices_with_limited_memory_it_is_recommended_to_uncheck_all_for_better_performance_and_stability_sorry_for_the_inconvenience">These features are not suitable for devices with limited memory. It is recommended to uncheck all for better performance and stability. Sorry for the inconvenience.</string>
     <string name="all_the_configurations_here_only_applies_to_al_chan_and_will_not_affect_the_website_anilist_co">All the configurations here only applies to AL-san and will not affect the website anilist.co.</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -158,7 +149,6 @@
     <string name="five_star">5 Star (3/5)</string>
     <string name="three_point_smiley">3 Point Smiley :)</string>
     <string name="type_here">Type here</string>
-    <string name="minute">minute</string>
     <string name="minutes">minutes</string>
     <string name="hour">hour</string>
     <string name="hours">hours</string>
@@ -170,7 +160,6 @@
     <string name="title">Title</string>
     <string name="last_updated">Last updated</string>
     <string name="last_added">Last added</string>
-    <string name="reset_order">Reset Order</string>
     <string name="are_you_sure_you_want_to_reset_your_anime_section_order">Are you sure you want to reset your Anime section order?</string>
     <string name="are_you_sure_you_want_to_reset_your_manga_section_order">Are you sure you want to reset your Manga section order?</string>
     <string name="reset_anime_section_order">Reset Anime Section Order</string>
@@ -202,24 +191,18 @@
     <string name="logout_from_alchan">Logout from AL-san</string>
     <string name="logging_out_from_alchan_doesnt_mean_logging_out_from_anilist">Logging out from AL-san doesn\'t mean logging out from AniList. If you also want to logout from AniList, you have to logout from the web.</string>
     <string name="important_links">Important Links</string>
-    <string name="anilist">AniList</string>
     <string name="github">GitHub</string>
-    <string name="alchanapp_gmail_com">domakingo@gmail.com</string>
-    <string name="play_store">Play Store</string>
-    <string name="alchan_app">\@domakingo</string>
     <string name="al_chan_is_an_unofficial_app_for_anilist_this_app_exists_with_the_purpose_to_help_manage_your_anilist_account">AL-san is an unofficial app for AniList. This app exists with the purpose to help manage your AniList account.</string>
     <string name="al_san_is_a_fork">This app is an unofficial fork of </string>
     <string name="al_chan">AL-chan</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="the_privacy_policy_of_this_app_can_be_read_fully_here">The privacy policy of this app can be read fully here.</string>
     <string name="filter">Filter</string>
-    <string name="advanced_options">Advanced Options</string>
     <string name="customise_list">Customise List</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
     <string name="sort_by">Sort by</string>
     <string name="order_by">Order by</string>
-    <string name="media_filter">Media Filter</string>
     <string name="format">Format</string>
     <string name="status">Status</string>
     <string name="source">Source</string>
@@ -227,20 +210,10 @@
     <string name="season">Season</string>
     <string name="release_year">Release Year</string>
     <string name="episodes">Episodes</string>
-    <string name="duration">Duration</string>
     <string name="average_score">Average Score</string>
     <string name="popularity">Popularity</string>
     <string name="tags">Tags</string>
-    <string name="exclude">Exclude</string>
-    <string name="include">Include</string>
-    <string name="genres">Genres</string>
-    <string name="include_these_genres">Include these genres</string>
-    <string name="exclude_these_genres">Exclude these genres</string>
-    <string name="include_these_tags">Include these tags</string>
-    <string name="exclude_these_tags">Exclude these tags</string>
-    <string name="user_list_filter">User List Filter</string>
     <string name="start_year">Start Year</string>
-    <string name="completed_year">Completed Year</string>
     <string name="priority">Priority</string>
     <string name="apply">Apply</string>
     <string name="descending">Descending</string>
@@ -251,20 +224,12 @@
     <string name="completed_date">Completed Date</string>
     <string name="release_date">Release Date</string>
     <string name="next_airing">Next Airing</string>
-    <string name="persist_filter_on_app_restart">Persist filter on app restart</string>
-    <string name="min_value">Min value</string>
-    <string name="max_value">Max value</string>
     <string name="select_range">Select range</string>
     <string name="range_min_to_max">Range %1$d - %2$d</string>
     <string name="version">Version %1$s</string>
-    <string name="streaming_on">Streaming on</string>
-    <string name="minimum_tag_percentage">Minimum Tag Percentage</string>
     <string name="others">Others</string>
-    <string name="hide_doujin_self_published_series">Hide Doujin (self-published series)</string>
-    <string name="only_show_doujin_self_published_series">Only show Doujin (self-published series)</string>
     <string name="chapters">Chapters</string>
     <string name="volumes">Volumes</string>
-    <string name="reading_on">Reading on</string>
     <string name="list_type">List Type</string>
     <string name="selected_list">Selected list</string>
     <string name="experience">Experience</string>
@@ -273,7 +238,6 @@
     <string name="show_priority_indicator">Show Priority indicator</string>
     <string name="primary_color">Primary Color</string>
     <string name="secondary_color">Secondary Color</string>
-    <string name="negative_color">Negative Color</string>
     <string name="text_color">Text Color</string>
     <string name="card_color">Card Color</string>
     <string name="toolbar_color">Toolbar Color</string>
@@ -466,7 +430,6 @@
     <string name="reply_deleted">Reply Deleted</string>
     <string name="select_activity_type">Select Activity Type</string>
     <string name="hello_user">Hello, %1$s!</string>
-    <string name="text_editor">Text Editor</string>
     <string name="post">Post</string>
     <string name="preview">Preview</string>
     <string name="type_the_link_here">Type the link here</string>
@@ -492,7 +455,6 @@
     <string name="year">Year</string>
     <string name="show_adult_content">Show adult content</string>
     <string name="seasonal_chart">Seasonal Chart</string>
-    <string name="tba">TBA</string>
     <string name="add_to_planning">Add to Planning</string>
     <string name="starts_on_x">Starts on %1$s</string>
     <string name="adapted_from_x">Adapted from %1$s</string>
@@ -551,17 +513,12 @@
     <string name="delete_account">Delete Account</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
-    <string name="anilist_theme">AniList</string>
-    <string name="purple_theme">Purple</string>
-    <string name="green_theme">Green</string>
-    <string name="pink_theme">Pink</string>
     <string name="genres_include">Genres +</string>
     <string name="genres_exclude">Genres -</string>
     <string name="persist_filter">Persist</string>
     <string name="persist_filter_explanation">When enabled, the filter settings will be saved and automatically applied the next time you open this list. Disable to use a one-time filter.</string>
     <string name="ascending_short">ASC</string>
     <string name="descending_short">DESC</string>
-    <string name="none">None</string>
 
 
     <plurals name="minute">

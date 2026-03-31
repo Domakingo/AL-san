@@ -5,14 +5,11 @@
     <dimen name="fontSmall">12sp</dimen>
     <dimen name="fontBig">22sp</dimen>
     <dimen name="fontLarge">32sp</dimen>
-    <dimen name="fontHuge">45sp</dimen>
-    <dimen name="fontLabel">11sp</dimen>
 
     <!-- Icon Sizes - Consistent with MD3 -->
     <dimen name="iconPadding">4dp</dimen>
     <dimen name="iconSize">24dp</dimen>
     <dimen name="iconSmallSize">18dp</dimen>
-    <dimen name="iconLargeSize">40dp</dimen>
     <dimen name="imageCircleSmallSize">72dp</dimen>
     <dimen name="imageCircleSize">96dp</dimen>
 
@@ -29,45 +26,32 @@
     <dimen name="marginFar">56dp</dimen>
 
     <!-- Corner Radius - Context-Aware Rounded Shapes -->
-    <dimen name="cornerFlat">2dp</dimen>      <!-- For flat/low elements: badges, small labels -->
+    <!-- For flat/low elements: badges, small labels -->
     <dimen name="cornerSmall">6dp</dimen>     <!-- Standard small components: chips, list items -->
     <dimen name="cornerNormal">8dp</dimen>    <!-- Medium components: cards, dialogs -->
     <dimen name="cornerMedium">10dp</dimen>   <!-- Large components: modal sheets -->
     <dimen name="cornerLarge">24dp</dimen>    <!-- Extra large: search bars, big cards -->
-    <dimen name="cornerExtraLarge">28dp</dimen>
     <dimen name="cornerFull">50dp</dimen>     <!-- Full pill: FABs, icon buttons only -->
 
     <!-- Elevation - Subtle Shadows -->
     <dimen name="elevationNone">0dp</dimen>
     <dimen name="elevationLow">1dp</dimen>
     <dimen name="elevationNormal">3dp</dimen>
-    <dimen name="elevationHigh">6dp</dimen>
 
     <!-- Component Sizes -->
     <dimen name="lineWidth">1dp</dimen>
     <dimen name="dividerWidth">1dp</dimen>
-    <dimen name="menuWidth">100dp</dimen>
     <dimen name="toolbarBigHeight">112dp</dimen>
     <dimen name="statusBarHeight">24dp</dimen>
-    <dimen name="bottomNavHeight">80dp</dimen>
-    
+
     <!-- List Items -->
-    <dimen name="list_item_spacing">16dp</dimen>
-    <dimen name="list_item_spacing_half">8dp</dimen>
-    <dimen name="list_item_height">56dp</dimen>
-    <dimen name="list_item_padding">16dp</dimen>
-    
+
     <!-- Button Sizes -->
     <dimen name="buttonMinHeight">40dp</dimen>
-    <dimen name="buttonMinWidth">64dp</dimen>
-    <dimen name="fabSize">56dp</dimen>
-    <dimen name="fabMiniSize">40dp</dimen>
-    
+
     <!-- Card Dimensions -->
     <dimen name="cardPadding">16dp</dimen>
-    <dimen name="cardMargin">8dp</dimen>
-    
+
     <!-- Bottom Sheet -->
-    <dimen name="bottomSheetCorner">28dp</dimen>
     <dimen name="bottomSheetPeekHeight">400dp</dimen>
 </resources>

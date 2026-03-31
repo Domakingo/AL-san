@@ -9,5 +9,4 @@
     <fraction name="listImageMediumRatio">0.12</fraction>
     <fraction name="listImageSmallRatio">0.09</fraction>
 
-    <fraction name="chartRatio">1.5</fraction>
 </resources>

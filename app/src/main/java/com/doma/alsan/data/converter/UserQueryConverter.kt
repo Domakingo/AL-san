@@ -87,7 +87,7 @@ fun UserQuery.Data.convert(): User {
 
 private fun UserQuery.Node.convert(): Media {
     return Media(
-        idAniList = id ?: 0,
+        idAniList = id,
         title = MediaTitle(
             romaji = title?.romaji ?: "",
             english = title?.english ?: "",
