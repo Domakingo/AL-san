@@ -82,7 +82,7 @@ class NotificationsAdapter(
                 is StaffSubmissionUpdateNotification -> handleStaffSubmissionUpdateNotification(item)
                 else -> {
                     binding.notificationsText.text = ""
-                    ImageUtil.loadImage(context, 0, binding.notificationImage)
+                    ImageUtil.loadImage(context, com.doma.alsan.R.drawable.ic_image, binding.notificationImage)
                     binding.root.isClickable = false
                 }
             }
@@ -344,7 +344,7 @@ class NotificationsAdapter(
 
         private fun handleMediaDeletionNotification(notification: MediaDeletionNotification) {
             binding.apply {
-                ImageUtil.loadImage(context, 0, notificationImage)
+                ImageUtil.loadImage(context, com.doma.alsan.R.drawable.ic_image, notificationImage)
                 notificationViewDetail.makeVisible(true)
                 notificationViewDetail.clicks {
                     listener.showDetail(notification.reason)

@@ -344,7 +344,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 ImageUtil.loadImage(requireContext(), backgroundUri, binding.mediaListBackgroundImage)
                 binding.mediaListBackgroundImage.show(true)
             } else {
-                ImageUtil.loadImage(requireContext(), 0, binding.mediaListBackgroundImage)
+                binding.mediaListBackgroundImage.setImageDrawable(null)
                 binding.mediaListBackgroundImage.show(false)
             }
         }
