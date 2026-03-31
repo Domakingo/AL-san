@@ -28,7 +28,7 @@ object Constant {
     const val ALSAN_PRIVACY_POLICY_URL = "https://zend10.github.io/AL-chan/privacy.html"
 
     // Resources from original AL-chan repo (for thumbnails)
-    const val ALCHAN_RAW_GITHUB_URL = "https://raw.githubusercontent.com/zend10/AL-chan/master/"
+    const val ALCHAN_RAW_GITHUB_URL = "https://raw.githubusercontent.com/Domakingo/AL-san/master/"
     const val ALSAN_VIDEO_THUMBNAIL_URL = "${ALCHAN_RAW_GITHUB_URL}docs/images/video_thumbnail.png"
     const val ALSAN_YOUTUBE_THUMBNAIL_URL = "${ALCHAN_RAW_GITHUB_URL}docs/images/youtube_thumbnail.png"
 
