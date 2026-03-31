@@ -19,7 +19,7 @@ object Constant {
     const val ANILIST_CONNECT_WITH_TWITTER_URL = "$ANILIST_PROFILE_SETTINGS_URL/twitter"
     const val ANILIST_ACTIVITY = "$ANILIST_WEBSITE_URL/activity/"
     // AL-san specific URLs
-    const val ALSAN_FORUM_THREAD_URL = "${ANILIST_WEBSITE_URL}/forum/thread/12889"
+    const val ALSAN_FORUM_THREAD_URL = "${ANILIST_WEBSITE_URL}/forum/thread/86531"
     const val ALSAN_GITHUB_URL = "https://github.com/Domakingo/AL-san"
     const val ALCHAN_GITHUB_URL = "https://github.com/zend10/AL-chan"
     const val ALSAN_EMAIL_ADDRESS = "domakingtheking@gmail.com"
