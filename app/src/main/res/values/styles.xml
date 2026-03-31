@@ -423,8 +423,14 @@
 
 
     <!-- Bottom Navigation Active Indicator (MD3 Pill) -->
-    <style name="BottomNavIndicator" parent="">
-        <item name="android:color">?themeSecondaryTransparent20Color</item>
+    <style name="BottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
+        <item name="shapeAppearance">@style/ShapeAppearanceIndicator</item>
+    </style>
+
+    <style name="ShapeAppearanceIndicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

@@ -84,33 +84,75 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
             binding.mainBottomNavigation.menu.findItem(R.id.menuManga).isVisible = isViewerAuthenticated
             binding.mainBottomNavigation.menu.findItem(R.id.menuNotifications).isVisible = isViewerAuthenticated
 
-            mainViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            binding.mainBottomNavigation.setOnItemReselectedListener {
+                sharedViewModel.scrollToTop(it.order)
+            }
+
+            var isSynchronizing = false
+
+            fun updateIndicatorPosition(position: Int, offset: Float = 0f) {
+                val menuSize = if (viewModel.isViewerAuthenticated) 5 else 2
+                val itemWidth = binding.mainBottomNavigation.width.toFloat() / menuSize
+                if (itemWidth > 0) {
+                    val indicatorWidth = binding.navIndicator.width.toFloat()
+                    binding.navIndicator.translationX = (position + offset) * itemWidth + (itemWidth - indicatorWidth) / 2f
+                }
+            }
+
+            binding.mainViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(p: Int, offset: Float, px: Int) {
+                    super.onPageScrolled(p, offset, px)
+                    if (!isSynchronizing) updateIndicatorPosition(p, offset)
+                }
+
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    mainBottomNavigation.menu[position].isChecked = true
+                    if (isSynchronizing) return
+                    
+                    isSynchronizing = true
+                    try {
+                        val itemId = if (viewModel.isViewerAuthenticated) {
+                            when (position) {
+                                0 -> R.id.menuHome
+                                1 -> R.id.menuAnime
+                                2 -> R.id.menuManga
+                                3 -> R.id.menuNotifications
+                                4 -> R.id.menuProfile
+                                else -> R.id.menuHome
+                            }
+                        } else {
+                            if (position == 0) R.id.menuHome else R.id.menuProfile
+                        }
+                        
+                        if (binding.mainBottomNavigation.selectedItemId != itemId) {
+                            binding.mainBottomNavigation.selectedItemId = itemId
+                        }
+                    } finally {
+                        isSynchronizing = false
+                    }
                 }
             })
 
-            mainBottomNavigation.setOnItemSelectedListener {
+            binding.mainBottomNavigation.setOnItemSelectedListener {
+                if (isSynchronizing) return@setOnItemSelectedListener true
+                
                 if (it.itemId == R.id.menuNotifications)
                     viewModel.clearUnreadNotificationCountBadge()
 
-                val index = if (fragments?.size == mainBottomNavigation.menu.size()) {
+                val index = if (fragments?.size == binding.mainBottomNavigation.menu.size()) {
                     it.order
                 } else {
-                    // manually manage the order
-                    when (it.itemId) {
-                        R.id.menuHome -> 0
-                        R.id.menuProfile -> 1
-                        else -> 0
-                    }
+                    if (it.itemId == R.id.menuProfile) 1 else 0
                 }
-                mainViewPager.setCurrentItem(index, true)
+                
+                isSynchronizing = true
+                binding.mainViewPager.setCurrentItem(index, true)
+                isSynchronizing = false
                 true
             }
 
-            mainBottomNavigation.setOnItemReselectedListener {
-                sharedViewModel.scrollToTop(it.order)
+            binding.mainBottomNavigation.post {
+                updateIndicatorPosition(binding.mainViewPager.currentItem)
             }
         }
     }
