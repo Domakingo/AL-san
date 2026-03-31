@@ -15,6 +15,8 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import com.doma.alsan.type.StaffLanguage
 import com.doma.alsan.helper.enums.MediaType
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MediaCharacterListViewModel(
     private val userRepository: UserRepository,
@@ -40,6 +42,7 @@ class MediaCharacterListViewModel(
     private var mediaId = 0
     private var mediaType = MediaType.ANIME
     private var selectedLanguage = StaffLanguage.JAPANESE
+    private var availableLanguages: List<StaffLanguage>? = null
 
     private var hasNextPage = false
     private var currentPage = 0
@@ -54,6 +57,8 @@ class MediaCharacterListViewModel(
         loadOnce {
             mediaId = param.mediaId
             mediaType = param.mediaType
+            selectedLanguage = param.selectedLanguage ?: StaffLanguage.JAPANESE
+            availableLanguages = param.availableLanguages
 
             disposables.add(
                 userRepository.getAppSetting()
@@ -212,30 +217,41 @@ class MediaCharacterListViewModel(
     fun loadVoiceActorLanguages() {
         if (mediaType == MediaType.MANGA) return
 
+        availableLanguages?.let { languages ->
+            _voiceActorLanguages.onNext(languages.map { lang -> ListItem(lang.getString(), lang) })
+            return
+        }
+
         // Make a request without language filter to get all available VAs
         // and extract the unique languages
         _loading.onNext(true)
         
         disposables.add(
             browseRepository.getMediaCharacters(mediaId, 1, null)
-                .applyScheduler()
+                .subscribeOn(Schedulers.io())
+                .map { (_, characterEdges) ->
+                    // Extract unique languages from all voice actors in background thread
+                    val languages = characterEdges
+                        .flatMap { it.voiceActorRoles }
+                        .mapNotNull { it.voiceActor.language.ifBlank { null } }
+                        .distinct()
+                        .mapNotNull { language ->
+                            StaffLanguage.values().find { 
+                                it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
+                            }
+                        }
+                        .sortedBy { it.ordinal }
+                    
+                    languages
+                }
+                .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { _loading.onNext(false) }
                 .subscribe(
-                    { (_, characterEdges) ->
-                        // Extract unique languages from all voice actors
-                        val availableLanguages = characterEdges
-                            .flatMap { it.voiceActorRoles }
-                            .mapNotNull { it.voiceActor.language.ifBlank { null } }
-                            .distinct()
-                            .mapNotNull { language ->
-                                StaffLanguage.values().find { 
-                                    it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
-                                }
-                            }
-                            .sortedBy { it.ordinal }
-                        
-                        if (availableLanguages.isNotEmpty()) {
-                            _voiceActorLanguages.onNext(availableLanguages.map { lang -> ListItem(lang.getString(), lang) })
+                    { languages ->
+                        availableLanguages = languages
+
+                        if (languages.isNotEmpty()) {
+                            _voiceActorLanguages.onNext(languages.map { lang -> ListItem(lang.getString(), lang) })
                         } else {
                             // Fallback to showing all languages if none found
                             _voiceActorLanguages.onNext(getNonUnknownValues<StaffLanguage>().map { lang -> ListItem(lang.getString(), lang) })

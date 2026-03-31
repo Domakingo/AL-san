@@ -309,7 +309,12 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 } else {
                     com.doma.alsan.helper.enums.MediaType.ANIME
                 }
-                navigation.navigateToMediaCharacters(media.getId(), mediaType)
+                navigation.navigateToMediaCharacters(
+                    media.getId(), 
+                    mediaType,
+                    viewModel.getSelectedLanguage(),
+                    viewModel.getAvailableLanguages()
+                )
             }
 
             override fun navigateToCharacter(character: Character) {

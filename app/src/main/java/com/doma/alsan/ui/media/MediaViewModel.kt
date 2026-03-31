@@ -30,6 +30,8 @@ import com.doma.alsan.type.MediaStatus
 import com.doma.alsan.type.StaffLanguage
 import com.doma.alsan.helper.pojo.ListItem
 import com.doma.alsan.helper.extensions.getNonUnknownValues
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MediaViewModel(
     private val browseRepository: BrowseRepository,
@@ -105,6 +107,8 @@ class MediaViewModel(
     private val _voiceActorLanguages = PublishSubject.create<List<ListItem<StaffLanguage>>>()
     val voiceActorLanguages: Observable<List<ListItem<StaffLanguage>>>
         get() = _voiceActorLanguages
+
+    private var availableLanguagesList: List<StaffLanguage>? = null
 
     private val _selectedLanguage = BehaviorSubject.createDefault(StaffLanguage.JAPANESE)
     val selectedLanguage: Observable<StaffLanguage>
@@ -234,10 +238,45 @@ class MediaViewModel(
                 .doFinally { _loading.onNext(false) }
                 .map { media ->
                     media.relations.edges = media.relations.edges.sortedBy { mediaRelationPriority[it.relationType] ?: mediaRelationPriority.size }
-                    media
+                    
+                    val mediaItemList = ArrayList<MediaItem>()
+
+                    if (media.genres.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_GENRE))
+
+                    if (media.description.isNotBlank())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_SYNOPSIS))
+
+                    if (media.characters.edges.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_CHARACTERS))
+
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_INFO))
+
+                    if (media.tags.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_TAGS))
+
+                    if (media.openings?.isNotEmpty() == true)
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_OPENING, themeGroup = media.openings.firstOrNull()?.group ?: ""))
+
+                    if (media.endings?.isNotEmpty() == true)
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_ENDING, themeGroup = media.endings.firstOrNull()?.group ?: ""))
+
+                    if (media.staff.edges.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_STAFF))
+
+                    if (media.relations.edges.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RELATIONS))
+
+                    if (media.recommendations.nodes.isNotEmpty())
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RECOMMENDATIONS))
+
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_LINKS))
+                    
+                    media to mediaItemList
                 }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { media ->
+                    { (media, mediaItemList) ->
                         this.media = media
 
                         checkMediaList()
@@ -254,39 +293,11 @@ class MediaViewModel(
 
                         _averageScore.onNext(media.averageScore)
                         _favorites.onNext(media.favourites)
-
-                        val mediaItemList = ArrayList<MediaItem>()
-
-                        if (media.genres.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_GENRE))
-
-                        if (media.description.isNotBlank())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_SYNOPSIS))
-
-                        if (media.characters.edges.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_CHARACTERS))
-
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_INFO))
-
-                        if (media.tags.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_TAGS))
-
-                        if (media.openings?.isNotEmpty() == true)
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_OPENING, themeGroup = media.openings.firstOrNull()?.group ?: ""))
-
-                        if (media.endings?.isNotEmpty() == true)
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_ENDING, themeGroup = media.endings.firstOrNull()?.group ?: ""))
-
-                        if (media.staff.edges.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_STAFF))
-
-                        if (media.relations.edges.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RELATIONS))
-
-                        if (media.recommendations.nodes.isNotEmpty())
-                            mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RECOMMENDATIONS))
-
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_LINKS))
+                        
+                        // Pre-calculate available languages for characters
+                        if (media.type == com.doma.alsan.type.MediaType.ANIME) {
+                            calculateVoiceActorLanguages()
+                        }
 
                         _mediaItemList.onNext(mediaItemList)
                     },
@@ -364,22 +375,37 @@ class MediaViewModel(
         }
     }
 
-    fun loadVoiceActorLanguages() {
-        // Extract available languages from all voice actors in the media
-        val availableLanguages = media.characters.edges
-            .flatMap { it.voiceActorRoles }
-            .mapNotNull { it.voiceActor.language.ifBlank { null } }
-            .distinct()
-            .mapNotNull { language ->
-                // Map language string to StaffLanguage enum
-                StaffLanguage.values().find { 
-                    it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
-                }
+    private fun calculateVoiceActorLanguages() {
+        disposables.add(
+            Observable.fromCallable {
+                media.characters.edges
+                    .flatMap { it.voiceActorRoles }
+                    .mapNotNull { it.voiceActor.language.ifBlank { null } }
+                    .distinct()
+                    .mapNotNull { language ->
+                        StaffLanguage.values().find { 
+                            it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
+                        }
+                    }
+                    .sortedBy { it.ordinal }
             }
-            .sortedBy { it.ordinal }
-        
-        if (availableLanguages.isNotEmpty()) {
-            _voiceActorLanguages.onNext(availableLanguages.map { ListItem(it.getString(), it) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { languages ->
+                availableLanguagesList = languages
+            }
+        )
+    }
+
+    fun loadVoiceActorLanguages() {
+        availableLanguagesList?.let { languages ->
+            _voiceActorLanguages.onNext(languages.map { ListItem(it.getString(), it) })
+            return
+        }
+
+        calculateVoiceActorLanguages()
+        availableLanguagesList?.let { languages ->
+            _voiceActorLanguages.onNext(languages.map { ListItem(it.getString(), it) })
         }
     }
 
@@ -388,4 +414,10 @@ class MediaViewModel(
         // Just notify the adapter to update the displayed voice actors
         // No need to reload media, the data is already there
     }
-}
+
+    fun getSelectedLanguage(): StaffLanguage = _selectedLanguage.value ?: StaffLanguage.JAPANESE
+
+    fun getAvailableLanguages(): List<StaffLanguage> {
+        return availableLanguagesList ?: listOf()
+    }
+}

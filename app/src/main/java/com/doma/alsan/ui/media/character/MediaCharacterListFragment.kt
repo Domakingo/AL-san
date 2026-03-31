@@ -20,6 +20,7 @@ import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.utils.GridSpacingItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.helper.enums.MediaType
+import com.doma.alsan.type.StaffLanguage
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -165,7 +166,21 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
         )
 
         arguments?.getInt(MEDIA_ID)?.let {
-            viewModel.loadData(MediaCharacterListParam(it, mediaType))
+            val selectedLanguage = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                arguments?.getSerializable(SELECTED_LANGUAGE, StaffLanguage::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                arguments?.getSerializable(SELECTED_LANGUAGE) as? StaffLanguage
+            }
+
+            val availableLanguages = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                arguments?.getSerializable(AVAILABLE_LANGUAGES, ArrayList::class.java) as? ArrayList<StaffLanguage>
+            } else {
+                @Suppress("DEPRECATION")
+                arguments?.getSerializable(AVAILABLE_LANGUAGES) as? ArrayList<StaffLanguage>
+            }
+
+            viewModel.loadData(MediaCharacterListParam(it, mediaType, selectedLanguage, availableLanguages))
         }
     }
 
@@ -202,12 +217,22 @@ class MediaCharacterListFragment : BaseFragment<LayoutInfiniteScrollingBinding, 
     companion object {
         private const val MEDIA_ID = "mediaId"
         private const val MEDIA_TYPE = "mediaType"
+        private const val SELECTED_LANGUAGE = "selectedLanguage"
+        private const val AVAILABLE_LANGUAGES = "availableLanguages"
+
         @JvmStatic
-        fun newInstance(mediaId: Int, mediaType: MediaType = MediaType.ANIME) =
+        fun newInstance(
+            mediaId: Int,
+            mediaType: MediaType = MediaType.ANIME,
+            selectedLanguage: StaffLanguage? = null,
+            availableLanguages: List<StaffLanguage>? = null
+        ) =
             MediaCharacterListFragment().apply {
                 arguments = Bundle().apply {
                     putInt(MEDIA_ID, mediaId)
                     putSerializable(MEDIA_TYPE, mediaType)
+                    selectedLanguage?.let { putSerializable(SELECTED_LANGUAGE, it) }
+                    availableLanguages?.let { putSerializable(AVAILABLE_LANGUAGES, ArrayList(it)) }
                 }
             }
     }

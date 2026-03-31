@@ -238,8 +238,13 @@ class DefaultNavigationManager(
         pushBrowseScreenPage(ReviewFragment.newInstance(media, null))
     }
 
-    override fun navigateToMediaCharacters(id: Int, mediaType: MediaType) {
-        pushBrowseScreenPage(MediaCharacterListFragment.newInstance(id, mediaType))
+    override fun navigateToMediaCharacters(
+        id: Int,
+        mediaType: MediaType,
+        selectedLanguage: com.doma.alsan.type.StaffLanguage?,
+        availableLanguages: List<com.doma.alsan.type.StaffLanguage>?
+    ) {
+        pushBrowseScreenPage(MediaCharacterListFragment.newInstance(id, mediaType, selectedLanguage, availableLanguages))
     }
 
     override fun navigateToMediaStaff(id: Int) {
