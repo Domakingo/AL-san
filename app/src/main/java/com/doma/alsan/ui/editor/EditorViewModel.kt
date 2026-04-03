@@ -202,51 +202,38 @@ class EditorViewModel(
 
                             _removeFromListButtonVisibility.onNext(media.mediaListEntry?.id != null)
 
-                            val mediaList = media.mediaListEntry
-                            mediaList?.let {
-                                updateStatus(it.status ?: MediaListStatus.PLANNING)
-                                updateScore(it.score)
-                                updateAdvancedScores(it.advancedScores as? LinkedHashMap<String, Double>?)
-                                _progressLabel.onNext(
-                                    when (mediaType) {
-                                        MediaType.ANIME -> R.string.episode
-                                        MediaType.MANGA -> R.string.chapter
-                                    }
-                                )
-                                updateProgress(it.progress)
-                                updateProgressVolume(it.progressVolumes ?: 0)
-                                updateStartDate(it.startedAt)
-                                updateFinishDate(it.completedAt)
-                                _totalRewatchesLabel.onNext(
-                                    when (mediaType) {
-                                        MediaType.ANIME -> R.string.total_rewatches
-                                        MediaType.MANGA -> R.string.total_rereads
-                                    }
-                                )
-                                updateTotalRewatches(it.repeat)
-                                updateNotes(it.notes)
-                                updatePriority(it.priority)
-                                updateShouldHideFromStatusLists(it.hiddenFromStatusLists)
-                                updateIsPrivate(it.private)
+                            _progressLabel.onNext(
+                                when (mediaType) {
+                                    MediaType.ANIME -> R.string.episode
+                                    MediaType.MANGA -> R.string.chapter
+                                }
+                            )
+                            _totalRewatchesLabel.onNext(
+                                when (mediaType) {
+                                    MediaType.ANIME -> R.string.total_rewatches
+                                    MediaType.MANGA -> R.string.total_rereads
+                                }
+                            )
 
-                                // sort Custom Lists
-                                val sectionOrder = when (mediaType) {
-                                    MediaType.ANIME -> user.mediaListOptions.animeList.sectionOrder
-                                    MediaType.MANGA -> user.mediaListOptions.mangaList.sectionOrder
-                                }
-                                val customLists = it.customLists as? LinkedHashMap<String, Boolean>
-                                val sortedCustomLists = LinkedHashMap<String, Boolean>()
-                                sectionOrder.forEach { section ->
-                                    if (customLists?.containsKey(section) == true)
-                                        sortedCustomLists[section] = customLists[section]!!
-                                }
-                                customLists?.forEach { (key, value) ->
-                                    if (!sortedCustomLists.containsKey(key))
-                                        sortedCustomLists[key] = value
-                                }
-                                updateCustomLists(sortedCustomLists)
-                                _customListsVisibility.onNext(!customLists.isNullOrEmpty())
+                            val mediaList = media.mediaListEntry
+                            if (mediaList?.id != null) {
+                                updateStatus(mediaList.status ?: MediaListStatus.PLANNING)
+                                updateScore(mediaList.score)
+                                updateAdvancedScores(mediaList.advancedScores as? LinkedHashMap<String, Double>?)
+                                updateProgress(mediaList.progress)
+                                updateProgressVolume(mediaList.progressVolumes ?: 0)
+                                updateStartDate(mediaList.startedAt)
+                                updateFinishDate(mediaList.completedAt)
+                                updateTotalRewatches(mediaList.repeat)
+                                updateNotes(mediaList.notes)
+                                updatePriority(mediaList.priority)
+                                updateShouldHideFromStatusLists(mediaList.hiddenFromStatusLists)
+                                updateIsPrivate(mediaList.private)
+                            } else {
+                                updateStatus(MediaListStatus.PLANNING)
                             }
+
+                            initCustomLists(mediaList)
                         },
                         {
                             _error.onNext(it.getStringResource())
@@ -429,6 +416,47 @@ class EditorViewModel(
 
     fun updateIsPrivate(shouldPrivate: Boolean) {
         _isPrivate.onNext(shouldPrivate)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun initCustomLists(mediaList: com.doma.alsan.data.response.anilist.MediaList?) {
+        val sectionOrder = when (mediaType) {
+            MediaType.ANIME -> user.mediaListOptions.animeList.sectionOrder
+            MediaType.MANGA -> user.mediaListOptions.mangaList.sectionOrder
+        }
+        val availableCustomLists = when (mediaType) {
+            MediaType.ANIME -> user.mediaListOptions.animeList.customLists
+            MediaType.MANGA -> user.mediaListOptions.mangaList.customLists
+        }
+
+        if (mediaList?.id != null) {
+            val customLists = mediaList.customLists as? LinkedHashMap<String, Boolean>
+            val sortedCustomLists = LinkedHashMap<String, Boolean>()
+            sectionOrder.forEach { section ->
+                if (customLists?.containsKey(section) == true)
+                    sortedCustomLists[section] = customLists[section]!!
+            }
+            customLists?.forEach { (key, value) ->
+                if (!sortedCustomLists.containsKey(key))
+                    sortedCustomLists[key] = value
+            }
+            updateCustomLists(sortedCustomLists)
+            _customListsVisibility.onNext(!customLists.isNullOrEmpty())
+        } else {
+            if (availableCustomLists.isNotEmpty()) {
+                val emptyCustomLists = LinkedHashMap<String, Boolean>()
+                sectionOrder.forEach { section ->
+                    if (availableCustomLists.contains(section))
+                        emptyCustomLists[section] = false
+                }
+                availableCustomLists.forEach { name ->
+                    if (!emptyCustomLists.containsKey(name))
+                        emptyCustomLists[name] = false
+                }
+                updateCustomLists(emptyCustomLists)
+                _customListsVisibility.onNext(true)
+            }
+        }
     }
 
     fun loadMediaListStatuses() {
