@@ -38,6 +38,7 @@ class EditorFragment : BaseFragment<FragmentEditorBinding, EditorViewModel>() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             viewModel.mediaId = it.getInt(MEDIA_ID)
+            viewModel.targetCustomList = it.getString(DEFAULT_CHECKED_CUSTOM_LIST)
         }
     }
 
@@ -322,18 +323,19 @@ class EditorFragment : BaseFragment<FragmentEditorBinding, EditorViewModel>() {
     }
 
     companion object {
-        const val MEDIA_ID = "mediaId"
-        const val FROM_MEDIA_LIST = "fromMediaList"
+        private const val MEDIA_ID = "mediaId"
+        private const val FROM_MEDIA_LIST = "fromMediaList"
+        const val DEFAULT_CHECKED_CUSTOM_LIST = "defaultCheckedCustomList"
 
         @JvmStatic
-        fun newInstance(mediaId: Int, fromMediaList: Boolean, listener: EditorListener) =
-            EditorFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(MEDIA_ID, mediaId)
-                    putBoolean(FROM_MEDIA_LIST, fromMediaList)
-                }
-                this.listener = listener
+        fun newInstance(mediaId: Int, fromMediaList: Boolean, targetCustomList: String? = null, listener: EditorListener) = EditorFragment().apply {
+            arguments = Bundle().apply {
+                putInt(MEDIA_ID, mediaId)
+                putBoolean(FROM_MEDIA_LIST, fromMediaList)
+                putString(DEFAULT_CHECKED_CUSTOM_LIST, targetCustomList)
             }
+            this.listener = listener
+        }
     }
 
     interface EditorListener {

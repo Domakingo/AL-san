@@ -402,6 +402,8 @@ class EditorViewModel(
         _customLists.onNext(NullableItem(newCustomLists))
     }
 
+    var targetCustomList: String? = null
+
     fun updateCustomList(newCustomList: Pair<String, Boolean>) {
         val currentCustomLists = _customLists.value?.data
         currentCustomLists?.let {
@@ -440,18 +442,25 @@ class EditorViewModel(
                 if (!sortedCustomLists.containsKey(key))
                     sortedCustomLists[key] = value
             }
+            
+            targetCustomList?.let { target -> 
+                if (availableCustomLists.contains(target)) {
+                    sortedCustomLists[target] = true 
+                }
+            }
+            
             updateCustomLists(sortedCustomLists)
-            _customListsVisibility.onNext(!customLists.isNullOrEmpty())
+            _customListsVisibility.onNext(sortedCustomLists.isNotEmpty())
         } else {
             if (availableCustomLists.isNotEmpty()) {
                 val emptyCustomLists = LinkedHashMap<String, Boolean>()
                 sectionOrder.forEach { section ->
                     if (availableCustomLists.contains(section))
-                        emptyCustomLists[section] = false
+                        emptyCustomLists[section] = (section == targetCustomList)
                 }
                 availableCustomLists.forEach { name ->
                     if (!emptyCustomLists.containsKey(name))
-                        emptyCustomLists[name] = false
+                        emptyCustomLists[name] = (name == targetCustomList)
                 }
                 updateCustomLists(emptyCustomLists)
                 _customListsVisibility.onNext(true)

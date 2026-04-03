@@ -113,6 +113,18 @@ class MediaListViewModel(
         private set
     private var searchKeyword = ""
 
+    fun getCurrentCustomListName(): String? {
+        val groups = currentMediaListCollection?.lists ?: return null
+        
+        val isAllList = if (isAllListPositionAtTop) selectedSectionIndex == 0 else selectedSectionIndex == groups.size
+        if (isAllList) return null
+        
+        val realIndex = if (isAllListPositionAtTop) selectedSectionIndex - 1 else selectedSectionIndex
+        val group = groups.getOrNull(realIndex) ?: return null
+        
+        return if (group.isCustomList) group.name else null
+    }
+
     fun addCustomList(name: String) {
         if (name.isBlank()) return
 

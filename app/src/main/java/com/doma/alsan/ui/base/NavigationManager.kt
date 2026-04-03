@@ -19,7 +19,7 @@ interface NavigationManager {
     fun navigateToLogin(bearerToken: String? = null, disableAnimation: Boolean = false) {}
     fun navigateToMain(deepLink: DeepLink? = null) {}
 
-    fun navigateToSearch(searchCategory: SearchCategory) {}
+    fun navigateToSearch(searchCategory: SearchCategory, isDirectEditorMode: Boolean = false, targetCustomList: String? = null) {}
     fun navigateToSeasonal() {}
     fun navigateToExplore(searchCategory: SearchCategory, mediaFilter: MediaFilter? = null, action: ((() -> Unit) -> Unit)? = null) {}
     fun navigateToSocial() {}
@@ -47,7 +47,7 @@ interface NavigationManager {
     fun navigateToReorder(itemList: List<String>, action: (reorderResult: List<String>) -> Unit) {}
     fun navigateToCustomise(mediaType: MediaType, action: (customiseResult: ListStyle) -> Unit) {}
 
-    fun navigateToEditor(mediaId: Int, fromMediaList: Boolean, action: (() -> Unit)? = null) {}
+    fun navigateToEditor(mediaId: Int, fromMediaList: Boolean, targetCustomList: String? = null, action: (() -> Unit)? = null) {}
 
     fun navigateToMedia(id: Int) {}
     fun navigateToMediaStats(media: Media) {}

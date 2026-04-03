@@ -91,8 +91,8 @@ class DefaultNavigationManager(
         swapPage(MainFragment.newInstance(deepLink), true)
     }
 
-    override fun navigateToSearch(searchCategory: SearchCategory) {
-        stackPage(SearchFragment.newInstance(searchCategory))
+    override fun navigateToSearch(searchCategory: SearchCategory, isDirectEditorMode: Boolean, targetCustomList: String?) {
+        stackPage(SearchFragment.newInstance(searchCategory, isDirectEditorMode, targetCustomList))
     }
 
     override fun navigateToSeasonal() {
@@ -214,8 +214,8 @@ class DefaultNavigationManager(
         }))
     }
 
-    override fun navigateToEditor(mediaId: Int, fromMediaList: Boolean, action: (() -> Unit)?) {
-        stackPage(EditorFragment.newInstance(mediaId, fromMediaList, object : EditorFragment.EditorListener {
+    override fun navigateToEditor(mediaId: Int, fromMediaList: Boolean, targetCustomList: String?, action: (() -> Unit)?) {
+        stackPage(EditorFragment.newInstance(mediaId, fromMediaList, targetCustomList, object : EditorFragment.EditorListener {
             override fun onEntryEdited() {
                 action?.invoke()
             }

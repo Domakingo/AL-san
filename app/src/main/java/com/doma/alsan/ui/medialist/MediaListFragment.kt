@@ -162,12 +162,35 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 }
             }
 
+            if (!viewModel.isViewer) {
+                mediaListAddMediaButton.hide()
+            }
+
+            mediaListAddMediaButton.clicks {
+                searchView?.clearFocus()
+                binding.mediaListSectionSelector.clearFocus()
+
+                val searchCategory = when (viewModel.mediaType) {
+                    MediaType.ANIME -> com.doma.alsan.helper.enums.SearchCategory.ANIME
+                    MediaType.MANGA -> com.doma.alsan.helper.enums.SearchCategory.MANGA
+                }
+
+                navigation.navigateToSearch(
+                    searchCategory = searchCategory,
+                    isDirectEditorMode = true,
+                    targetCustomList = viewModel.getCurrentCustomListName()
+                )
+            }
+
             mediaListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy > 0)
+                    if (dy > 0) {
                         mediaListSwitchListButton.hide()
-                    else
+                        mediaListAddMediaButton.hide()
+                    } else {
                         mediaListSwitchListButton.show()
+                        if (viewModel.isViewer) mediaListAddMediaButton.show()
+                    }
 
                     if (dy != 0) {
                         searchView?.clearFocus()

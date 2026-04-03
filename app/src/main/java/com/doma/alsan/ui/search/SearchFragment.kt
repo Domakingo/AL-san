@@ -125,7 +125,17 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         return object : SearchRvAdapter.SearchListener {
             override fun navigateToMedia(media: Media) {
                 binding.searchEditText.clearFocus()
-                navigation.navigateToMedia(media.getId())
+                val isDirectEditorMode = arguments?.getBoolean(IS_DIRECT_EDITOR_MODE) == true
+                if (isDirectEditorMode) {
+                    val targetCustomList = arguments?.getString(TARGET_CUSTOM_LIST)
+                    navigation.navigateToEditor(
+                        mediaId = media.getId(),
+                        fromMediaList = false,
+                        targetCustomList = targetCustomList
+                    )
+                } else {
+                    navigation.navigateToMedia(media.getId())
+                }
             }
 
             override fun navigateToCharacter(character: Character) {
@@ -161,11 +171,15 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
     companion object {
         private const val SEARCH_CATEGORY = "searchCategory"
+        private const val IS_DIRECT_EDITOR_MODE = "isDirectEditorMode"
+        private const val TARGET_CUSTOM_LIST = "targetCustomList"
 
         @JvmStatic
-        fun newInstance(searchCategory: SearchCategory) = SearchFragment().apply {
+        fun newInstance(searchCategory: SearchCategory, isDirectEditorMode: Boolean = false, targetCustomList: String? = null) = SearchFragment().apply {
             arguments = Bundle().apply {
                 putString(SEARCH_CATEGORY, searchCategory.name)
+                putBoolean(IS_DIRECT_EDITOR_MODE, isDirectEditorMode)
+                putString(TARGET_CUSTOM_LIST, targetCustomList)
             }
         }
     }
