@@ -7,6 +7,7 @@ import com.doma.alsan.helper.enums.Sort
 import com.doma.alsan.type.MediaFormat
 import com.doma.alsan.type.MediaSeason
 import com.doma.alsan.type.MediaSource
+import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.MediaStatus
 import com.doma.alsan.type.UserTitleLanguage
 
@@ -46,7 +47,8 @@ data class MediaFilter(
     var minUserPriority: Int? = null,
     var maxUserPriority: Int? = null,
     var isDoujin: Boolean? = null,
-    var onList: Boolean? = null
+    var onList: Boolean? = null,
+    var mediaListStatuses: List<MediaListStatus> = listOf()
 ) {
     companion object {
         const val DEFAULT_MINIMUM_TAG_PERCENTAGE = 18

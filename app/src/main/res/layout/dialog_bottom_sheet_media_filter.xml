@@ -210,11 +210,79 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <!-- List Status Row -->
+        <LinearLayout
+            android:id="@+id/filterRowListStatus"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/filterOptionsTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/marginSmall"
+            android:layout_marginHorizontal="@dimen/marginPageBig"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/filterMediaListStatusCard"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/marginNormal"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?themePrimaryColor"
+                app:cardBackgroundColor="?themeCardColor">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/marginSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:src="@drawable/ic_format_list_bulleted"
+                        android:importantForAccessibility="no"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"/>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:text="List Status"
+                            style="?themeSmallFont"
+                            android:alpha="0.7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/filterMediaListStatusText"
+                            style="?themeSmallFont"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="All"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
         <!-- First Row: Format, Status -->
         <LinearLayout
             android:id="@+id/filterRow1"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/filterOptionsTitle"
+            app:layout_constraintTop_toBottomOf="@id/filterRowListStatus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/marginSmall"

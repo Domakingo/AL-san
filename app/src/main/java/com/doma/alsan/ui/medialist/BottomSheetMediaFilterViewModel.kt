@@ -12,6 +12,7 @@ import com.doma.alsan.helper.extensions.getString
 import com.doma.alsan.helper.pojo.ListItem
 import com.doma.alsan.ui.base.BaseViewModel
 import com.doma.alsan.type.MediaFormat
+import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.MediaSeason
 import com.doma.alsan.type.MediaSource
 import com.doma.alsan.type.MediaStatus
@@ -44,6 +45,9 @@ class BottomSheetMediaFilterViewModel(
     private val _mediaSourcesText = BehaviorSubject.create<String>()
     val mediaSourcesText: Observable<String> get() = _mediaSourcesText
 
+    private val _mediaListStatusesText = BehaviorSubject.create<String>()
+    val mediaListStatusesText: Observable<String> get() = _mediaListStatusesText
+
     private val _countriesText = BehaviorSubject.create<String>()
     val countriesText: Observable<String> get() = _countriesText
 
@@ -65,6 +69,9 @@ class BottomSheetMediaFilterViewModel(
     private val _seasonVisibility = BehaviorSubject.create<Boolean>()
     val seasonVisibility: Observable<Boolean> get() = _seasonVisibility
 
+    private val _mediaListStatusVisibility = BehaviorSubject.create<Boolean>()
+    val mediaListStatusVisibility: Observable<Boolean> get() = _mediaListStatusVisibility
+
     // Dialog triggers
     private val _sortByList = PublishSubject.create<List<ListItem<Sort>>>()
     val sortByList: Observable<List<ListItem<Sort>>> get() = _sortByList
@@ -77,6 +84,9 @@ class BottomSheetMediaFilterViewModel(
 
     private val _mediaSourceList = PublishSubject.create<Pair<List<ListItem<MediaSource>>, ArrayList<Int>>>()
     val mediaSourceList: Observable<Pair<List<ListItem<MediaSource>>, ArrayList<Int>>> get() = _mediaSourceList
+
+    private val _mediaListStatusList = PublishSubject.create<Pair<List<ListItem<MediaListStatus>>, ArrayList<Int>>>()
+    val mediaListStatusList: Observable<Pair<List<ListItem<MediaListStatus>>, ArrayList<Int>>> get() = _mediaListStatusList
 
     private val _countryList = PublishSubject.create<Pair<List<ListItem<Country>>, ArrayList<Int>>>()
     val countryList: Observable<Pair<List<ListItem<Country>>, ArrayList<Int>>> get() = _countryList
@@ -120,6 +130,7 @@ class BottomSheetMediaFilterViewModel(
         _orderByDescending.onNext(currentMediaFilter.orderByDescending)
         _persistFilter.onNext(currentMediaFilter.persistFilter)
         _seasonVisibility.onNext(mediaType == MediaType.ANIME)
+        _mediaListStatusVisibility.onNext(isUserList)
 
         updateDisplayTexts()
         
@@ -191,6 +202,12 @@ class BottomSheetMediaFilterViewModel(
         _mediaSourcesText.onNext(
             if (currentMediaFilter.mediaSources.isEmpty()) "All"
             else currentMediaFilter.mediaSources.size.toString()
+        )
+
+        // List Status text
+        _mediaListStatusesText.onNext(
+            if (currentMediaFilter.mediaListStatuses.isEmpty()) "All"
+            else currentMediaFilter.mediaListStatuses.size.toString()
         )
 
         // Country text
@@ -312,6 +329,26 @@ class BottomSheetMediaFilterViewModel(
 
     fun updateMediaStatuses(statuses: List<MediaStatus>) {
         currentMediaFilter.mediaStatuses = statuses
+        updateDisplayTexts()
+    }
+
+    fun loadMediaListStatuses() {
+        val listStatuses = getNonUnknownValues<MediaListStatus>()
+        val statuses = ArrayList<ListItem<MediaListStatus>>()
+        statuses.addAll(listStatuses.map { ListItem(it.getString(mediaType), it) })
+
+        val selectedIndex = ArrayList<Int>()
+        currentMediaFilter.mediaListStatuses.forEach {
+            val index = listStatuses.indexOf(it)
+            if (index != -1)
+                selectedIndex.add(index)
+        }
+
+        _mediaListStatusList.onNext(statuses to selectedIndex)
+    }
+
+    fun updateMediaListStatuses(statuses: List<MediaListStatus>) {
+        currentMediaFilter.mediaListStatuses = statuses
         updateDisplayTexts()
     }
 

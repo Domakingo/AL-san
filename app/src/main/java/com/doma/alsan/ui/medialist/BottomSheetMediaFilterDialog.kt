@@ -27,10 +27,9 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
     private var listener: MediaFilterListener? = null
     private var isLoadingIncludedGenres = true // Track which genre list to update
     
-    // Params to be set before showing the dialog
+    
     private var params: BottomSheetMediaFilterParam? = null
     
-    // DialogManager from parent activity
     private val dialogManager: DialogManager? by lazy {
         (activity as? BaseActivity<*>)?.dialogManager
     }
@@ -48,28 +47,28 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
 
     override fun setUpLayout() {
         binding.apply {
-            // Section card click - shows list dialog
             filterSectionCard.clicks {
                 showSectionDialog()
             }
             
-            // Sort By card click
             filterSortByCard.clicks {
                 viewModel.loadSortByOptions()
             }
 
-            // Order By toggle
             filterOrderByCard.setOnClickListener {
                 viewModel.toggleOrderBy()
             }
 
-            // Filter option cards
             filterFormatCard.clicks {
                 viewModel.loadMediaFormats()
             }
 
             filterStatusCard.clicks {
                 viewModel.loadMediaStatuses()
+            }
+
+            filterMediaListStatusCard.clicks {
+                viewModel.loadMediaListStatuses()
             }
 
             filterSourceCard.clicks {
@@ -144,14 +143,11 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
         val selectedIndex = viewModel.selectedSectionIndex
         val isAllAtTop = viewModel.isAllListPositionAtTop
         
-        // Build list items
         val items = mutableListOf<ListItem<Int>>()
         
-        // Calculate total entries
         var totalEntries = 0
         sections.forEach { totalEntries += it.entries.size }
         
-        // Add "All" option
         val allExpectedIndex = if (isAllAtTop) 0 else sections.size
         
         if (isAllAtTop) {
@@ -237,6 +233,9 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
             viewModel.mediaStatusesText.subscribe {
                 binding.filterStatusText.text = it
             },
+            viewModel.mediaListStatusesText.subscribe {
+                binding.filterMediaListStatusText.text = it
+            },
             viewModel.mediaSourcesText.subscribe {
                 binding.filterSourceText.text = it
             },
@@ -262,7 +261,9 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
                 binding.filterSeasonCard.show(it)
                 binding.filterSeasonSeparator.show(it)
             },
-            // Dialog triggers
+            viewModel.mediaListStatusVisibility.subscribe {
+                binding.filterMediaListStatusCard.show(it)
+            },
             viewModel.sortByList.subscribe { options ->
                 dialogManager?.showListDialog(options) { data, _ ->
                     viewModel.updateSortBy(data)
@@ -276,6 +277,11 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
             viewModel.mediaStatusList.subscribe { (list, selectedIndices) ->
                 dialogManager?.showMultiSelectDialog(list, selectedIndices) { data ->
                     viewModel.updateMediaStatuses(data)
+                }
+            },
+            viewModel.mediaListStatusList.subscribe { (list, selectedIndices) ->
+                dialogManager?.showMultiSelectDialog(list, selectedIndices) { data ->
+                    viewModel.updateMediaListStatuses(data)
                 }
             },
             viewModel.mediaSourceList.subscribe { (list, selectedIndices) ->
@@ -308,10 +314,8 @@ class BottomSheetMediaFilterDialog : BaseDialogFragment<DialogBottomSheetMediaFi
             }
         )
 
-        // Load initial data from params
         params?.let { param ->
             viewModel.loadData(param)
-            // Setup section visibility after loading data
             setupSectionVisibility()
         }
     }
