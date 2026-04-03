@@ -140,8 +140,10 @@ class MediaListLinearRvAdapter(
 
                 // root
                 root.setOnLongClickListener {
-                    if (shouldShowQuickDetail())
+                    if (shouldShowQuickDetail()) {
+                        it.isPressed = false
                         listener.showQuickDetail(mediaList)
+                    }
 
                     true
                 }
