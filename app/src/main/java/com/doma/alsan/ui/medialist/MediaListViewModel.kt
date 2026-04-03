@@ -57,8 +57,8 @@ class MediaListViewModel(
     val mediaListItems: Observable<List<MediaListItem>>
         get() = _mediaListItems
 
-    private val _listSections = PublishSubject.create<List<ListItem<String>>>()
-    val listSections: Observable<List<ListItem<String>>>
+    private val _listSections = BehaviorSubject.createDefault<List<ListItem<Int>>>(listOf())
+    val listSections: Observable<List<ListItem<Int>>>
         get() = _listSections
 
     private val _scoreValues = PublishSubject.create<Pair<MediaList, ScoreFormat>>()
@@ -104,14 +104,62 @@ class MediaListViewModel(
     var isAllListPositionAtTop = true
         private set
 
-    private var rawMediaListCollection: MediaListCollection? = null // needed when applying filter
-    var currentMediaListCollection: MediaListCollection? = null // needed to show number of entries in each section
+    private var rawMediaListCollection: MediaListCollection? = null
+    var currentMediaListCollection: MediaListCollection? = null
         private set
-    private var currentMediaListItems: List<MediaListItem> = listOf() // needed for search
+    private var currentMediaListItems: List<MediaListItem> = listOf()
 
     var selectedSectionIndex = 0
         private set
     private var searchKeyword = ""
+
+    fun addCustomList(name: String) {
+        if (name.isBlank()) return
+
+        _loading.onNext(true)
+
+        val updatedAnimeList = if (mediaType == MediaType.ANIME) {
+            user.mediaListOptions.animeList.copy(
+                customLists = user.mediaListOptions.animeList.customLists.toMutableList().apply {
+                    if (!contains(name)) add(name)
+                }
+            )
+        } else {
+            user.mediaListOptions.animeList
+        }
+
+        val updatedMangaList = if (mediaType == MediaType.MANGA) {
+            user.mediaListOptions.mangaList.copy(
+                customLists = user.mediaListOptions.mangaList.customLists.toMutableList().apply {
+                    if (!contains(name)) add(name)
+                }
+            )
+        } else {
+            user.mediaListOptions.mangaList
+        }
+
+        disposables.add(
+            userRepository.updateListSettings(
+                user.mediaListOptions.scoreFormat ?: ScoreFormat.POINT_100,
+                user.mediaListOptions.rowOrder ?: "TITLE",
+                updatedAnimeList,
+                updatedMangaList,
+                user.options.disabledListActivity
+            )
+            .applyScheduler()
+            .subscribe(
+                {
+                    this.user = it
+                    reloadData()
+                    _success.onNext(R.string.entry_saved)
+                },
+                {
+                    _loading.onNext(false)
+                    _error.onNext(it.getStringResource())
+                }
+            )
+        )
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun loadData(param: Unit) {
@@ -185,7 +233,7 @@ class MediaListViewModel(
                         } else {
                             _loading.onNext(true)
 
-                            // get all the index of the modified MediaList
+
                             var previousMediaList: MediaList? = null
                             val mediaListGroupIndex = ArrayList<Int>()
                             val mediaListIndex = ArrayList<Int>()
@@ -199,7 +247,7 @@ class MediaListViewModel(
                                 }
                             }
 
-                            // reload if it's a new entry or when the status is changed or when the visibility is changed
+
                             if (previousMediaList == null ||
                                 previousMediaList.status != newMediaList.status ||
                                 previousMediaList.hiddenFromStatusLists != newMediaList.hiddenFromStatusLists
@@ -208,7 +256,7 @@ class MediaListViewModel(
                                 return@subscribe
                             }
 
-                            // reload if the custom lists is changed
+
                             val oldCustomLists = previousMediaList.customLists as? LinkedHashMap<String, Boolean>
                             val newCustomLists = newMediaList.customLists as? LinkedHashMap<String, Boolean>
                             newCustomLists?.forEach { (key, value) ->
@@ -218,7 +266,7 @@ class MediaListViewModel(
                                 }
                             }
 
-                            // modify the collection with the new MediaList
+
                             mediaListGroupIndex.zip(mediaListIndex).forEach { (groupIndex, listIndex) ->
                                 rawMediaListCollection?.lists?.get(groupIndex)?.entries?.get(listIndex)?.apply {
                                     status = newMediaList.status
@@ -239,7 +287,7 @@ class MediaListViewModel(
                                 }
                             }
 
-                            // emit the change
+
                             rawMediaListCollection?.let {
                                 _mediaListItems.onNext(getFilteredAndSortedList(it))
 
@@ -306,20 +354,29 @@ class MediaListViewModel(
 
     fun loadListSections() {
         currentMediaListCollection?.lists?.let { groups ->
-            val sections = ArrayList<ListItem<String>>()
+            val sections = ArrayList<ListItem<Int>>()
             var totalEntries = 0
-            val listFromCurrentGroups = groups.map {
-                totalEntries += it.entries.size
-                val formattedTitle = "${it.name} (${it.entries.size})"
-                ListItem(formattedTitle, formattedTitle)
-            }
-            sections.addAll(listFromCurrentGroups)
+            
+            groups.forEach { totalEntries += it.entries.size }
 
-            val allListItem = ListItem("All ($totalEntries)", "All")
+            val allTitle = "All ($totalEntries)"
+            val allIndex = if (isAllListPositionAtTop) 0 else groups.size
+            val allItem = ListItem(allTitle, allIndex)
+            
             if (isAllListPositionAtTop) {
-                sections.add(0, allListItem)
-            } else {
-                sections.add(allListItem)
+                sections.add(allItem)
+            }
+
+            groups.forEachIndexed { index, group ->
+                if (group.isCustomList) {
+                    val formattedTitle = "${group.name} (${group.entries.size})"
+                    val originalIndex = if (isAllListPositionAtTop) index + 1 else index
+                    sections.add(ListItem(formattedTitle, originalIndex))
+                }
+            }
+
+            if (!isAllListPositionAtTop) {
+                sections.add(allItem)
             }
 
             _listSections.onNext(sections)
@@ -381,7 +438,7 @@ class MediaListViewModel(
         if (planningEntries.isNotEmpty()) {
             _randomMedia.onNext(planningEntries.random().media)
         } else {
-            // Optional: notify error
+
         }
     }
 
@@ -405,6 +462,7 @@ class MediaListViewModel(
                         if (mediaType == MediaType.ANIME)
                             mediaListRepository.triggerReleasingToday()
                         
+                        loadListSections()
                         state = State.LOADED
 
                         disposables.add(
@@ -470,6 +528,7 @@ class MediaListViewModel(
             groupWithSortedAndFilteredEntries.add(mediaListGroup.copy(entries = filteredEntries))
         }
         val sortedGroups = getSortedGroups(groupWithSortedAndFilteredEntries)
+        currentMediaListCollection = mediaListCollection.copy(lists = sortedGroups)
         list.addAll(getMediaListItems(sortedGroups, selectedSectionIndex))
 
         return list
@@ -544,6 +603,9 @@ class MediaListViewModel(
 
         if (mediaFilter.mediaSeasons.isNotEmpty())
             filterEntries.removeAll { !mediaFilter.mediaSeasons.contains(it.media.season) }
+
+        if (mediaFilter.mediaListStatuses.isNotEmpty())
+            filterEntries.removeAll { !mediaFilter.mediaListStatuses.contains(it.status) }
 
         if (mediaFilter.minYear != null)
             filterEntries.removeAll { it.media.startDate?.year == null || mediaFilter.minYear!! > it.media.startDate.year }
@@ -740,12 +802,16 @@ class MediaListViewModel(
         }
 
         customList.forEach { custom ->
-            val group = groups.find { it.name == custom && it.isCustomList }
-            if (group != null) { normalizedGroups.add(group) }
+            val group = groups.find { it.name == custom && (it.isCustomList || it.status == null) }
+            if (group != null) {
+                normalizedGroups.add(group)
+            } else {
+                normalizedGroups.add(MediaListGroup(name = custom, entries = listOf(), isCustomList = true))
+            }
         }
 
         defaultList.forEach { default ->
-            val group = groups.find { it.name == default && !it.isCustomList }
+            val group = groups.find { it.name == default && !it.isCustomList && it.status != null }
             if (group != null) normalizedGroups.add(group)
         }
 
@@ -769,7 +835,7 @@ class MediaListViewModel(
                 if (group.entries.isNotEmpty()) {
                     list.add(MediaListItem(title = group.name, viewType = MediaListItem.VIEW_TYPE_TITLE))
                     
-                    // Apply collapse grouping only to Completed section
+
                     val isCompletedSection = group.status == MediaListStatus.COMPLETED ||
                         group.name.equals("Completed", ignoreCase = true) ||
                         group.name.contains("Completed", ignoreCase = true)
@@ -788,16 +854,14 @@ class MediaListViewModel(
             }
             _toolbarSubtitle.onNext("All ($itemCount)")
         } else {
-            // "All" list is just for display, not actually stored
-            // It does not exist in "groups"
-            // That is why we should calculate the actual index without "All" list
+
             var selectedIndex = if (isAllListPositionAtTop) index - 1 else index
             if (selectedIndex >= groups.size)
                 selectedIndex = groups.lastIndex
             
             val selectedGroup = groups[selectedIndex]
             
-            // Apply collapse grouping only to Completed section
+
             val isCompletedSection = selectedGroup.status == MediaListStatus.COMPLETED ||
                 selectedGroup.name.equals("Completed", ignoreCase = true) ||
                 selectedGroup.name.contains("Completed", ignoreCase = true)
@@ -831,7 +895,7 @@ class MediaListViewModel(
                 }
                 .subscribe(
                     {
-                        // do nothing
+
                     },
                     {
                         _error.onNext(it.getStringResource())
@@ -1020,7 +1084,7 @@ class MediaListViewModel(
                     0.0
                 }
                 
-                // Use the earliest entry as representative (usually the first season)
+
                 val representative = groupEntries.minByOrNull { 
                     it.media.startDate?.let { date -> 
                         (date.year ?: 9999) * 10000 + (date.month ?: 12) * 100 + (date.day ?: 31)
@@ -1053,7 +1117,7 @@ class MediaListViewModel(
             }
         }
         
-        // Apply sorting based on user's selected sort option
+
         val isDescending = mediaFilter.orderByDescending
         
         return when (mediaFilter.sort) {
@@ -1158,7 +1222,7 @@ class MediaListViewModel(
                 if (isDescending) sorted.reversed() else sorted
             }
             else -> {
-                // Default: sort by title/franchise name
+
                 result.sortedBy { 
                     it.collapsedGroup?.franchiseName?.lowercase() 
                         ?: it.mediaList.media.getTitle(appSetting).lowercase() 

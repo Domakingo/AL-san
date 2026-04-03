@@ -16,6 +16,9 @@
         android:icon="@drawable/ic_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|always"/>
+    <item android:id="@+id/itemAddList"
+        android:title="@string/add_list"
+        app:showAsAction="never"/>
     <item android:id="@+id/itemCustomiseList"
         android:title="@string/customise_list"
         app:showAsAction="never"/>

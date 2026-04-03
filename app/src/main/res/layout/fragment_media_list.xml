@@ -1,57 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/mediaListRootLayout"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.medialist.MediaListFragment">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/mediaListBackgroundImage"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <include layout="@layout/toolbar_default"
         android:id="@+id/defaultToolbar"/>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/mediaListSwipeRefresh"
-        android:layout_below="@+id/defaultToolbar"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/mediaListSectionSelectorLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginNormal"
+        android:layout_marginEnd="@dimen/marginNormal"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginBottom="@dimen/marginNormal"
+        android:visibility="gone">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mediaListRecyclerView"
-            android:paddingTop="@dimen/marginNormal"
-            android:paddingStart="@dimen/marginNormal"
-            android:clipToPadding="false"
+        <AutoCompleteTextView
+            android:id="@+id/mediaListSectionSelector"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:padding="12dp"
+            android:hint="@string/list" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <FrameLayout
-        android:id="@+id/mediaListSwitchListContainer"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mediaListSwitchListButton"
-            android:src="@drawable/ic_filter"
-            android:layout_margin="@dimen/marginPageNormal"
-            app:backgroundTint="?themeSecondaryColor"
-            app:tint="?themeBackgroundColor"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mediaListBackgroundImage"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/mediaListSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mediaListRecyclerView"
+                android:paddingTop="@dimen/marginNormal"
+                android:paddingStart="@dimen/marginNormal"
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <FrameLayout
+            android:id="@+id/mediaListSwitchListContainer"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-    </FrameLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mediaListSwitchListButton"
+                android:src="@drawable/ic_filter"
+                android:layout_margin="@dimen/marginPageNormal"
+                app:backgroundTint="?themeSecondaryColor"
+                app:tint="?themeBackgroundColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-    <include layout="@layout/layout_loading"
-        android:id="@+id/loadingLayout"/>
+        </FrameLayout>
 
-</RelativeLayout>
+        <include layout="@layout/layout_loading"
+            android:id="@+id/loadingLayout"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

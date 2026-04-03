@@ -198,6 +198,8 @@
     <string name="privacy_policy">Informativa sulla privacy</string>
     <string name="the_privacy_policy_of_this_app_can_be_read_fully_here">L\'informativa sulla privacy di questa app può essere letta integralmente qui.</string>
     <string name="filter">Filtra</string>
+    <string name="add_list">Aggiungi lista</string>
+    <string name="enter_list_name">Inserisci nome lista</string>
     <string name="customise_list">Personalizza lista</string>
     <string name="search">Cerca</string>
     <string name="sort">Ordina</string>

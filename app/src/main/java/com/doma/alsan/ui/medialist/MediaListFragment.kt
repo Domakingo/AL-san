@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ArrayAdapter
+import com.doma.alsan.helper.pojo.TextInputSetting
 import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -21,6 +23,7 @@ import com.doma.alsan.data.entity.AppSetting
 import com.doma.alsan.databinding.FragmentMediaListBinding
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.data.entity.ListStyle
+import java.util.LinkedHashMap
 import com.doma.alsan.data.network.apollo.adapter.JsonAdapter
 import com.doma.alsan.data.response.anilist.Media
 import com.doma.alsan.data.response.anilist.MediaList
@@ -28,6 +31,7 @@ import com.doma.alsan.data.response.anilist.MediaListOptions
 import com.doma.alsan.helper.enums.ListType
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.MediaListItem
+import com.doma.alsan.helper.pojo.ListItem
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.ui.base.BaseFragment
 import com.doma.alsan.ui.main.SharedMainViewModel
@@ -44,6 +48,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
     private var adapter: BaseMediaListRvAdapter? = null
 
     private var menuItemSearch: MenuItem? = null
+    private var menuItemAddList: MenuItem? = null
     private var menuItemCustomiseList: MenuItem? = null
     private var menuItemChangeListType: MenuItem? = null
     private var menuItemRandom: MenuItem? = null
@@ -75,6 +80,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             defaultToolbar.defaultToolbar.apply {
                 inflateMenu(R.menu.menu_media_list)
                 menuItemSearch = menu.findItem(R.id.itemSearch)
+                menuItemAddList = menu.findItem(R.id.itemAddList)
                 menuItemCustomiseList = menu.findItem(R.id.itemCustomiseList)
                 menuItemChangeListType = menu.findItem(R.id.itemChangeListType)
                 menuItemRandom = menu.findItem(R.id.itemRandom)
@@ -105,6 +111,15 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 viewModel.reloadData()
             }
 
+            menuItemAddList?.isVisible = viewModel.isViewer
+            menuItemAddList?.setOnMenuItemClickListener {
+                searchView?.clearFocus()
+                dialog.showTextInputDialog("", TextInputSetting(hintStringResource = R.string.enter_list_name)) { name ->
+                    viewModel.addCustomList(name)
+                }
+                true
+            }
+
             menuItemCustomiseList?.setOnMenuItemClickListener {
                 searchView?.clearFocus()
                 navigation.navigateToCustomise(viewModel.mediaType) { customiseResult ->
@@ -130,6 +145,8 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
 
             mediaListSwitchListButton.clicks {
                 searchView?.clearFocus()
+                binding.mediaListSectionSelector.clearFocus()
+
                 dialog.showMediaFilterDialog(
                     mediaFilter = viewModel.mediaFilter,
                     mediaType = viewModel.mediaType,
@@ -137,12 +154,11 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                     isUserList = true,
                     hasBigList = viewModel.hasBigList,
                     isViewer = viewModel.isViewer,
-                    listSections = viewModel.currentMediaListCollection?.lists ?: listOf(),
-                    selectedSectionIndex = viewModel.selectedSectionIndex,
+                    listSections = emptyList(),
+                    selectedSectionIndex = 0,
                     isAllListPositionAtTop = viewModel.isAllListPositionAtTop
-                ) { filterResult, sectionIndex ->
+                ) { filterResult, _ ->
                     viewModel.updateMediaFilter(filterResult)
-                    viewModel.showSelectedSectionMediaList(sectionIndex)
                 }
             }
 
@@ -153,8 +169,10 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                     else
                         mediaListSwitchListButton.show()
 
-                    if (dy != 0)
+                    if (dy != 0) {
                         searchView?.clearFocus()
+                        binding.mediaListSectionSelector.clearFocus()
+                    }
                 }
             })
         }
@@ -196,13 +214,32 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
             viewModel.mediaListAdapterComponent.subscribe {
                 modifyLayoutStyle(it.isViewer, it.listStyle, it.appSetting, it.mediaListOptions, it.backgroundUri)
             },
+            viewModel.listSections.subscribe { sections: List<ListItem<Int>> ->
+                binding.mediaListSectionSelectorLayout.visibility = if (sections.size > 1) android.view.View.VISIBLE else android.view.View.GONE
+                if (sections.size > 1) {
+                    val titles: List<String> = sections.map { it.text }
+                    val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, titles)
+                    binding.mediaListSectionSelector.setAdapter(adapter)
+                    
+                    binding.mediaListSectionSelector.setOnItemClickListener { _, _, position, _ ->
+                        searchView?.clearFocus()
+                        viewModel.showSelectedSectionMediaList(sections[position].data)
+                        binding.mediaListSectionSelector.post { 
+                            binding.mediaListSectionSelector.clearFocus()
+                            binding.mediaListSectionSelectorLayout.clearFocus()
+                        }
+                    }
+
+                    val currentSelection = sections.find { it.data == viewModel.selectedSectionIndex }
+                    if (currentSelection != null) {
+                        binding.mediaListSectionSelector.setText(currentSelection.text, false)
+                    } else {
+                        binding.mediaListSectionSelector.setText("", false)
+                    }
+                }
+            },
             viewModel.mediaListItems.subscribe {
                 adapter?.updateData(it, true)
-            },
-            viewModel.listSections.subscribe {
-                dialog.showListDialog(it) { _, index ->
-                    viewModel.showSelectedSectionMediaList(index)
-                }
             },
             viewModel.scoreValues.subscribe { (mediaList: MediaList, scoreFormat: ScoreFormat) ->
                 val currentScore = mediaList.score
