@@ -80,28 +80,28 @@ class DefaultMediaListDataSource(
             status = Optional.present(status),
             score = Optional.present(score),
             progress = Optional.present(progress),
-            progressVolumes = Optional.present(progressVolumes),
+            progressVolumes = Optional.presentIfNotNull(progressVolumes),
             repeat = Optional.present(repeat),
             priority = Optional.present(priority),
             isPrivate = Optional.present(isPrivate),
             notes = Optional.present(notes),
             hiddenFromStatusLists = Optional.present(hiddenFromStatusLists),
-            customLists = Optional.present(customLists),
-            advancedScores = Optional.present(advancedScores),
-            startedAt = Optional.present(
+            customLists = Optional.presentIfNotNull(customLists),
+            advancedScores = Optional.presentIfNotNull(advancedScores),
+            startedAt = Optional.presentIfNotNull(startedAt?.let {
                 FuzzyDateInput(
-                    year = Optional.present(startedAt?.year),
-                    month = Optional.present(startedAt?.month),
-                    day = Optional.present(startedAt?.day)
+                    year = Optional.presentIfNotNull(it.year),
+                    month = Optional.presentIfNotNull(it.month),
+                    day = Optional.presentIfNotNull(it.day)
                 )
-            ),
-            completedAt = Optional.present(
+            }),
+            completedAt = Optional.presentIfNotNull(completedAt?.let {
                 FuzzyDateInput(
-                    year = Optional.present(completedAt?.year),
-                    month = Optional.present(completedAt?.month),
-                    day = Optional.present(completedAt?.day)
+                    year = Optional.presentIfNotNull(it.year),
+                    month = Optional.presentIfNotNull(it.month),
+                    day = Optional.presentIfNotNull(it.day)
                 )
-            )
+            })
         )
         return apolloHandler.apolloClient.mutation(mutation).rxSingle().toObservable()
     }
