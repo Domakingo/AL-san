@@ -163,7 +163,7 @@ class AlsanApplication : Application() {
         viewModel { MainViewModel(get(), get(), get()) }
 
         viewModel { BottomSheetMediaQuickDetailViewModel(get()) }
-        viewModel { BottomSheetMediaListQuickDetailViewModel(get(), get()) }
+        viewModel<BottomSheetMediaListQuickDetailViewModel> { BottomSheetMediaListQuickDetailViewModel(get<UserRepository>(), get<BrowseRepository>(), get<MediaListRepository>()) }
         viewModel { BottomSheetMediaThemesViewModel(get()) }
 
         viewModel { HomeViewModel(get(), get(), get()) }

@@ -22,8 +22,7 @@ class CustomListsRvAdapter(
             binding.customListsCheckBox.isEnabled = !readOnly
             binding.customListsCheckBox.isChecked = item.second
             binding.customListsCheckBox.setOnClickListener {
-                val isChecked = binding.customListsCheckBox.isChecked
-                listener.getNewCustomList(item.first to isChecked)
+                listener.getNewCustomList(item.first to binding.customListsCheckBox.isChecked)
             }
         }
     }

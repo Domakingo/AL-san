@@ -131,14 +131,20 @@ class BottomSheetMediaListQuickDetailDialog : BaseDialogFragment<DialogBottomShe
                     } else {
                         val customLists = (mediaList.customLists as? LinkedHashMap<String, Boolean>?)?.toList() ?: listOf()
                         dialogMediaListCustomListsLayout.show(true)
-                        customListsAdapter = CustomListsRvAdapter(customLists, true, object : CustomListsRvAdapter.CustomListsListener {
+                        customListsAdapter = CustomListsRvAdapter(customLists, false, object : CustomListsRvAdapter.CustomListsListener {
                             override fun getNewCustomList(newCustomList: Pair<String, Boolean>) {
-                                // do nothing
+                                viewModel.updateCustomList(mediaList, newCustomList.first, newCustomList.second)
                             }
                         })
                         dialogMediaListCustomListRecyclerView.adapter = customListsAdapter
                     }
                 }
+            },
+            viewModel.success.subscribe {
+                (requireActivity() as? com.doma.alsan.ui.base.BaseActivity<*>)?.dialogManager?.showToast(it)
+            },
+            viewModel.error.subscribe {
+                (requireActivity() as? com.doma.alsan.ui.base.BaseActivity<*>)?.dialogManager?.showToast(it)
             }
         )
 
