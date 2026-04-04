@@ -522,6 +522,7 @@
     <string name="ascending_short">CRESC</string>
     <string name="descending_short">DECR</string>
 
+    <string name="share_list_text">Guarda la mia lista di %1$s su AniList!\n%2$s</string>
     <plurals name="minute">
         <item quantity="one">minuto</item>
         <item quantity="other">minuti</item>

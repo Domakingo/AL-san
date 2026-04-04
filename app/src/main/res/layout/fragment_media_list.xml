@@ -59,6 +59,25 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <FrameLayout
+            android:id="@+id/mediaListShareListContainer"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mediaListShareListButton"
+                android:src="@drawable/ic_share"
+                android:layout_marginStart="@dimen/marginPageNormal"
+                android:layout_marginBottom="@dimen/marginPageNormal"
+                app:backgroundTint="?themeSecondaryColor"
+                app:tint="?themeBackgroundColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/mediaListAddMediaContainer"
             android:layout_alignParentEnd="true"
             android:layout_above="@id/mediaListSwitchListContainer"

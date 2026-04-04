@@ -164,6 +164,27 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
 
             if (!viewModel.isViewer) {
                 mediaListAddMediaButton.hide()
+                mediaListShareListButton.hide()
+            }
+
+            mediaListShareListButton.clicks {
+                val listTypeUrl = if (viewModel.mediaType == MediaType.ANIME) "animelist" else "mangalist"
+                val customListName = viewModel.getCurrentCustomListName()
+                val url = if (customListName != null) {
+                    "https://anilist.co/user/${viewModel.user.name}/$listTypeUrl/$customListName"
+                } else {
+                    "https://anilist.co/user/${viewModel.user.name}/$listTypeUrl"
+                }
+                
+                val mediaTypeText = getString(if (viewModel.mediaType == MediaType.ANIME) R.string.anime else R.string.manga).lowercase()
+                val text = getString(R.string.share_list_text, mediaTypeText, url)
+                
+                val shareIntent = android.content.Intent().apply {
+                    action = android.content.Intent.ACTION_SEND
+                    putExtra(android.content.Intent.EXTRA_TEXT, text)
+                    type = "text/plain"
+                }
+                startActivity(android.content.Intent.createChooser(shareIntent, null))
             }
 
             mediaListAddMediaButton.clicks {
@@ -187,9 +208,13 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                     if (dy > 0) {
                         mediaListSwitchListButton.hide()
                         mediaListAddMediaButton.hide()
+                        mediaListShareListButton.hide()
                     } else {
                         mediaListSwitchListButton.show()
-                        if (viewModel.isViewer) mediaListAddMediaButton.show()
+                        if (viewModel.isViewer) {
+                            mediaListAddMediaButton.show()
+                            mediaListShareListButton.show()
+                        }
                     }
 
                     if (dy != 0) {
@@ -396,9 +421,13 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
 
             val floatingButtonColor = listStyle.getFloatingButtonColor(requireContext())
             mediaListSwitchListButton.backgroundTintList = ColorStateList.valueOf(floatingButtonColor)
+            mediaListAddMediaButton.backgroundTintList = ColorStateList.valueOf(floatingButtonColor)
+            mediaListShareListButton.backgroundTintList = ColorStateList.valueOf(floatingButtonColor)
 
             val floatingIconColor = listStyle.getFloatingIconColor(requireContext())
             mediaListSwitchListButton.imageTintList = ColorStateList.valueOf(floatingIconColor)
+            mediaListAddMediaButton.imageTintList = ColorStateList.valueOf(floatingIconColor)
+            mediaListShareListButton.imageTintList = ColorStateList.valueOf(floatingIconColor)
 
             if (backgroundUri != null) {
                 ImageUtil.loadImage(requireContext(), backgroundUri, binding.mediaListBackgroundImage)

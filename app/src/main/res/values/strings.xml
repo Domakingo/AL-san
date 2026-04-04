@@ -523,6 +523,7 @@
     <string name="descending_short">DESC</string>
 
 
+    <string name="share_list_text">Check out my %1$s list on AniList!\n%2$s</string>
     <plurals name="minute">
         <item quantity="one">minute</item>
         <item quantity="other">minutes</item>
