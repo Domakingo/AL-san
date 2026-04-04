@@ -120,7 +120,12 @@ object MarkdownUtil {
         val srcRegex = "src\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
         val hrefRegex = "href\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
 
+        val anyItalicTagRegex = "</?([ei]m|i)>".toRegex(RegexOption.IGNORE_CASE)
+        val intraWordAsteriskRegex = "(?<=\\S)\\*(?=\\S)".toRegex()
+
         return markdownText
+            .replace(anyItalicTagRegex, "∗")
+            .replace(intraWordAsteriskRegex, "∗")
             .replace(brRegex, "\n\n")
             .replace(htmlImgRegex) {
                 val srcMatch = srcRegex.find(it.value)
