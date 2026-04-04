@@ -149,4 +149,4 @@ These go through Retrofit.
 
 ---
 
-*AL-san v3.1.4*
+*AL-san v3.2.0*
