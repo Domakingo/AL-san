@@ -113,6 +113,7 @@ object MarkdownUtil {
         val spoilerRegex = "(~!)[\\s\\S]+?(!~)".toRegex()
         val youtubeRegex = "youtube\\(.+?\\)".toRegex()
         val webmRegex = "webm\\(.+?\\)".toRegex()
+        val intraWordAsteriskRegex = "(?<=\\w)\\*(?=\\w)".toRegex()
         
         val brRegex = "<br\\s*/?>".toRegex(RegexOption.IGNORE_CASE)
         val htmlImgRegex = "<img\\b[^>]*>".toRegex(RegexOption.IGNORE_CASE)
@@ -120,12 +121,8 @@ object MarkdownUtil {
         val srcRegex = "src\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
         val hrefRegex = "href\\s*=\\s*[\"']([^\"']*)[\"']".toRegex(RegexOption.IGNORE_CASE)
 
-        val anyItalicTagRegex = "</?([ei]m|i)>".toRegex(RegexOption.IGNORE_CASE)
-        val intraWordAsteriskRegex = "(?<=\\S)\\*(?=\\S)".toRegex()
-
         return markdownText
-            .replace(anyItalicTagRegex, "∗")
-            .replace(intraWordAsteriskRegex, "∗")
+            .replace(intraWordAsteriskRegex) { "\\*" }
             .replace(brRegex, "\n\n")
             .replace(htmlImgRegex) {
                 val srcMatch = srcRegex.find(it.value)
