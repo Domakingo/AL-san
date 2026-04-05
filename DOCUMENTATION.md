@@ -14,8 +14,11 @@ AL-san is built with **Kotlin** and follows the **MVVM** pattern. Here's the tec
 - **Retrofit** for other REST APIs (YouTube, Spotify, etc.)
 - **Coil** for loading images
 - **Material Design** for the UI
+- **Markwon** for high-performance Markdown rendering
+- **WorkManager** for background tasks and sync
+- **Firebase** for Crashlytics and Analytics
 
-Works on Android 6.0+ (API 23), targets Android 15 (API 35).
+Works on Android 6.0+ (API 23), targets Android 16 (API 36).
 
 ---
 
@@ -103,7 +106,7 @@ There are several repositories:
 - **UserRepository** - Login, profile, settings, notifications
 - **MediaListRepository** - Anime/manga lists
 - **ContentRepository** - Genres, tags, homepage stuff
-- **BrowseRepository** - Search, media details, characters, staff
+- **BrowseRepository** - Search, media details, characters, staff, studios
 - **SocialRepository** - Activities, likes, comments
 - **InfoRepository** - External data from Jikan and AnimeThemes
 
@@ -115,11 +118,11 @@ Each repository talks to one or more DataSources that make the actual API calls.
 
 Feature modules, each with its own screens:
 
-**Main stuff:** Home, Login, Splash
-**Content:** Media details, Lists, Search, Seasonal charts, Calendar
-**Social:** Activity feed, Notifications, Following
-**Profile:** Stats, Favorites
-**Settings:** App settings, List customization, Filters
+**Main stuff:** Home, Login, Splash, Landing
+**Content:** Media details, Lists (with filter and reordering), Search, Seasonal charts, Calendar, Reviews & Reader, Characters, Staff, Studios
+**Social:** Activity feed, Notifications, Following, Media Social
+**Profile:** Stats (User & Media), Favorites
+**Settings:** App settings, List customization, Filters, Account settings, AniList settings
 
 Every Fragment inherits from `BaseFragment`, which handles ViewBinding, RxJava disposal, and navigation helpers.
 
@@ -143,7 +146,6 @@ Besides AniList, the app also talks to:
 - **Jikan** - MyAnimeList data
 - **AnimeThemes** - OP/ED songs
 - **YouTube** - Trailers/Episodes
-- **Spotify** - Music links
 
 These go through Retrofit.
 
