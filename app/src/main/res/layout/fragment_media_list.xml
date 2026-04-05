@@ -72,6 +72,7 @@
                 android:layout_marginBottom="@dimen/marginPageNormal"
                 app:backgroundTint="?themeSecondaryColor"
                 app:tint="?themeBackgroundColor"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -90,6 +91,7 @@
                 android:layout_marginEnd="@dimen/marginPageNormal"
                 app:backgroundTint="?themeSecondaryColor"
                 app:tint="?themeBackgroundColor"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -108,6 +110,7 @@
                 android:layout_margin="@dimen/marginPageNormal"
                 app:backgroundTint="?themeSecondaryColor"
                 app:tint="?themeBackgroundColor"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

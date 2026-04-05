@@ -162,10 +162,9 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                 }
             }
 
-            if (!viewModel.isViewer) {
-                mediaListAddMediaButton.hide()
-                mediaListShareListButton.hide()
-            }
+            mediaListSwitchListButton.hide()
+            mediaListAddMediaButton.hide()
+            mediaListShareListButton.hide()
 
             mediaListShareListButton.clicks {
                 val listTypeUrl = if (viewModel.mediaType == MediaType.ANIME) "animelist" else "mangalist"
@@ -209,7 +208,7 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
                         mediaListSwitchListButton.hide()
                         mediaListAddMediaButton.hide()
                         mediaListShareListButton.hide()
-                    } else {
+                    } else if (binding.loadingLayout.loadingLayout.visibility != android.view.View.VISIBLE) {
                         mediaListSwitchListButton.show()
                         if (viewModel.isViewer) {
                             mediaListAddMediaButton.show()
@@ -237,9 +236,21 @@ class MediaListFragment : BaseFragment<FragmentMediaListBinding, MediaListViewMo
 
     override fun setUpObserver() {
         disposables.addAll(
-            viewModel.loading.subscribe {
-                binding.loadingLayout.loadingLayout.show(it)
+            viewModel.loading.subscribe { isLoading ->
+                binding.loadingLayout.loadingLayout.show(isLoading)
                 binding.mediaListSwipeRefresh.isRefreshing = false
+
+                if (isLoading) {
+                    binding.mediaListSwitchListButton.hide()
+                    binding.mediaListAddMediaButton.hide()
+                    binding.mediaListShareListButton.hide()
+                } else {
+                    binding.mediaListSwitchListButton.show()
+                    if (viewModel.isViewer) {
+                        binding.mediaListAddMediaButton.show()
+                        binding.mediaListShareListButton.show()
+                    }
+                }
             },
             viewModel.success.subscribe {
                 dialog.showToast(it)
