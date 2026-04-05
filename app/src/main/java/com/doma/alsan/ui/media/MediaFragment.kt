@@ -58,6 +58,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private var menuItemDownloadCover: MenuItem? = null
     private var currentMedia: Media? = null
     private var appSetting = AppSetting()
+    private var pendingScrollToEpisode: Int? = null
 
     override fun generateViewBinding(
         inflater: LayoutInflater,
@@ -229,10 +230,6 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             viewModel.mediaItemList.subscribe { list ->
                 currentMedia = list.firstOrNull()?.media
                 mediaAdapter?.updateData(list, true)
-                
-                list.find { item -> item.viewType == MediaItem.VIEW_TYPE_EPISODES }?.let { episodeItem ->
-                    episodesAdapter?.updateEpisodes(episodeItem.episodes, episodeItem.currentPage, episodeItem.totalPages)
-                }
             },
             viewModel.coverImageUrlForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.mediaCoverImage)
@@ -248,8 +245,18 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             viewModel.selectedLanguage.subscribe { language ->
                 mediaAdapter?.updateSelectedLanguage(language)
             },
-            viewModel.pagedEpisodes.observeOn(AndroidSchedulers.mainThread()).subscribe { triple ->
-                episodesAdapter?.updateEpisodes(triple.first, triple.second, triple.third)
+            viewModel.pagedEpisodes.observeOn(AndroidSchedulers.mainThread()).subscribe { result: Triple<List<Episode>, Int, Int> ->
+                val episodes: List<Episode> = result.first
+                val currentPage: Int = result.second
+                val totalPages: Int = result.third
+                episodesAdapter?.updateEpisodes(episodes, currentPage, totalPages)
+                val epNum: Int? = pendingScrollToEpisode
+                if (epNum != null) {
+                    binding.root.postDelayed({
+                        episodesAdapter?.scrollToEpisode(epNum)
+                        pendingScrollToEpisode = null
+                    }, 300L)
+                }
             },
             viewModel.currentProgress.observeOn(AndroidSchedulers.mainThread()).subscribe { progress ->
                 episodesAdapter?.setCurrentProgress(progress)
@@ -478,6 +485,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 media.mediaListEntry?.progress,
                 viewModel.episodeCurrentPageValue,
                 viewModel.episodeTotalPagesValue,
+                true,
                 object : MediaEpisodesRvAdapter.MediaEpisodesListener {
                     override fun onEpisodeClick(episode: Episode) {
                         this@MediaFragment.onEpisodeClick(episode)
@@ -488,9 +496,17 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                     override fun onPageClick(page: Int) {
                         viewModel.fetchEpisodes(malId, page)
                     }
+
+                    override fun onJumpToProgressClick(page: Int, episodeNumber: Int) {
+                        if (viewModel.episodeCurrentPageValue != page) {
+                            pendingScrollToEpisode = episodeNumber
+                            viewModel.fetchEpisodes(malId, page)
+                        } else {
+                            episodesAdapter?.scrollToEpisode(episodeNumber)
+                        }
+                    }
                 }
             )
-            dialog.showListDialog(episodesAdapter!!)
         } else {
             episodesAdapter?.updateEpisodes(
                 episodes,
@@ -498,6 +514,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 viewModel.episodeTotalPagesValue
             )
         }
+        dialog.showListDialog(episodesAdapter!!)
     }
 
     private fun onEpisodeClick(episode: Episode) {

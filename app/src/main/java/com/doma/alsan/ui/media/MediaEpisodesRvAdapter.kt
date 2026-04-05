@@ -10,6 +10,7 @@ import com.doma.alsan.data.response.Episode
 import androidx.viewbinding.ViewBinding
 import com.doma.alsan.databinding.ListEpisodeBinding
 import com.doma.alsan.databinding.ListEpisodeMoreBinding
+import androidx.recyclerview.widget.RecyclerView
 import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.HorizontalScrollView
@@ -26,13 +27,16 @@ class MediaEpisodesRvAdapter(
     private var currentProgress: Int? = null,
     private var currentPage: Int = 1,
     private var totalPages: Int = 1,
+    private val showJump: Boolean = true,
     private val listener: MediaEpisodesListener
 ) : BaseRecyclerViewAdapter<Episode, ViewBinding>(list) {
+    private var recyclerView: RecyclerView? = null
 
     companion object {
         private const val VIEW_TYPE_EPISODE = 0
         private const val VIEW_TYPE_MORE = 1
         private const val VIEW_TYPE_PAGINATION = 2
+        private const val VIEW_TYPE_JUMP = 3
     }
 
     interface MediaEpisodesListener {
@@ -40,29 +44,45 @@ class MediaEpisodesRvAdapter(
         fun onEpisodeLongClick(episode: Episode)
         fun onShowMoreClick() {}
         fun onPageClick(page: Int) {}
+        fun onJumpToProgressClick(page: Int, episodeNumber: Int) {}
     }
 
     override fun getItemCount(): Int {
         var count = list.size
         if (hasMore) count++
         if (totalPages > 1) count += 2 // Top and Bottom
+        if (showJump && currentProgress != null && currentProgress!! > 0) count++ // Jump Button
         return count
     }
 
     override fun getItemViewType(position: Int): Int {
         val listSize = list.size
         val hasPagination = totalPages > 1
+        val hasJump = showJump && currentProgress != null && currentProgress!! > 0
         
-        // Top Pagination
-        if (hasPagination && position == 0) return VIEW_TYPE_PAGINATION
+        var currentPos = position
         
-        val offset = if (hasPagination) 1 else 0
+        if (hasJump) {
+            if (currentPos == 0) return VIEW_TYPE_JUMP
+            currentPos--
+        }
         
-        // Show More Button
-        if (hasMore && position == (listSize + offset)) return VIEW_TYPE_MORE
+        if (hasPagination) {
+            if (currentPos == 0) return VIEW_TYPE_PAGINATION
+            currentPos--
+        }
         
-        // Bottom Pagination
-        if (hasPagination && position == (listSize + offset + (if (hasMore) 1 else 0))) return VIEW_TYPE_PAGINATION
+        if (currentPos < listSize) return VIEW_TYPE_EPISODE
+        currentPos -= listSize
+        
+        if (hasMore) {
+            if (currentPos == 0) return VIEW_TYPE_MORE
+            currentPos--
+        }
+        
+        if (hasPagination) {
+            if (currentPos == 0) return VIEW_TYPE_PAGINATION
+        }
         
         return VIEW_TYPE_EPISODE
     }
@@ -79,6 +99,26 @@ class MediaEpisodesRvAdapter(
         notifyDataSetChanged()
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
+    }
+
+    fun scrollToEpisode(episodeNumber: Int) {
+        val index = list.indexOfFirst { ep: Episode -> ep.number == episodeNumber }
+        if (index != -1) {
+            val hasJump = showJump && currentProgress != null && currentProgress!! > 0
+            val hasPagination = totalPages > 1
+            val offset = (if (hasJump) 1 else 0) + (if (hasPagination) 1 else 0)
+            recyclerView?.scrollToPosition(index + offset)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecyclerViewAdapter<Episode, ViewBinding>.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -93,6 +133,17 @@ class MediaEpisodesRvAdapter(
                 }
                 PaginationViewHolder(view)
             }
+            VIEW_TYPE_JUMP -> {
+                val view = TextView(context).apply {
+                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    val padding = 32
+                    setPadding(padding, padding, padding, padding)
+                    gravity = Gravity.CENTER
+                    textSize = 16f
+                    setTypeface(null, Typeface.BOLD)
+                }
+                JumpViewHolder(view)
+            }
             else -> {
                 val view = ListEpisodeBinding.inflate(inflater, parent, false)
                 ItemViewHolder(view)
@@ -104,11 +155,14 @@ class MediaEpisodesRvAdapter(
         val viewType = getItemViewType(position)
         when (viewType) {
             VIEW_TYPE_EPISODE -> {
-                val offset = if (totalPages > 1) 1 else 0
+                val hasJump = showJump && currentProgress != null && currentProgress!! > 0
+                val hasPagination = totalPages > 1
+                val offset = (if (hasJump) 1 else 0) + (if (hasPagination) 1 else 0)
                 holder.bind(list[position - offset], position - offset)
             }
             VIEW_TYPE_MORE -> (holder as MoreViewHolder).bindInternal()
             VIEW_TYPE_PAGINATION -> (holder as PaginationViewHolder).bindInternal()
+            VIEW_TYPE_JUMP -> (holder as JumpViewHolder).bindInternal()
         }
     }
 
@@ -183,6 +237,40 @@ class MediaEpisodesRvAdapter(
         fun bindInternal() {
             binding.root.setOnClickListener {
                 listener.onShowMoreClick()
+            }
+        }
+    }
+
+    inner class JumpViewHolder(private val textView: TextView) : BaseRecyclerViewAdapter<Episode, ViewBinding>.ViewHolder(object : ViewBinding {
+        override fun getRoot(): View = textView
+    }) {
+        override fun bind(item: Episode, index: Int) {
+            bindInternal()
+        }
+
+        fun bindInternal() {
+            val progress = currentProgress ?: return
+            val targetPage = (progress - 1) / 100 + 1
+            
+            textView.text = if (totalPages > 1) {
+                "Jump to Episode $progress (Page $targetPage)"
+            } else {
+                "Jump to Episode $progress"
+            }
+
+            val secondaryTV = android.util.TypedValue()
+            context.theme.resolveAttribute(com.doma.alsan.R.attr.themeSecondaryColor, secondaryTV, true)
+            val secondaryColor = secondaryTV.data
+
+            val secondaryTransparent20TV = android.util.TypedValue()
+            context.theme.resolveAttribute(com.doma.alsan.R.attr.themeSecondaryTransparent20Color, secondaryTransparent20TV, true)
+            val secondaryTransparent20Color = secondaryTransparent20TV.data
+
+            textView.setTextColor(secondaryColor)
+            textView.setBackgroundColor(secondaryTransparent20Color)
+
+            textView.setOnClickListener {
+                listener.onJumpToProgressClick(targetPage, progress)
             }
         }
     }

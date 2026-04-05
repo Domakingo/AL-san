@@ -281,16 +281,12 @@ class MediaViewModel(
                                 browseRepository.getAnimeDetails(media.idMal).onErrorReturnItem(Anime()),
                                 browseRepository.getAnimeEpisodes(media.idMal, fetchAll = false).onErrorReturnItem(listOf<Episode>() to 1)
                             ) { anime, episodesPair ->
-                                 var totalPages = episodesPair.second
-                                 // Check both episodes count and next airing episode for ongoing series
                                  val animeTotalEpisodes = media.episodes ?: (media.nextAiringEpisode?.episode?.minus(1)) ?: 0
-                                 android.util.Log.d("AL-san-VM", "Initial - TotalPages: $totalPages, AniList Episodes: ${media.episodes}, NextEp: ${media.nextAiringEpisode?.episode}")
+                                 val totalPages = if (episodesPair.second == 1 && (animeTotalEpisodes > 100 || episodesPair.first.size >= 100)) {
+                                     val countToUse = if (animeTotalEpisodes > 100) animeTotalEpisodes else 100
+                                     (countToUse + 99) / 100
+                                 } else episodesPair.second
                                  
-                                 if (totalPages == 1 && (animeTotalEpisodes > 100 || episodesPair.first.size >= 100)) {
-                                     val countToUse = if (animeTotalEpisodes > 100) animeTotalEpisodes else 1000 // Guess if we don't know
-                                     totalPages = java.lang.Math.ceil(countToUse.toDouble() / 100.0).toInt()
-                                     android.util.Log.d("AL-san-VM", "Page load - Triggered fallback. Calculated TotalPages: $totalPages")
-                                 }
                                  _episodeTotalPages.onNext(totalPages)
                                 media.copy(
                                     openings = anime.openings,

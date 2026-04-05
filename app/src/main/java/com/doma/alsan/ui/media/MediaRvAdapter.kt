@@ -402,6 +402,7 @@ class MediaRvAdapter(
                     item.media.mediaListEntry?.progress,
                     1,
                     1,
+                    false,
                     object : MediaEpisodesRvAdapter.MediaEpisodesListener {
                         override fun onEpisodeClick(episode: com.doma.alsan.data.response.Episode) {
                             listener.mediaEpisodesListener.onEpisodeClick(episode)
