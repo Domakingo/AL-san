@@ -8,6 +8,7 @@ import com.doma.alsan.data.network.apollo.ApolloHandler
 import com.doma.alsan.data.network.retrofit.RetrofitHandler
 import com.doma.alsan.data.response.animethemes.AnimePaginationResponse
 import com.doma.alsan.data.response.mal.AnimeResponse
+import com.doma.alsan.data.response.mal.EpisodeListResponse
 import com.doma.alsan.data.response.mal.MangaResponse
 import com.doma.alsan.data.response.spotify.SpotifyAccessTokenResponse
 import com.doma.alsan.data.response.spotify.TrackSearchResponse
@@ -120,6 +121,10 @@ class DefaultBrowseDataSource(
 
     override fun getAnimeDetailsFromMal(malId: Int): Observable<AnimeResponse> {
         return retrofitHandler.jikanRetrofitClient().getAnimeDetails(malId)
+    }
+
+    override fun getAnimeEpisodes(malId: Int, page: Int): Observable<EpisodeListResponse> {
+        return retrofitHandler.jikanRetrofitClient().getAnimeEpisodes(malId, page)
     }
 
     override fun getAnimeDetailsFromAnimeThemes(malId: Int): Observable<AnimePaginationResponse> {

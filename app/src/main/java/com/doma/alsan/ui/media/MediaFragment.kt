@@ -20,18 +20,25 @@ import com.doma.alsan.data.entity.MediaFilter
 import com.doma.alsan.data.response.AnimeTheme
 import com.doma.alsan.data.response.AnimeThemeEntry
 import com.doma.alsan.data.response.Genre
+import com.doma.alsan.data.response.Episode
+import com.doma.alsan.databinding.ListEpisodeBinding
+import com.doma.alsan.databinding.ListEpisodeMoreBinding
+import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 import com.doma.alsan.data.response.anilist.*
 import com.doma.alsan.databinding.FragmentMediaBinding
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.enums.SearchCategory
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.ListItem
+import com.doma.alsan.helper.pojo.MediaItem
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.helper.utils.TimeUtil
 import com.doma.alsan.type.MediaSeason
 import com.doma.alsan.ui.base.BaseFragment
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs
 
 class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
@@ -43,6 +50,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private var isToolbarExpanded = true
 
     private var mediaAdapter: MediaRvAdapter? = null
+    private var episodesAdapter: MediaEpisodesRvAdapter? = null
+    private var episodesRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private var menuItemMediaStats: MenuItem? = null
     private var menuItemSocial: MenuItem? = null
     private var menuItemReview: MenuItem? = null
@@ -217,9 +226,13 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                     }
                 }
             },
-            viewModel.mediaItemList.subscribe {
-                currentMedia = it.firstOrNull()?.media
-                mediaAdapter?.updateData(it, true)
+            viewModel.mediaItemList.subscribe { list ->
+                currentMedia = list.firstOrNull()?.media
+                mediaAdapter?.updateData(list, true)
+                
+                list.find { item -> item.viewType == MediaItem.VIEW_TYPE_EPISODES }?.let { episodeItem ->
+                    episodesAdapter?.updateEpisodes(episodeItem.episodes, episodeItem.currentPage, episodeItem.totalPages)
+                }
             },
             viewModel.coverImageUrlForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.mediaCoverImage)
@@ -234,6 +247,12 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.selectedLanguage.subscribe { language ->
                 mediaAdapter?.updateSelectedLanguage(language)
+            },
+            viewModel.pagedEpisodes.observeOn(AndroidSchedulers.mainThread()).subscribe { triple ->
+                episodesAdapter?.updateEpisodes(triple.first, triple.second, triple.third)
+            },
+            viewModel.currentProgress.observeOn(AndroidSchedulers.mainThread()).subscribe { progress ->
+                episodesAdapter?.setCurrentProgress(progress)
             }
         )
 
@@ -260,6 +279,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             override val mediaRelationsListener: MediaListener.MediaRelationsListener = getMediaRelationsListener()
             override val mediaRecommendationsListener: MediaListener.MediaRecommendationsListener = getMediaRecommendationsListener()
             override val mediaLinksListener: MediaListener.MediaLinksListener = getMediaLinksListener()
+            override val mediaEpisodesListener: MediaListener.MediaEpisodesListener = getMediaEpisodesListener()
         }
     }
 
@@ -425,9 +445,77 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
         }
     }
 
+    private fun getMediaEpisodesListener(): MediaListener.MediaEpisodesListener {
+        return object : MediaListener.MediaEpisodesListener {
+            override fun onEpisodeClick(episode: Episode) {
+                this@MediaFragment.onEpisodeClick(episode)
+            }
+
+            override fun onEpisodeLongClick(episode: Episode) {
+                this@MediaFragment.onEpisodeLongClick(episode)
+            }
+
+            override fun showAllEpisodes() {
+                this@MediaFragment.showAllEpisodes()
+            }
+
+            override fun onPageClick(malId: Int, page: Int) {
+                viewModel.fetchEpisodes(malId, page)
+            }
+        }
+    }
+
+    private fun showAllEpisodes() {
+        val media = currentMedia ?: return
+        val episodes = media.episodeList ?: return
+        val malId = media.idMal ?: 0
+
+        if (episodesAdapter == null) {
+            episodesAdapter = MediaEpisodesRvAdapter(
+                requireContext(),
+                episodes,
+                false,
+                media.mediaListEntry?.progress,
+                viewModel.episodeCurrentPageValue,
+                viewModel.episodeTotalPagesValue,
+                object : MediaEpisodesRvAdapter.MediaEpisodesListener {
+                    override fun onEpisodeClick(episode: Episode) {
+                        this@MediaFragment.onEpisodeClick(episode)
+                    }
+                    override fun onEpisodeLongClick(episode: Episode) {
+                        this@MediaFragment.onEpisodeLongClick(episode)
+                    }
+                    override fun onPageClick(page: Int) {
+                        viewModel.fetchEpisodes(malId, page)
+                    }
+                }
+            )
+            dialog.showListDialog(episodesAdapter!!)
+        } else {
+            episodesAdapter?.updateEpisodes(
+                episodes,
+                viewModel.episodeCurrentPageValue,
+                viewModel.episodeTotalPagesValue
+            )
+        }
+    }
+
+    private fun onEpisodeClick(episode: Episode) {
+        if (!episode.url.isNullOrBlank()) {
+            navigation.openWebView(episode.url)
+        }
+    }
+
+    private fun onEpisodeLongClick(episode: Episode) {
+        if (!episode.title.isNullOrBlank()) {
+            viewModel.copyText(episode.title, R.string.episode_title_copied)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         mediaAdapter = null
+        episodesAdapter = null
         menuItemMediaStats = null
         menuItemSocial = null
         menuItemReview = null

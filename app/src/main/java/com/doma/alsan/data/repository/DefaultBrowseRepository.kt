@@ -4,6 +4,7 @@ import com.doma.alsan.data.converter.convert
 import com.doma.alsan.data.datasource.BrowseDataSource
 import com.doma.alsan.data.manager.BrowseManager
 import com.doma.alsan.data.response.Anime
+import com.doma.alsan.data.response.Episode
 import com.doma.alsan.data.response.Manga
 import com.doma.alsan.data.response.TrackSearch
 import com.doma.alsan.data.response.VideoSearch
@@ -24,7 +25,11 @@ import com.doma.alsan.helper.utils.AnimeThemesException
 import com.doma.alsan.helper.utils.TimeUtil
 import com.doma.alsan.type.*
 import convert
+import java.util.HashMap
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import java.util.*
 
 class DefaultBrowseRepository(
     private val browseDataSource: BrowseDataSource,
@@ -160,6 +165,40 @@ class DefaultBrowseRepository(
         return browseDataSource.getAnimeDetailsFromMal(malId).map {
             it.convert()
         }
+    }
+
+    override fun getAnimeEpisodes(malId: Int, page: Int, fetchAll: Boolean): Observable<Pair<List<Episode>, Int>> {
+        android.util.Log.d("AL-san-EP", "Fetching episodes for malId: $malId, page: $page")
+        return browseDataSource.getAnimeEpisodes(malId, page)
+            .subscribeOn(Schedulers.io())
+            .flatMap { response ->
+                val currentEpisodes = mapEpisodes(response.data)
+                android.util.Log.d("AL-san-EP", "Pagination object present: ${response.pagination != null}")
+                android.util.Log.d("AL-san-EP", "lastVisiblePage: ${response.pagination?.lastVisiblePage}, hasNextPage: ${response.pagination?.hasNextPage}")
+                val totalPages = response.pagination?.lastVisiblePage ?: page
+                android.util.Log.d("AL-san-EP", "Fetched ${currentEpisodes.size} episodes for malId: $malId, page: $page. Final totalPages calculated: $totalPages")
+                if (fetchAll && response.pagination?.hasNextPage == true) {
+                    getAnimeEpisodes(malId, page + 1, fetchAll)
+                        .map { (nextEpisodes, _) -> (currentEpisodes + nextEpisodes) to totalPages }
+                } else {
+                    Observable.just(currentEpisodes to totalPages)
+                }
+            }
+    }
+
+    private fun mapEpisodes(data: List<com.doma.alsan.data.response.mal.EpisodeDataResponse>?): List<Episode> {
+        return data?.map { ep ->
+            Episode(
+                number = ep.malId ?: 0,
+                title = ep.title ?: "",
+                titleJapanese = ep.titleJapanese ?: "",
+                titleRomanji = ep.titleRomanji ?: "",
+                aired = ep.aired ?: "",
+                filler = ep.filler ?: false,
+                recap = ep.recap ?: false,
+                url = ep.url ?: ""
+            )
+        } ?: listOf()
     }
 
     override fun getYouTubeVideo(searchQuery: String): Observable<VideoSearch> {

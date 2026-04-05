@@ -22,6 +22,7 @@
         <item name="themeRegularClickableBoldFont">@style/FontRegularClickableBold</item>
         <item name="themeRegularNegativeFont">@style/FontRegularNegative</item>
         <item name="themeSmallFont">@style/FontSmall</item>
+        <item name="themeSmallBoldFont">@style/FontSmallBold</item>
         <item name="themeSmallClickableFont">@style/FontSmallClickable</item>
         <item name="themeSmallNegativeFont">@style/FontSmallNegative</item>
         <item name="themeBigFont">@style/FontBig</item>
@@ -241,6 +242,13 @@
 
     <style name="FontSmall">
         <item name="android:fontFamily">@font/sourcesanspro_regular</item>
+        <item name="android:textSize">@dimen/fontSmall</item>
+        <item name="android:textColor">?themeContentColor</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="FontSmallBold">
+        <item name="android:fontFamily">@font/sourcesanspro_semibold</item>
         <item name="android:textSize">@dimen/fontSmall</item>
         <item name="android:textColor">?themeContentColor</item>
         <item name="android:lineSpacingMultiplier">1.2</item>

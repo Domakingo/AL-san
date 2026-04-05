@@ -41,6 +41,7 @@ class MediaRvAdapter(
     private var relationsAdapter: MediaRelationsRvAdapter? = null
     private var recommendationsAdapter: MediaRecommendationsRvAdapter? = null
     private var linksAdapter: MediaLinksRvAdapter? = null
+    private var episodesAdapter: MediaEpisodesRvAdapter? = null
     
     private var selectedLanguage: StaffLanguage = StaffLanguage.JAPANESE
     private var characterViewHolderBinding: LayoutHorizontalListBinding? = null
@@ -120,6 +121,11 @@ class MediaRvAdapter(
                 view.listRecyclerView.adapter = linksAdapter
                 view.listRecyclerView.layoutManager = FlexboxLayoutManager(context)
                 return LinkViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_EPISODES -> {
+                val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
+                view.listRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                return EpisodesViewHolder(view)
             }
             else -> {
                 val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
@@ -296,7 +302,7 @@ class MediaRvAdapter(
                 if (item.showSpoilerTags)
                     item.media.tags
                 else
-                    item.media.tags.filter { !it.isGeneralSpoiler && !it.isMediaSpoiler },
+                    item.media.tags.filter { !!it.isGeneralSpoiler && !it.isMediaSpoiler },
                 item.media.type ?: com.doma.alsan.type.MediaType.ANIME,
                 listener.mediaTagsListener
             )
@@ -365,6 +371,59 @@ class MediaRvAdapter(
             binding.footnoteText.text = context.getString(R.string.long_press_to_copy_link)
             binding.footnoteText.show(true)
             linksAdapter?.updateData(item.media.externalLinks)
+        }
+    }
+
+    inner class EpisodesViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
+        override fun bind(item: MediaItem, index: Int) {
+            binding.titleText.text = context.getString(R.string.episode_guide)
+            val episodes = item.episodes
+            val currentProgress = item.media.mediaListEntry?.progress ?: 0
+            val previewEpisodes = episodes.take(10).toMutableList()
+            if (currentProgress > 10) {
+                episodes.find { it.number == currentProgress }?.let { currentEp ->
+                    if (!previewEpisodes.any { it.number == currentEp.number }) {
+                        previewEpisodes.add(currentEp)
+                    }
+                }
+            }
+            val hasMore = episodes.size > 10
+
+            binding.seeMoreText.show(false)
+
+            binding.footnoteText.text = context.getString(R.string.long_press_to_copy_episode_title)
+            binding.footnoteText.show(true)
+
+            if (episodesAdapter == null) {
+                episodesAdapter = MediaEpisodesRvAdapter(
+                    context,
+                    previewEpisodes,
+                    hasMore,
+                    item.media.mediaListEntry?.progress,
+                    1,
+                    1,
+                    object : MediaEpisodesRvAdapter.MediaEpisodesListener {
+                        override fun onEpisodeClick(episode: com.doma.alsan.data.response.Episode) {
+                            listener.mediaEpisodesListener.onEpisodeClick(episode)
+                        }
+                        override fun onEpisodeLongClick(episode: com.doma.alsan.data.response.Episode) {
+                            listener.mediaEpisodesListener.onEpisodeLongClick(episode)
+                        }
+                        override fun onShowMoreClick() {
+                            listener.mediaEpisodesListener.showAllEpisodes()
+                        }
+                        override fun onPageClick(page: Int) {
+                            item.media.idMal?.let { malId ->
+                                listener.mediaEpisodesListener.onPageClick(malId, page)
+                            }
+                        }
+                    }
+                )
+                binding.listRecyclerView.adapter = episodesAdapter
+            } else {
+                episodesAdapter?.updateEpisodes(previewEpisodes, 1, 1)
+                episodesAdapter?.setCurrentProgress(item.media.mediaListEntry?.progress ?: 0)
+            }
         }
     }
 }

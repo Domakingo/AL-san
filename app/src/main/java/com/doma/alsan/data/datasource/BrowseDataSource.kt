@@ -4,6 +4,7 @@ import com.apollographql.apollo3.api.ApolloResponse
 import com.doma.alsan.*
 import com.doma.alsan.data.response.animethemes.AnimePaginationResponse
 import com.doma.alsan.data.response.mal.AnimeResponse
+import com.doma.alsan.data.response.mal.EpisodeListResponse
 import com.doma.alsan.data.response.mal.MangaResponse
 import com.doma.alsan.data.response.spotify.SpotifyAccessTokenResponse
 import com.doma.alsan.data.response.spotify.TrackSearchResponse
@@ -32,6 +33,7 @@ interface BrowseDataSource {
     fun getMangaDetails(malId: Int): Observable<MangaResponse>
     fun getAnimeDetailsFromMal(malId: Int): Observable<AnimeResponse>
     fun getAnimeDetailsFromAnimeThemes(malId: Int): Observable<AnimePaginationResponse>
+    fun getAnimeEpisodes(malId: Int, page: Int): Observable<EpisodeListResponse>
     fun getYouTubeVideo(key: String, searchQuery: String): Observable<VideoSearchResponse>
     fun getSpotifyAccessToken(): Observable<SpotifyAccessTokenResponse>
     fun getSpotifyTrack(searchQuery: String): Observable<TrackSearchResponse>

@@ -1,6 +1,7 @@
 package com.doma.alsan.data.repository
 
 import com.doma.alsan.data.response.Anime
+import com.doma.alsan.data.response.Episode
 import com.doma.alsan.data.response.Manga
 import com.doma.alsan.data.response.TrackSearch
 import com.doma.alsan.data.response.VideoSearch
@@ -42,6 +43,7 @@ interface BrowseRepository {
 
     fun getMangaDetails(malId: Int): Observable<Manga>
     fun getAnimeDetails(malId: Int): Observable<Anime>
+    fun getAnimeEpisodes(malId: Int, page: Int = 1, fetchAll: Boolean = false): Observable<Pair<List<Episode>, Int>>
     fun getYouTubeVideo(searchQuery: String): Observable<VideoSearch>
     fun getSpotifyTrack(searchQuery: String): Observable<TrackSearch>
 }

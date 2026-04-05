@@ -55,7 +55,8 @@ data class Media(
     val mediaListEntry: MediaList? = null,
     val openings: List<AnimeTheme>? = null,
     val endings: List<AnimeTheme>? = null,
-    val mangaSerialization: List<MangaSerialization>? = null
+    val mangaSerialization: List<MangaSerialization>? = null,
+    val episodeList: List<com.doma.alsan.data.response.Episode>? = null
 ) {
     fun getId() : Int {
         return idAniList

@@ -1,5 +1,6 @@
 package com.doma.alsan.helper.pojo
 
+import com.doma.alsan.data.response.Episode
 import com.doma.alsan.data.response.anilist.Media
 
 data class MediaItem(
@@ -7,7 +8,10 @@ data class MediaItem(
     val viewType: Int = 0,
     var showFullDescription: Boolean = false,
     var showSpoilerTags: Boolean = false,
-    var themeGroup: String = ""
+    var themeGroup: String = "",
+    val episodes: List<Episode> = listOf(),
+    val currentPage: Int = 1,
+    val totalPages: Int = 1
 ) {
     companion object {
         const val VIEW_TYPE_SYNOPSIS = 100
@@ -22,6 +26,7 @@ data class MediaItem(
         const val VIEW_TYPE_RECOMMENDATIONS = 900
         const val VIEW_TYPE_TRAILERS = 1000
         const val VIEW_TYPE_LINKS = 1100
-        const val VIEW_TYPE_STAFF = 1200
+        const val VIEW_TYPE_EPISODES = 1200
+        const val VIEW_TYPE_STAFF = 1300
     }
 }

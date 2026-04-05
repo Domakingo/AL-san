@@ -2,6 +2,7 @@ package com.doma.alsan.ui.media
 
 import com.doma.alsan.data.response.AnimeTheme
 import com.doma.alsan.data.response.AnimeThemeEntry
+import com.doma.alsan.data.response.Episode
 import com.doma.alsan.data.response.Genre
 import com.doma.alsan.data.response.anilist.*
 import com.doma.alsan.type.MediaSeason
@@ -62,6 +63,13 @@ interface MediaListener {
         fun copyExternalLink(mediaExternalLink: MediaExternalLink)
     }
 
+    interface MediaEpisodesListener {
+        fun onEpisodeClick(episode: Episode)
+        fun onEpisodeLongClick(episode: Episode)
+        fun showAllEpisodes()
+        fun onPageClick(malId: Int, page: Int)
+    }
+
     val mediaSynopsisListener: MediaSynopsisListener
     val mediaInfoListener: MediaInfoListener
     val mediaGenreListener: MediaGenreListener
@@ -73,4 +81,5 @@ interface MediaListener {
     val mediaRelationsListener: MediaRelationsListener
     val mediaRecommendationsListener: MediaRecommendationsListener
     val mediaLinksListener: MediaLinksListener
+    val mediaEpisodesListener: MediaEpisodesListener
 }

@@ -360,6 +360,9 @@
     <string name="hide_spoilers">Nascondi spoiler</string>
     <string name="links">Link</string>
     <string name="long_press_to_copy_link">Premi a lungo per copiare il link</string>
+    <string name="episode_guide">Guida agli Episodi</string>
+    <string name="long_press_to_copy_episode_title">Premi a lungo per copiare il titolo</string>
+    <string name="episode_title_copied">Titolo episodio copiato</string>
     <string name="long_press_to_see_tag_description">Premi a lungo per la descrizione del tag</string>
     <string name="character_list">Lista personaggi</string>
     <string name="change_language">Cambia lingua</string>

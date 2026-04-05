@@ -23,6 +23,8 @@ import com.doma.alsan.ui.base.BaseViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlin.collections.*
+import com.doma.alsan.data.response.Episode
 import com.doma.alsan.type.MediaFormat
 import com.doma.alsan.type.MediaListStatus
 import com.doma.alsan.type.MediaRelation
@@ -108,11 +110,33 @@ class MediaViewModel(
     val voiceActorLanguages: Observable<List<ListItem<StaffLanguage>>>
         get() = _voiceActorLanguages
 
+    private val _pagedEpisodes = PublishSubject.create<Triple<List<Episode>, Int, Int>>()
+    val pagedEpisodes: Observable<Triple<List<Episode>, Int, Int>>
+        get() = _pagedEpisodes
+
+    private val _currentProgress = BehaviorSubject.createDefault(0)
+    val currentProgress: Observable<Int>
+        get() = _currentProgress
+
     private var availableLanguagesList: List<StaffLanguage>? = null
 
     private val _selectedLanguage = BehaviorSubject.createDefault(StaffLanguage.JAPANESE)
     val selectedLanguage: Observable<StaffLanguage>
         get() = _selectedLanguage
+
+    private val _episodeCurrentPage = BehaviorSubject.createDefault(1)
+    val episodeCurrentPage: Observable<Int>
+        get() = _episodeCurrentPage
+
+    val episodeCurrentPageValue: Int
+        get() = _episodeCurrentPage.value ?: 1
+
+    private val _episodeTotalPages = BehaviorSubject.createDefault(1)
+    val episodeTotalPages: Observable<Int>
+        get() = _episodeTotalPages
+
+    val episodeTotalPagesValue: Int
+        get() = _episodeTotalPages.value ?: 1
 
     private var mediaId = 0
 
@@ -192,6 +216,9 @@ class MediaViewModel(
                             mediaListGroup.entries.forEach { mediaList ->
                                 if (mediaList.media.getId() == mediaId) {
                                     _addToListButtonText.onNext(mediaList.status?.getString(media.type?.getMediaType() ?: MediaType.ANIME) ?: "")
+                                    this@MediaViewModel.media = this@MediaViewModel.media.copy(mediaListEntry = mediaList)
+                                    _currentProgress.onNext(mediaList.progress ?: 0)
+                                    _mediaItemList.onNext(_mediaItemList.value.orEmpty().map { it.copy(media = this@MediaViewModel.media) })
                                     itemFound = true
                                     return@collection
                                 }
@@ -200,6 +227,36 @@ class MediaViewModel(
 
                         if (!itemFound) {
                             _addToListButtonText.onNext("")
+                        }
+                    },
+                    {
+                        it.printStackTrace()
+                    }
+                )
+        )
+    }
+
+    fun fetchEpisodes(malId: Int, page: Int) {
+        disposables.add(
+            browseRepository.getAnimeEpisodes(malId, page)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { episodesPair ->
+                        var totalPages = episodesPair.second
+                        val animeTotalEpisodes = this.media.episodes ?: (this.media.nextAiringEpisode?.episode?.minus(1)) ?: 0
+                        
+                        if (totalPages == 1 && (animeTotalEpisodes > 100 || (page == 1 && episodesPair.first.size >= 100))) {
+                             val countToUse = if (animeTotalEpisodes > 100) animeTotalEpisodes else (if (episodesPair.first.size >= 100) 1000 else 0)
+                             if (countToUse > 0) {
+                                 totalPages = java.lang.Math.ceil(countToUse.toDouble() / 100.0).toInt()
+                             }
+                        }
+                        
+                        _episodeCurrentPage.onNext(page)
+                        _episodeTotalPages.onNext(totalPages)
+                        
+                        if (episodesPair.first.isNotEmpty()) {
+                            _pagedEpisodes.onNext(Triple(episodesPair.first, page, totalPages))
                         }
                     },
                     {
@@ -220,8 +277,26 @@ class MediaViewModel(
 
                     return@flatMap when (media.type) {
                         com.doma.alsan.type.MediaType.ANIME -> {
-                            browseRepository.getAnimeDetails(media.idMal).onErrorReturn { Anime() }.map {
-                                media.copy(openings = it.openings, endings = it.endings)
+                            Observable.zip(
+                                browseRepository.getAnimeDetails(media.idMal).onErrorReturnItem(Anime()),
+                                browseRepository.getAnimeEpisodes(media.idMal, fetchAll = false).onErrorReturnItem(listOf<Episode>() to 1)
+                            ) { anime, episodesPair ->
+                                 var totalPages = episodesPair.second
+                                 // Check both episodes count and next airing episode for ongoing series
+                                 val animeTotalEpisodes = media.episodes ?: (media.nextAiringEpisode?.episode?.minus(1)) ?: 0
+                                 android.util.Log.d("AL-san-VM", "Initial - TotalPages: $totalPages, AniList Episodes: ${media.episodes}, NextEp: ${media.nextAiringEpisode?.episode}")
+                                 
+                                 if (totalPages == 1 && (animeTotalEpisodes > 100 || episodesPair.first.size >= 100)) {
+                                     val countToUse = if (animeTotalEpisodes > 100) animeTotalEpisodes else 1000 // Guess if we don't know
+                                     totalPages = java.lang.Math.ceil(countToUse.toDouble() / 100.0).toInt()
+                                     android.util.Log.d("AL-san-VM", "Page load - Triggered fallback. Calculated TotalPages: $totalPages")
+                                 }
+                                 _episodeTotalPages.onNext(totalPages)
+                                media.copy(
+                                    openings = anime.openings,
+                                    endings = anime.endings,
+                                    episodeList = episodesPair.first
+                                )
                             }
                         }
                         com.doma.alsan.type.MediaType.MANGA -> {
@@ -246,6 +321,11 @@ class MediaViewModel(
 
                     if (media.description.isNotBlank())
                         mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_SYNOPSIS))
+
+                    if (media.episodeList?.isNotEmpty() == true) {
+                        val totalPages = episodeTotalPagesValue
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_EPISODES, episodes = media.episodeList ?: emptyList(), totalPages = totalPages, currentPage = episodeCurrentPageValue))
+                    }
 
                     if (media.characters.edges.isNotEmpty())
                         mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_CHARACTERS))
@@ -351,13 +431,13 @@ class MediaViewModel(
         )
     }
 
-    fun copyText(text: String) {
+    fun copyText(text: String, successMessage: Int = R.string.text_copied) {
         disposables.add(
             clipboardService.copyPlainText(text)
                 .applyScheduler()
                 .subscribe(
                     {
-                        _success.onNext(R.string.text_copied)
+                        _success.onNext(successMessage)
                     },
                     {
                         it.printStackTrace()

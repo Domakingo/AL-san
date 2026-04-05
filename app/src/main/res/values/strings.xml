@@ -360,6 +360,9 @@
     <string name="hide_spoilers">Hide Spoilers</string>
     <string name="links">Links</string>
     <string name="long_press_to_copy_link">Long press to copy link</string>
+    <string name="episode_guide">Episode Guide</string>
+    <string name="long_press_to_copy_episode_title">Long press to copy episode title</string>
+    <string name="episode_title_copied">Episode title copied</string>
     <string name="long_press_to_see_tag_description">Long press to see tag description</string>
     <string name="character_list">Character List</string>
     <string name="change_language">Change Language</string>
