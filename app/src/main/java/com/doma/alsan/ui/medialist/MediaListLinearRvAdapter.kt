@@ -256,7 +256,9 @@ class MediaListLinearRvAdapter(
             val collapsedGroup = item.collapsedGroup ?: return
             val representativeMedia = collapsedGroup.representativeMedia
 
+            val primaryColor = listStyle.getPrimaryColor(context)
             binding.apply {
+                collapsedGroupIndicator.setBackgroundColor(primaryColor)
                 ImageUtil.loadImage(context, getCoverImage(representativeMedia.media), collapsedGroupCoverImage)
                 collapsedGroupCoverImage.clicks {
                     listener.navigateToMedia(representativeMedia.media)
@@ -284,7 +286,6 @@ class MediaListLinearRvAdapter(
                     listener.navigateToMedia(representativeMedia.media)
                 }
 
-                val primaryColor = listStyle.getPrimaryColor(context)
                 collapsedGroupTitleText.setTextColor(primaryColor)
                 collapsedGroupScoreText.setTextColor(primaryColor)
 
