@@ -36,4 +36,4 @@
 - Create new Issue, explain your plan, and mention that you're planning to work on it.
 - Wait for my confirmation. Only start working after I approve it, for both our sake. 
 - Branch out from `master`.
-- For example, assuming the latest version is `v2.0.0`, target your Pull Request to `version/2.1.0`. Check Releases page to find the latest version.
+- For example, assuming the latest version is `v2.0.0`, target your Pull Request to `version/2.1.0` or `version/2.0.1`. Check Releases page to find the latest version and the next development branch before you start making changes.
