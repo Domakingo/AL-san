@@ -255,7 +255,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView
-            android:text="@string/start_date"
+            android:text="@string/release_date"
             style="?themeSmallFont"
             android:layout_marginEnd="@dimen/marginNormal"
             android:layout_weight="1"

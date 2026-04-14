@@ -268,7 +268,7 @@
     <string name="episode">Episode</string>
     <string name="chapter">Chapter</string>
     <string name="volume">Volume</string>
-    <string name="finish_date">Finish Date</string>
+    <string name="finish_date">Finished Watching</string>
     <string name="total_rewatches">Total Rewatches</string>
     <string name="total_rereads">Total Rereads</string>
     <string name="notes">Notes</string>
