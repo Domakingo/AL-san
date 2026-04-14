@@ -8,9 +8,10 @@
 <p align="center">AL-san is an unofficial fork of AL-chan, an unofficial Android client for AniList, a place where you can track, share, discover, and experience Anime and Manga.</p>
 
 <p align="center">
-  <img src="assets/screen1.png" width="30%" alt="Screen 1">
-  <img src="assets/screen2.png" width="30%" alt="Screen 2">
-  <img src="assets/screen3.png" width="30%" alt="Screen 3">
+  <img src="assets/screens/list_screen.png" width="24%" alt="List">
+  <img src="assets/screens/episodes_screen.png" width="24%" alt="Episodes">
+  <img src="assets/screens/profile_screen.png" width="24%" alt="Profile">
+  <img src="assets/screens/notifications_screen.png" width="24%" alt="Notifications">
 </p>
 
 
@@ -36,4 +37,4 @@
 - Create new Issue, explain your plan, and mention that you're planning to work on it.
 - Wait for my confirmation. Only start working after I approve it, for both our sake. 
 - Branch out from `master`.
-- For example, assuming the latest version is `v2.0.0`, target your Pull Request to `version/2.1.0`. Check Releases page to find the latest version.
+- For example, assuming the latest version is `v3.2.0`, target your Pull Request to `version/3.2.1`. Check Releases page to find the latest version.
