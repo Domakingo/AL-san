@@ -97,6 +97,10 @@ class ProfileRvAdapter(
                 val view = LayoutProfileStatsBinding.inflate(inflater, parent, false)
                 return StatsViewHolder(view)
             }
+            ProfileItem.VIEW_TYPE_DIVIDER -> {
+                val view = LayoutDividerAccentBinding.inflate(inflater, parent, false)
+                return DividerViewHolder(view)
+            }
             ProfileItem.VIEW_TYPE_ACTIVITY_HISTORY -> {
                 val view = ItemProfileActivityHistoryBinding.inflate(inflater, parent, false)
                 return ActivityHistoryViewHolder(view)
@@ -373,6 +377,12 @@ class ProfileRvAdapter(
     inner class ActivityHistoryViewHolder(private val binding: ItemProfileActivityHistoryBinding) : ViewHolder(binding) {
         override fun bind(item: ProfileItem, index: Int) {
             binding.activityHeatmap.setData(item.activityHistory ?: listOf())
+        }
+    }
+
+    inner class DividerViewHolder(binding: LayoutDividerAccentBinding) : ViewHolder(binding) {
+        override fun bind(item: ProfileItem, index: Int) {
+            // No data to bind for divider
         }
     }
 }

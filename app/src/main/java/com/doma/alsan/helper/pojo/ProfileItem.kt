@@ -30,6 +30,7 @@ data class ProfileItem(
         const val VIEW_TYPE_FAVORITE_STUDIO = 404
         const val VIEw_TYPE_STATS = 500
         const val VIEW_TYPE_REVIEW = 600
+        const val VIEW_TYPE_DIVIDER = 900
     }
 }
 

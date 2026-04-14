@@ -299,6 +299,13 @@ class ProfileViewModel(
     private fun emitProfileItemList() {
         val profileItemList = ArrayList<ProfileItem>()
 
+        // Helper function to add divider if list is not empty
+        fun addDividerIfNeeded() {
+            if (profileItemList.isNotEmpty()) {
+                profileItemList.add(ProfileItem(viewType = ProfileItem.VIEW_TYPE_DIVIDER))
+            }
+        }
+
         // Add header as first item
         val headerData = ProfileHeaderData(
             userId = user.id,
@@ -320,37 +327,55 @@ class ProfileViewModel(
         )
         profileItemList.add(ProfileItem(headerData = headerData, viewType = ProfileItem.VIEW_TYPE_HEADER))
 
-        if (user.about.isNotBlank())
+        if (user.about.isNotBlank()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(bio = user.about, viewType = ProfileItem.VIEW_TYPE_BIO))
+        }
 
-        if (!isViewer)
+        if (!isViewer) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(affinity = Pair(Affinity(status = Affinity.AFFINITY_STATUS_LOADING), Affinity(status = Affinity.AFFINITY_STATUS_LOADING)), viewType = ProfileItem.VIEW_TYPE_AFFINITY))
+        }
 
+        addDividerIfNeeded()
         profileItemList.add(ProfileItem(animeStats = user.statistics.anime, mangaStats = user.statistics.manga, viewType = ProfileItem.VIEw_TYPE_STATS))
         
         if (user.stats.activityHistory.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(activityHistory = user.stats.activityHistory, viewType = ProfileItem.VIEW_TYPE_ACTIVITY_HISTORY))
         }
 
-        if (user.favourites.anime.nodes.isNotEmpty())
+        if (user.favourites.anime.nodes.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(favoriteMedia = user.favourites.anime.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_ANIME))
+        }
 
-        if (user.favourites.manga.nodes.isNotEmpty())
+        if (user.favourites.manga.nodes.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(favoriteMedia = user.favourites.manga.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_MANGA))
+        }
 
-        if (user.favourites.characters.nodes.isNotEmpty())
+        if (user.favourites.characters.nodes.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(favoriteCharacters = user.favourites.characters.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_CHARACTER))
+        }
 
-        if (user.favourites.staff.nodes.isNotEmpty())
+        if (user.favourites.staff.nodes.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(favoriteStaff = user.favourites.staff.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_STAFF))
+        }
 
-        if (user.favourites.studios.nodes.isNotEmpty())
+        if (user.favourites.studios.nodes.isNotEmpty()) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(favoriteStudios = user.favourites.studios.nodes.take(FAVORITE_LIMIT), viewType = ProfileItem.VIEW_TYPE_FAVORITE_STUDIO))
+        }
 
         val animeTendency = getTendency(user.statistics.anime)
         val mangaTendency = getTendency(user.statistics.manga)
-        if (animeTendency != null || mangaTendency != null)
+        if (animeTendency != null || mangaTendency != null) {
+            addDividerIfNeeded()
             profileItemList.add(ProfileItem(tendency = animeTendency to mangaTendency, viewType = ProfileItem.VIEW_TYPE_TENDENCY))
+        }
 
         _profileItemList.onNext(profileItemList)
     }

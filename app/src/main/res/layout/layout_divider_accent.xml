@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?themePrimaryColor"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/lineWidth"
+    android:layout_marginTop="@dimen/marginPageNormal"
+    android:layout_marginBottom="@dimen/marginPageNormal"
+    android:layout_marginHorizontal="@dimen/marginPageNormal"
+    android:alpha="0.2"/>
