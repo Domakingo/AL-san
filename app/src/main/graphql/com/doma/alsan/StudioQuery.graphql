@@ -30,6 +30,11 @@ query StudioQuery($id:Int, $sort:[MediaSort], $onList:Boolean $page:Int) {
                 month
                 day
             }
+            endDate {
+                year
+                month
+                day
+            }
           }
           isMainStudio
         }

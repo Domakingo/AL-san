@@ -12,6 +12,16 @@ query MediaWithMediaListQuery($id:Int) {
         episodes
         chapters
         volumes
+        startDate {
+            year
+            month
+            day
+        }
+        endDate {
+            year
+            month
+            day
+        }
         isFavourite
         mediaListEntry {
             id

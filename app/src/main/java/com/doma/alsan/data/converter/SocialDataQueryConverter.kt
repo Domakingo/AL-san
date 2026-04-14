@@ -91,6 +91,13 @@ fun OnListActivity.convert() : ListActivity {
                         day = it.day
                     )
                 },
+                endDate = it.endDate?.let {
+                    FuzzyDate(
+                        year = it.year,
+                        month = it.month,
+                        day = it.day
+                    )
+                },
                 episodes = it.episodes,
                 duration = it.duration,
                 chapters = it.chapters,

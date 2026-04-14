@@ -35,6 +35,9 @@ fun StudioQuery.Data.convert(): Studio {
                             favourites = node.favourites ?: 0,
                             startDate = node.startDate?.let { startDate ->
                                 FuzzyDate(year = startDate.year, month = startDate.month, day = startDate.day)
+                            },
+                            endDate = node.endDate?.let { endDate ->
+                                FuzzyDate(year = endDate.year, month = endDate.month, day = endDate.day)
                             }
                         ),
                         isMainStudio = edge.isMainStudio

@@ -86,6 +86,11 @@ fragment onListActivity on ListActivity {
       month
       day
     }
+    endDate {
+      year
+      month
+      day
+    }
     episodes
     duration
     chapters

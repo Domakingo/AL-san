@@ -86,6 +86,14 @@ fun MediaQuery.Data.convert(): Media {
                             large = it?.node?.coverImage?.large ?: "",
                             medium = it?.node?.coverImage?.medium ?: ""
                         ),
+                        startDate = if (it?.node?.startDate != null)
+                            FuzzyDate(year = it.node.startDate.year, month = it.node.startDate.month, day = it.node.startDate.day)
+                        else
+                            null,
+                        endDate = if (it?.node?.endDate != null)
+                            FuzzyDate(year = it.node.endDate.year, month = it.node.endDate.month, day = it.node.endDate.day)
+                        else
+                            null,
                         countryOfOrigin = it?.node?.countryOfOrigin
                     ),
                     relationType = it?.relationType
@@ -228,6 +236,10 @@ fun MediaQuery.Data.convert(): Media {
                         status = it?.mediaRecommendation?.status,
                         startDate = if (it?.mediaRecommendation?.startDate != null)
                             FuzzyDate(year = it.mediaRecommendation.startDate.year, month = it.mediaRecommendation.startDate.month, day = it.mediaRecommendation.startDate.day)
+                        else
+                            null,
+                        endDate = if (it?.mediaRecommendation?.endDate != null)
+                            FuzzyDate(year = it.mediaRecommendation.endDate.year, month = it.mediaRecommendation.endDate.month, day = it.mediaRecommendation.endDate.day)
                         else
                             null,
                         episodes = it?.mediaRecommendation?.episodes,

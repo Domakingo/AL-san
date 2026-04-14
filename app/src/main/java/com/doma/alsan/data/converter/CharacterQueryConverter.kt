@@ -57,6 +57,10 @@ fun CharacterQuery.Data.convert(): Character {
                         startDate = if (it.node?.startDate != null)
                             FuzzyDate(year = it.node.startDate.year, month = it.node.startDate.month, day = it.node.startDate.day)
                         else
+                            null,
+                        endDate = if (it.node?.endDate != null)
+                            FuzzyDate(year = it.node.endDate.year, month = it.node.endDate.month, day = it.node.endDate.day)
+                        else
                             null
                     ),
                     characterRole = it.characterRole,

@@ -69,4 +69,9 @@ fragment HomeMedia on Media {
     month
     day
   }
+  endDate {
+    year
+    month
+    day
+  }
 }

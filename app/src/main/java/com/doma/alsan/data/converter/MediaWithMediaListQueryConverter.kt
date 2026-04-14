@@ -20,6 +20,14 @@ fun MediaWithMediaListQuery.Data.convert(): Media {
         episodes = Media?.episodes,
         chapters = Media?.chapters,
         volumes = Media?.volumes,
+        startDate = if (Media?.startDate != null)
+            FuzzyDate(year = Media.startDate.year, month = Media.startDate.month, day = Media.startDate.day)
+        else
+            null,
+        endDate = if (Media?.endDate != null)
+            FuzzyDate(year = Media.endDate.year, month = Media.endDate.month, day = Media.endDate.day)
+        else
+            null,
         isFavourite = Media?.isFavourite ?: false,
         mediaListEntry = MediaList(
             id = Media?.mediaListEntry?.id,

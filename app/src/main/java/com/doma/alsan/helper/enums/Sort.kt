@@ -12,9 +12,10 @@ enum class Sort {
     PROGRESS,
     LAST_UPDATED,
     LAST_ADDED,
+    RELEASE_DATE,
+    END_DATE,
     START_DATE,
     COMPLETED_DATE,
-    RELEASE_DATE,
     AVERAGE_SCORE,
     POPULARITY,
     FAVORITES,
@@ -35,9 +36,10 @@ fun Sort.getStringResource(): Int {
         Sort.PROGRESS -> R.string.progress
         Sort.LAST_UPDATED -> R.string.last_updated
         Sort.LAST_ADDED -> R.string.last_added
+        Sort.RELEASE_DATE -> R.string.release_date
+        Sort.END_DATE -> R.string.end_date
         Sort.START_DATE -> R.string.start_date
         Sort.COMPLETED_DATE -> R.string.completed_date
-        Sort.RELEASE_DATE -> R.string.release_date
         Sort.AVERAGE_SCORE -> R.string.average_score
         Sort.POPULARITY -> R.string.popularity
         Sort.FAVORITES -> R.string.favorites
@@ -61,9 +63,10 @@ fun Sort.getAniListMediaSort(titleLanguage: UserTitleLanguage, orderByDescending
             Sort.PROGRESS -> null
             Sort.LAST_UPDATED -> null
             Sort.LAST_ADDED -> MediaSort.ID_DESC
+            Sort.RELEASE_DATE -> MediaSort.START_DATE_DESC
+            Sort.END_DATE -> MediaSort.END_DATE_DESC
             Sort.START_DATE -> null
             Sort.COMPLETED_DATE -> null
-            Sort.RELEASE_DATE -> MediaSort.START_DATE_DESC
             Sort.AVERAGE_SCORE -> MediaSort.SCORE_DESC
             Sort.POPULARITY -> MediaSort.POPULARITY_DESC
             Sort.FAVORITES -> MediaSort.FAVOURITES_DESC
@@ -84,9 +87,10 @@ fun Sort.getAniListMediaSort(titleLanguage: UserTitleLanguage, orderByDescending
             Sort.PROGRESS -> null
             Sort.LAST_UPDATED -> null
             Sort.LAST_ADDED -> MediaSort.ID
+            Sort.RELEASE_DATE -> MediaSort.START_DATE
+            Sort.END_DATE -> MediaSort.END_DATE
             Sort.START_DATE -> null
             Sort.COMPLETED_DATE -> null
-            Sort.RELEASE_DATE -> MediaSort.START_DATE
             Sort.AVERAGE_SCORE -> MediaSort.SCORE
             Sort.POPULARITY -> MediaSort.POPULARITY
             Sort.FAVORITES -> MediaSort.FAVOURITES

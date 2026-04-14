@@ -61,6 +61,11 @@ query StaffQuery($id:Int, $staffMediaSort:[MediaSort], $characterSort:[Character
                         month
                         day
                     }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
                 }
                 staffRole
             }
@@ -139,6 +144,11 @@ query StaffQuery($id:Int, $staffMediaSort:[MediaSort], $characterSort:[Character
                     popularity
                     favourites
                     startDate {
+                        year
+                        month
+                        day
+                    }
+                    endDate {
                         year
                         month
                         day

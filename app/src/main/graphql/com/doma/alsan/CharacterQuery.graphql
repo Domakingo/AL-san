@@ -53,6 +53,11 @@ query CharacterQuery($id:Int,$page:Int,$sort:[MediaSort],$type:MediaType,$onList
                         month
                         day
                     }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
                 }
                 characterRole
               	voiceActorRoles {

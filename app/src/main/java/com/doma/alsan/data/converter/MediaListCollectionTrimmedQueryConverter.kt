@@ -63,6 +63,11 @@ private fun MediaListCollectionTrimmedQuery.Entry?.convert(): MediaList {
             } else {
                 null
             },
+            endDate = if (media?.endDate?.year != null) {
+                FuzzyDate(media.endDate.year, media.endDate.month, media.endDate.day)
+            } else {
+                null
+            },
             season = media?.season,
             seasonYear = media?.seasonYear,
             episodes = media?.episodes,

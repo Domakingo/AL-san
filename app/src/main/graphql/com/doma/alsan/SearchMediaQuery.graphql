@@ -98,6 +98,11 @@ query SearchMediaQuery(
         month
         day
       }
+      endDate {
+        year
+        month
+        day
+      }
       genres
       studios(isMain:true) {
         edges {

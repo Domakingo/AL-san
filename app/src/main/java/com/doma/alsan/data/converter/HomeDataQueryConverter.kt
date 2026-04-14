@@ -34,6 +34,11 @@ private fun HomeMedia?.convert(): Media {
         } else {
             null
         },
+        endDate = if (this?.endDate?.year != null) {
+            FuzzyDate(this.endDate.year, this.endDate.month, this.endDate.day)
+        } else {
+            null
+        },
         coverImage = MediaCoverImage(
             this?.coverImage?.extraLarge ?: "",
             this?.coverImage?.large ?: "",

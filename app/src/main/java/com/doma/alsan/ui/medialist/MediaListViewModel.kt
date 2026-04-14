@@ -567,6 +567,7 @@ class MediaListViewModel(
             Sort.START_DATE -> sortUsing(entriesSortedByTitle, isDescending) { TimeUtil.getMillisFromFuzzyDate(startedAt) }
             Sort.COMPLETED_DATE -> sortUsing(entriesSortedByTitle, isDescending) { TimeUtil.getMillisFromFuzzyDate(completedAt) }
             Sort.RELEASE_DATE -> sortUsing(entriesSortedByTitle, isDescending) { TimeUtil.getMillisFromFuzzyDate(media.startDate) }
+            Sort.END_DATE -> sortUsing(entriesSortedByTitle, isDescending) { TimeUtil.getMillisFromFuzzyDate(media.endDate) }
             Sort.AVERAGE_SCORE -> sortUsing(entriesSortedByTitle, isDescending) { media.averageScore }
             Sort.POPULARITY -> sortUsing(entriesSortedByTitle, isDescending) { media.popularity }
             Sort.FAVORITES -> sortUsing(entriesSortedByTitle, isDescending) { media.favourites }

@@ -76,6 +76,16 @@ query MediaQuery($id:Int, $statusVersion:Int, $sourceVersion:Int, $relationTypeV
                         large
                         medium
                     }
+                    startDate {
+                        year
+                        month
+                        day
+                    }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
                     countryOfOrigin
                 }
                 relationType(version: $relationTypeVersion)
@@ -196,6 +206,11 @@ query MediaQuery($id:Int, $statusVersion:Int, $sourceVersion:Int, $relationTypeV
                   	format
                   	status(version: $statusVersion)
                   	startDate {
+                        year
+                        month
+                        day
+                    }
+                  	endDate {
                         year
                         month
                         day

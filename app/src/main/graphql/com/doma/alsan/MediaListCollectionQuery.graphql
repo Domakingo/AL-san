@@ -43,6 +43,11 @@ query MediaListCollectionQuery($userId:Int, $type:MediaType, $statusVersion:Int,
             month
             day
           }
+          endDate {
+            year
+            month
+            day
+          }
           season
           seasonYear
           episodes

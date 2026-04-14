@@ -39,6 +39,14 @@ fun SearchMediaQuery.Data.convert(): Page<Media> {
                     )
                 else
                     null,
+                endDate = if (it.endDate != null)
+                    FuzzyDate(
+                        year = it.endDate.year,
+                        month = it.endDate.month,
+                        day = it.endDate.day
+                    )
+                else
+                    null,
                 genres = it.genres?.filterNotNull()?.map { genre -> Genre(genre) } ?: listOf(),
                 studios = StudioConnection(
                     edges = it.studios?.edges?.filterNotNull()?.map {
