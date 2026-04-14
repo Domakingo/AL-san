@@ -35,6 +35,7 @@ object ImageUtil {
                 }
                 add(SvgDecoder.Factory())
             }
+            .allowHardware(false)
             .build()
 
         Coil.setImageLoader(imageLoader)
@@ -75,18 +76,20 @@ object ImageUtil {
 
     fun loadImagesIntoOverlapImageListView(context: Context, urls: List<String>, overlapImageListView: OverlapImageListView) {
         val bitmaps = ArrayList<Bitmap>()
+        val loader = Coil.imageLoader(context)
 
         urls.forEach {
-            val loader = ImageLoader(context)
-
             val request = ImageRequest.Builder(context)
                 .data(it)
+                .allowHardware(false)
                 .transformations(CircleCropTransformation())
                 .target { drawable ->
-                    bitmaps.add((drawable as BitmapDrawable).bitmap)
+                    if (drawable is BitmapDrawable) {
+                        bitmaps.add(drawable.bitmap)
 
-                    if (bitmaps.size == overlapImageListView.circleCount) {
-                        overlapImageListView.imageList = bitmaps
+                        if (bitmaps.size == overlapImageListView.circleCount) {
+                            overlapImageListView.imageList = bitmaps
+                        }
                     }
                 }
                 .build()
