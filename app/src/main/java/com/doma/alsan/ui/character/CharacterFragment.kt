@@ -21,6 +21,8 @@ import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
+import com.doma.alsan.helper.pojo.CharacterItem
+import com.doma.alsan.ui.character.CharacterViewModel.CharacterTab
 
 class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewModel>() {
 
@@ -35,6 +37,8 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
     private var menuViewOnAniList: MenuItem? = null
     private var menuCopyLink: MenuItem? = null
     private var appSetting = AppSetting()
+    private var isUpdatingTabs = false
+    private var isSynopsisExpanded = false
 
     override fun generateViewBinding(
         inflater: LayoutInflater,
@@ -87,6 +91,51 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
             characterSwipeRefresh.setOnRefreshListener {
                 viewModel.reloadData()
             }
+
+            characterTabLayout.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+                    if (isUpdatingTabs) return
+                    val tabType = tab.tag as? CharacterViewModel.CharacterTab ?: return
+                    viewModel.setTab(tabType)
+                    updateRecyclerViewLayout(tabType)
+                }
+                override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab) {}
+                override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {}
+            })
+
+            characterHeaderSynopsisLayout.clicks {
+                isSynopsisExpanded = !isSynopsisExpanded
+                updateSynopsisState()
+            }
+        }
+    }
+
+    private fun updateSynopsisState() {
+        binding.apply {
+            characterHeaderSynopsisText.maxLines = if (isSynopsisExpanded) Int.MAX_VALUE else 4
+            characterHeaderSynopsisArrow.rotation = if (isSynopsisExpanded) 180f else 0f
+        }
+    }
+
+    private fun updateRecyclerViewLayout(tab: CharacterViewModel.CharacterTab) {
+        binding.characterRecyclerView.apply {
+            for (i in 0 until itemDecorationCount) {
+                removeItemDecorationAt(0)
+            }
+
+            val spanCount = 3
+            val spacing = resources.getDimensionPixelSize(R.dimen.marginSmall)
+            val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
+            gridLayoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (characterAdapter?.getItemViewType(position)) {
+                        CharacterItem.VIEW_TYPE_MEDIA_GROUP -> spanCount
+                        else -> 1
+                    }
+                }
+            }
+            layoutManager = gridLayoutManager
+            addItemDecoration(com.doma.alsan.helper.utils.GridSpacingItemDecoration(spanCount, spacing, true))
         }
     }
 
@@ -165,6 +214,7 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
             },
             viewModel.characterItemList.subscribe {
                 characterAdapter?.updateData(it, true)
+                updateRecyclerViewLayout(viewModel.currentTab.blockingFirst())
             },
             viewModel.staffMedia.subscribe {
                 dialog.showListDialog(it) { data, _ ->
@@ -176,11 +226,46 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
             },
             viewModel.characterImageForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.characterImage)
+            },
+            viewModel.characterMetadata.subscribe { character ->
+                updateHeaderContent(character)
             }
         )
 
         arguments?.getInt(CHARACTER_ID)?.let {
             viewModel.loadData(CharacterParam(it))
+        }
+    }
+
+    private fun updateHeaderContent(character: com.doma.alsan.data.response.anilist.Character) {
+        binding.apply {
+            // Synopsis
+            com.doma.alsan.helper.utils.MarkdownUtil.applyMarkdown(requireContext(), screenWidth, characterHeaderSynopsisText, character.description)
+             characterBloodTypeText.text = character.bloodType.ifBlank { "-" }
+             characterBloodTypeLabel.text = "Blood Type"
+             characterBloodTypeLayout.show(character.bloodType.isNotBlank())
+             
+             characterHeaderSynopsisLayout.show(character.description.isNotBlank())
+
+            // Tabs
+            val tabs = ArrayList<CharacterTab>()
+            tabs.add(CharacterTab.APPEARANCES)
+            
+            // Check if there are voice actors to show the tab
+            val hasVoiceActors = character.media.edges.any { it.voiceActorRoles.isNotEmpty() }
+            if (hasVoiceActors) tabs.add(CharacterTab.VOICE_ACTORS)
+
+            if (characterTabLayout.tabCount != tabs.size) {
+                isUpdatingTabs = true
+                characterTabLayout.removeAllTabs()
+                tabs.forEach { tabType ->
+                    val tab = characterTabLayout.newTab()
+                    tab.text = getString(tabType.stringRes)
+                    tab.tag = tabType
+                    characterTabLayout.addTab(tab)
+                }
+                isUpdatingTabs = false
+            }
         }
     }
 
@@ -192,7 +277,7 @@ class CharacterFragment : BaseFragment<FragmentCharacterBinding, CharacterViewMo
     private fun getCharacterListener(): CharacterListener {
         return object : CharacterListener {
             override fun toggleShowMore(shouldShowMore: Boolean) {
-                viewModel.updateShouldShowFullDescription(shouldShowMore)
+                // Now handled in header
             }
 
             override fun navigateToStaff(staff: Staff) {

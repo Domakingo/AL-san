@@ -28,7 +28,8 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/staffCollapsingToolbar"
                     app:toolbarId="@id/staffToolbar"
-                    app:layout_scrollFlags="scroll"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:contentScrim="?themeBackgroundColor"
                     app:titleEnabled="false"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_width="match_parent"
@@ -120,8 +121,9 @@
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
 
-                            <!-- Stats Card - now inside banner content so it scrolls with it -->
+                            <!-- Stats Card - hidden from header, moved to details tab -->
                             <com.google.android.material.card.MaterialCardView
+                                android:visibility="gone"
                                 android:id="@+id/staffStatsCard"
                                 app:cardBackgroundColor="?themeCardColor"
                                 app:cardCornerRadius="@dimen/cornerMedium"
@@ -202,12 +204,68 @@
 
                                     </LinearLayout>
 
+                                    <LinearLayout
+                                        android:id="@+id/staffLanguageLayout"
+                                        android:orientation="vertical"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content">
+
+                                        <com.google.android.material.textview.MaterialTextView
+                                            android:id="@+id/staffLanguageText"
+                                            style="?themeRegularBoldFont"
+                                            android:text="-"
+                                            android:textAlignment="center"
+                                            android:maxLines="1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"/>
+
+                                        <com.google.android.material.textview.MaterialTextView
+                                            style="?themeSmallFont"
+                                            android:text="Stat"
+                                            android:id="@+id/staffLanguageLabel"
+                                            android:textAlignment="center"
+                                            android:maxLines="1"
+                                            android:ellipsize="end"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"/>
+
+                                    </LinearLayout>
+
                                     <View
-                                        android:id="@+id/staffBarDivider2"
+                                        android:id="@+id/staffBarDivider3"
                                         android:background="?themeDividerColor"
                                         android:layout_marginHorizontal="@dimen/marginClose"
                                         android:layout_width="@dimen/lineWidth"
                                         android:layout_height="match_parent"/>
+
+                                    <LinearLayout
+                                        android:id="@+id/staffAgeLayout"
+                                        android:orientation="vertical"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content">
+
+                                        <com.google.android.material.textview.MaterialTextView
+                                            android:id="@+id/staffAgeText"
+                                            style="?themeRegularBoldFont"
+                                            android:text="-"
+                                            android:textAlignment="center"
+                                            android:maxLines="1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"/>
+
+                                        <com.google.android.material.textview.MaterialTextView
+                                            style="?themeSmallFont"
+                                            android:text="Stat"
+                                            android:id="@+id/staffAgeLabel"
+                                            android:textAlignment="center"
+                                            android:maxLines="1"
+                                            android:ellipsize="end"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"/>
+
+                                    </LinearLayout>
 
                                     <com.google.android.material.button.MaterialButton
                                         android:id="@+id/staffSetAsFavoriteButton"
@@ -222,6 +280,53 @@
 
                             </com.google.android.material.card.MaterialCardView>
 
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/staffHeaderSynopsisLayout"
+                                app:layout_constraintTop_toBottomOf="@id/staffStatsCard"
+                                android:layout_marginTop="@dimen/marginNormal"
+                                android:layout_marginHorizontal="@dimen/marginPageBig"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/staffHeaderSynopsisTitle"
+                                    style="?themeSmallFont"
+                                    android:text="@string/bio"
+                                    android:textColor="?themeSecondaryColor"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <FrameLayout
+                                    android:id="@+id/staffHeaderSynopsisContainer"
+                                    app:layout_constraintTop_toBottomOf="@id/staffHeaderSynopsisTitle"
+                                    android:layout_marginTop="@dimen/marginSmall"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/staffHeaderSynopsisText"
+                                        style="?themeSmallFont"
+                                        android:ellipsize="end"
+                                        android:maxLines="4"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"/>
+
+                                </FrameLayout>
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/staffHeaderSynopsisArrow"
+                                    app:layout_constraintTop_toBottomOf="@id/staffHeaderSynopsisContainer"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:srcCompat="@drawable/ic_chevron_down"
+                                    app:tint="?themeContentColor"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"/>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
@@ -232,13 +337,34 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+                     <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/staffToolbar"
+                        app:layout_collapseMode="pin"
+                        android:elevation="0dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:minHeight="?attr/actionBarSize"
+                        android:paddingTop="@dimen/statusBarHeight"
+                        app:popupTheme="@style/PopupTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            </com.google.android.material.appbar.AppBarLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/staffTabLayout"
+                    android:visibility="gone"
+                    android:background="?themeBackgroundColor"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="?themePrimaryColor"
+                    app:tabTextColor="?themeContentColor"
+                    app:tabIndicatorColor="?themePrimaryColor"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabTextAppearance="@style/TabTextAppearance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-            <!-- Stats card removed - now inside CollapsingToolbarLayout -->
+            </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/staffRecyclerView"
@@ -253,15 +379,4 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/staffToolbar"
-        android:layout_marginTop="@dimen/statusBarHeight"
-        android:layout_gravity="top"
-        android:elevation="0dp"
-        android:backgroundTint="@android:color/transparent"
-        android:minHeight="@dimen/toolbarBigHeight"
-        app:popupTheme="@style/PopupTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

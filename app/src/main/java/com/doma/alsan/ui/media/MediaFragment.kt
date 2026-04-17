@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.google.android.material.appbar.AppBarLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import com.doma.alsan.R
 import com.doma.alsan.data.entity.AppSetting
 import com.doma.alsan.data.entity.MediaFilter
@@ -31,6 +32,7 @@ import com.doma.alsan.helper.enums.SearchCategory
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.ListItem
 import com.doma.alsan.helper.pojo.MediaItem
+import com.doma.alsan.helper.utils.GridSpacingItemDecoration
 import com.doma.alsan.helper.utils.ImageUtil
 import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.helper.utils.TimeUtil
@@ -39,6 +41,8 @@ import com.doma.alsan.ui.base.BaseFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.doma.alsan.ui.common.GenreRvAdapter
+import com.doma.alsan.helper.utils.MarkdownUtil
 import kotlin.math.abs
 
 class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
@@ -56,9 +60,11 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     private var menuItemSocial: MenuItem? = null
     private var menuItemReview: MenuItem? = null
     private var menuItemDownloadCover: MenuItem? = null
+    private var menuItemDownloadBanner: MenuItem? = null
     private var currentMedia: Media? = null
     private var appSetting = AppSetting()
     private var pendingScrollToEpisode: Int? = null
+    private var isSynopsisExpanded = false
 
     override fun generateViewBinding(
         inflater: LayoutInflater,
@@ -66,6 +72,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
     ): FragmentMediaBinding {
         return FragmentMediaBinding.inflate(inflater, container, false)
     }
+
+    private var isUpdatingTabs = false
 
     override fun setUpLayout() {
         binding.apply {
@@ -101,7 +109,36 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 true
             }
 
-            mediaRecyclerView.addItemDecoration(SpaceItemDecoration(top = resources.getDimensionPixelSize(R.dimen.marginFar)))
+            menuItemDownloadBanner = mediaToolbar.menu.findItem(R.id.itemDownloadBanner)
+            menuItemDownloadBanner?.setOnMenuItemClickListener {
+                currentMedia?.let {
+                    if (it.bannerImage.isNotBlank()) {
+                        ImageUtil.downloadImage(requireContext(), it.bannerImage, "${it.title.userPreferred}_banner.jpg")
+                    } else {
+                        dialog.showToast(R.string.there_s_nothing_here)
+                    }
+                }
+                true
+            }
+
+            val gridLayoutManager = GridLayoutManager(requireContext(), 3)
+            gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val viewType = mediaAdapter?.getItemViewType(position)
+                    return when (viewType) {
+                        MediaItem.VIEW_TYPE_CHARACTER_ITEM,
+                        MediaItem.VIEW_TYPE_STAFF_ITEM -> 1
+                        else -> 3
+                    }
+                }
+            }
+            mediaRecyclerView.layoutManager = gridLayoutManager
+            
+            mediaAdapter = MediaRvAdapter(requireContext(), listOf(), appSetting, screenWidth, getMediaListener())
+            mediaRecyclerView.adapter = mediaAdapter
+            
+            val spacing = resources.getDimensionPixelSize(R.dimen.marginNormal)
+            mediaRecyclerView.addItemDecoration(GridSpacingItemDecoration(3, spacing, true))
             assignAdapter(appSetting)
 
             mediaAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -128,6 +165,28 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
 
             mediaSwipeRefresh.setOnRefreshListener {
                 viewModel.reloadData()
+            }
+
+            // TabLayout setup
+            mediaTabLayout.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+                    if (isUpdatingTabs) return
+                    val mediaTab = tab.tag as? MediaViewModel.MediaTab ?: return
+                    viewModel.setTab(mediaTab)
+                }
+                override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab) {}
+                override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+                    if (isUpdatingTabs) return
+                    val mediaTab = tab.tag as? MediaViewModel.MediaTab ?: return
+                    viewModel.setTab(mediaTab)
+                }
+            })
+
+            mediaHeaderSynopsisArrow.clicks {
+                isSynopsisExpanded = !isSynopsisExpanded
+                mediaHeaderSynopsisText.maxLines = if (isSynopsisExpanded) Int.MAX_VALUE else 4
+                mediaHeaderSynopsisGradient.show(!isSynopsisExpanded)
+                ImageUtil.loadImage(requireContext(), if (isSynopsisExpanded) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down, mediaHeaderSynopsisArrow)
             }
         }
     }
@@ -228,8 +287,11 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 }
             },
             viewModel.mediaItemList.subscribe { list ->
-                currentMedia = list.firstOrNull()?.media
                 mediaAdapter?.updateData(list, true)
+            },
+            viewModel.mediaMetadata.subscribe { media ->
+                currentMedia = media
+                updateHeaderContent(media)
             },
             viewModel.coverImageUrlForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.mediaCoverImage)
@@ -260,6 +322,16 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
             },
             viewModel.currentProgress.observeOn(AndroidSchedulers.mainThread()).subscribe { progress ->
                 episodesAdapter?.setCurrentProgress(progress)
+            },
+            viewModel.currentTab.subscribe { tab ->
+                val tabLayout = binding.mediaTabLayout
+                for (i in 0 until tabLayout.tabCount) {
+                    val t = tabLayout.getTabAt(i)
+                    if (t?.tag == tab) {
+                        t.select()
+                        break
+                    }
+                }
             }
         )
 
@@ -275,7 +347,6 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
 
     private fun getMediaListener(): MediaListener {
         return object : MediaListener {
-            override val mediaSynopsisListener: MediaListener.MediaSynopsisListener = getMediaSynopsisListener()
             override val mediaInfoListener: MediaListener.MediaInfoListener = getMediaInfoListener()
             override val mediaGenreListener: MediaListener.MediaGenreListener = getMediaGenreListener()
             override val mediaCharacterListener: MediaListener.MediaCharacterListener = getMediaCharacterListener()
@@ -290,13 +361,6 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
         }
     }
 
-    private fun getMediaSynopsisListener(): MediaListener.MediaSynopsisListener {
-        return object : MediaListener.MediaSynopsisListener {
-            override fun toggleShowMore(shouldShowMore: Boolean) {
-                viewModel.updateShouldShowFullDescription(shouldShowMore)
-            }
-        }
-    }
 
     private fun getMediaInfoListener(): MediaListener.MediaInfoListener {
         return object : MediaListener.MediaInfoListener {
@@ -330,18 +394,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
 
     private fun getMediaCharacterListener(): MediaListener.MediaCharacterListener {
         return object : MediaListener.MediaCharacterListener {
-            override fun navigateToMediaCharacters(media: Media) {
-                val mediaType = if (media.type == com.doma.alsan.type.MediaType.MANGA) {
-                    com.doma.alsan.helper.enums.MediaType.MANGA
-                } else {
-                    com.doma.alsan.helper.enums.MediaType.ANIME
-                }
-                navigation.navigateToMediaCharacters(
-                    media.getId(), 
-                    mediaType,
-                    viewModel.getSelectedLanguage(),
-                    viewModel.getAvailableLanguages()
-                )
+            fun navigateToMediaCharacters(media: Media) {
+                // No longer needed, characters are in a tab
             }
 
             override fun navigateToCharacter(character: Character) {
@@ -414,8 +468,8 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
 
     private fun getMediaStaffListener(): MediaListener.MediaStaffListener {
         return object : MediaListener.MediaStaffListener {
-            override fun navigateToMediaStaff(media: Media) {
-                navigation.navigateToMediaStaff(media.getId())
+            fun navigateToMediaStaff(media: Media) {
+                // No longer needed, staff is in a tab
             }
 
             override fun navigateToStaff(staff: Staff) {
@@ -462,59 +516,69 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
                 this@MediaFragment.onEpisodeLongClick(episode)
             }
 
-            override fun showAllEpisodes() {
-                this@MediaFragment.showAllEpisodes()
+            fun showAllEpisodes() {
+                // No longer needed, episodes are in a tab
             }
 
             override fun onPageClick(malId: Int, page: Int) {
                 viewModel.fetchEpisodes(malId, page)
             }
+
+            override fun onPageSelectorClick(view: android.view.View, malId: Int, currentPage: Int, totalPages: Int) {
+                val popup = androidx.appcompat.widget.PopupMenu(requireContext(), view)
+                for (i in 1..totalPages) {
+                    val item = popup.menu.add(0, i, i, "Pagina $i")
+                    if (i == currentPage) item.isEnabled = false
+                }
+                popup.setOnMenuItemClickListener { item ->
+                    viewModel.fetchEpisodes(malId, item.itemId)
+                    true
+                }
+                popup.show()
+            }
         }
     }
 
-    private fun showAllEpisodes() {
-        val media = currentMedia ?: return
-        val episodes = media.episodeList ?: return
-        val malId = media.idMal ?: 0
-
-        if (episodesAdapter == null) {
-            episodesAdapter = MediaEpisodesRvAdapter(
-                requireContext(),
-                episodes,
-                false,
-                media.mediaListEntry?.progress,
-                viewModel.episodeCurrentPageValue,
-                viewModel.episodeTotalPagesValue,
-                true,
-                object : MediaEpisodesRvAdapter.MediaEpisodesListener {
-                    override fun onEpisodeClick(episode: Episode) {
-                        this@MediaFragment.onEpisodeClick(episode)
-                    }
-                    override fun onEpisodeLongClick(episode: Episode) {
-                        this@MediaFragment.onEpisodeLongClick(episode)
-                    }
-                    override fun onPageClick(page: Int) {
-                        viewModel.fetchEpisodes(malId, page)
-                    }
-
-                    override fun onJumpToProgressClick(page: Int, episodeNumber: Int) {
-                        if (viewModel.episodeCurrentPageValue != page) {
-                            pendingScrollToEpisode = episodeNumber
-                            viewModel.fetchEpisodes(malId, page)
-                        } else {
-                            episodesAdapter?.scrollToEpisode(episodeNumber)
-                        }
-                    }
+    private fun updateHeaderContent(media: Media) {
+        binding.apply {
+            // Genres
+            if (mediaHeaderGenreRecyclerView.layoutManager == null) {
+                mediaHeaderGenreRecyclerView.layoutManager = com.google.android.flexbox.FlexboxLayoutManager(requireContext()).apply {
+                    flexDirection = com.google.android.flexbox.FlexDirection.ROW
+                    justifyContent = com.google.android.flexbox.JustifyContent.FLEX_START
+                    flexWrap = com.google.android.flexbox.FlexWrap.WRAP
                 }
-            )
-        } else {
-            episodesAdapter?.updateEpisodes(
-                episodes,
-                viewModel.episodeCurrentPageValue,
-                viewModel.episodeTotalPagesValue
-            )
+            }
+            mediaHeaderGenreRecyclerView.adapter = GenreRvAdapter(requireContext(), media.genres, object : GenreRvAdapter.GenreListener {
+                override fun getGenre(genre: Genre) {
+                    getMediaGenreListener().navigateToExplore(media.type ?: com.doma.alsan.type.MediaType.ANIME, genre)
+                }
+            })
+
+            // Synopsis
+            MarkdownUtil.applyMarkdown(requireContext(), screenWidth, mediaHeaderSynopsisText, media.description)
+            mediaHeaderSynopsisLayout.show(media.description.isNotBlank())
+
+            // Tabs
+            val tabs = ArrayList<MediaViewModel.MediaTab>()
+            tabs.add(MediaViewModel.MediaTab.DETAILS)
+            tabs.add(MediaViewModel.MediaTab.CHARACTERS)
+            if (media.type == com.doma.alsan.type.MediaType.ANIME) tabs.add(MediaViewModel.MediaTab.EPISODES)
+            tabs.add(MediaViewModel.MediaTab.STAFF)
+            tabs.add(MediaViewModel.MediaTab.RECOMMENDATIONS)
+
+            if (mediaTabLayout.tabCount != tabs.size) {
+                isUpdatingTabs = true
+                mediaTabLayout.removeAllTabs()
+                tabs.forEach { tabType ->
+                    val tab = mediaTabLayout.newTab()
+                    tab.text = getString(tabType.stringRes)
+                    tab.tag = tabType
+                    mediaTabLayout.addTab(tab)
+                }
+                isUpdatingTabs = false
+            }
         }
-        dialog.showListDialog(episodesAdapter!!)
     }
 
     private fun onEpisodeClick(episode: Episode) {
@@ -537,6 +601,7 @@ class MediaFragment : BaseFragment<FragmentMediaBinding, MediaViewModel>() {
         menuItemSocial = null
         menuItemReview = null
         menuItemDownloadCover = null
+        menuItemDownloadBanner = null
     }
 
     companion object {

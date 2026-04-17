@@ -25,7 +25,6 @@ class MediaCharacterRvAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = ListCircularBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        view.root.layoutParams.width = (width.toDouble() / context.resources.getInteger(R.integer.horizontalListCharacterDivider)).toInt()
         return ItemViewHolder(view)
     }
 

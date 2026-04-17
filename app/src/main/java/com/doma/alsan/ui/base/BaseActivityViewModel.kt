@@ -12,6 +12,10 @@ class BaseActivityViewModel(private val userRepository: UserRepository) : BaseVi
         return userRepository.getAppTheme().name.contains("LIGHT")
     }
 
+    fun getFontScale(): Float {
+        return userRepository.getFontSize().value
+    }
+
     fun getAppThemeResource(): Int {
         return when (userRepository.getAppTheme()) {
             // AniList Themes (Default)

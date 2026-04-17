@@ -93,10 +93,70 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Font Size Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/appSettingsFontSizeLayout"
+                app:layout_constraintTop_toBottomOf="@+id/appSettingsThemeLayout"
+                android:layout_marginTop="@dimen/marginBig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsFontSizeTitleLayout"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        app:srcCompat="@drawable/ic_title"
+                        app:tint="?themePrimaryColor"
+                        android:layout_marginEnd="@dimen/marginSmall"
+                        android:layout_width="@dimen/iconSmallSize"
+                        android:layout_height="@dimen/iconSmallSize"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsFontSizeTitle"
+                        android:text="@string/font_size"
+                        style="?themeRegularBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/appSettingsSelectedFontSizeLayout"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsFontSizeTitleLayout"
+                    android:layout_marginTop="@dimen/marginNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:text="@string/selected_font_size"
+                        style="?themeRegularFont"
+                        android:layout_marginEnd="@dimen/marginNormal"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appSettingsSelectedFontSizeText"
+                        style="?themeRegularClickableFont"
+                        android:foreground="?selectableItemBackground"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <!-- Appearance Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/appSettingsAppearanceLayout"
-                app:layout_constraintTop_toBottomOf="@id/appSettingsThemeLayout"
+                app:layout_constraintTop_toBottomOf="@id/appSettingsFontSizeLayout"
                 android:layout_marginTop="@dimen/marginBig"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

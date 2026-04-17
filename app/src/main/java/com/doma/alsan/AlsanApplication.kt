@@ -36,11 +36,9 @@ import com.doma.alsan.ui.landing.LandingViewModel
 import com.doma.alsan.ui.login.LoginViewModel
 import com.doma.alsan.ui.main.MainViewModel
 import com.doma.alsan.ui.main.SharedMainViewModel
-import com.doma.alsan.ui.media.character.MediaCharacterListViewModel
 import com.doma.alsan.ui.media.MediaViewModel
 import com.doma.alsan.ui.media.mediasocial.MediaSocialViewModel
 import com.doma.alsan.ui.media.mediastats.MediaStatsViewModel
-import com.doma.alsan.ui.media.staff.MediaStaffListViewModel
 import com.doma.alsan.ui.media.themes.BottomSheetMediaThemesViewModel
 import com.doma.alsan.ui.medialist.BottomSheetMediaListQuickDetailViewModel
 import com.doma.alsan.ui.medialist.BottomSheetMediaFilterViewModel
@@ -200,8 +198,6 @@ class AlsanApplication : Application() {
         viewModel { MediaViewModel(get(), get(), get(), get()) }
         viewModel { MediaStatsViewModel(get()) }
         viewModel { MediaSocialViewModel(get(), get()) }
-        viewModel { MediaCharacterListViewModel(get(), get()) }
-        viewModel { MediaStaffListViewModel(get(), get()) }
         viewModel { CharacterViewModel(get(), get(), get()) }
         viewModel { CharacterMediaListViewModel(get(), get()) }
         viewModel { StaffViewModel(get(), get(), get()) }

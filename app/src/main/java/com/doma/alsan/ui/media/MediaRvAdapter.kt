@@ -14,11 +14,13 @@ import com.doma.alsan.data.response.AnimeTheme
 import com.doma.alsan.data.response.AnimeThemeEntry
 import com.doma.alsan.data.response.Genre
 import com.doma.alsan.data.response.anilist.MediaTag
+import com.doma.alsan.data.response.anilist.PageInfo
 import com.doma.alsan.databinding.*
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.extensions.*
 import com.doma.alsan.helper.pojo.MediaItem
 import com.doma.alsan.helper.utils.*
+import com.doma.alsan.helper.utils.GridSpacingItemDecoration
 import com.doma.alsan.ui.base.BaseRecyclerViewAdapter
 import com.doma.alsan.ui.common.GenreRvAdapter
 import com.doma.alsan.ui.common.TextRvAdapter
@@ -41,7 +43,6 @@ class MediaRvAdapter(
     private var relationsAdapter: MediaRelationsRvAdapter? = null
     private var recommendationsAdapter: MediaRecommendationsRvAdapter? = null
     private var linksAdapter: MediaLinksRvAdapter? = null
-    private var episodesAdapter: MediaEpisodesRvAdapter? = null
     
     private var selectedLanguage: StaffLanguage = StaffLanguage.JAPANESE
     private var characterViewHolderBinding: LayoutHorizontalListBinding? = null
@@ -55,22 +56,6 @@ class MediaRvAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
-            MediaItem.VIEW_TYPE_GENRE -> {
-                val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
-                view.listRecyclerView.layoutManager = FlexboxLayoutManager(context)
-                return GenreViewHolder(view)
-            }
-            MediaItem.VIEW_TYPE_SYNOPSIS -> {
-                val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
-                return SynopsisViewHolder(view)
-            }
-            MediaItem.VIEW_TYPE_CHARACTERS -> {
-                val view = LayoutHorizontalListBinding.inflate(inflater, parent, false)
-                characterAdapter = MediaCharacterRvAdapter(context, listOf(), appSetting, width, listener.mediaCharacterListener)
-                view.horizontalListRecyclerView.adapter = characterAdapter
-                view.horizontalListRecyclerView.addItemDecoration(SpaceItemDecoration(right = context.resources.getDimensionPixelSize(R.dimen.marginPageBig)))
-                return CharacterViewHolder(view)
-            }
             MediaItem.VIEW_TYPE_INFO -> {
                 val view = LayoutMediaInfoBinding.inflate(inflater, parent, false)
                 synonymsAdapter = TextRvAdapter(context, listOf())
@@ -86,20 +71,13 @@ class MediaRvAdapter(
             MediaItem.VIEW_TYPE_TAGS -> {
                 val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
                 view.listRecyclerView.layoutManager = GridLayoutManager(context, 2)
-                view.listRecyclerView.addItemDecoration(GridSpacingItemDecoration(2, context.resources.getDimensionPixelSize(R.dimen.marginSmall), false))
+                view.listRecyclerView.addItemDecoration(GridSpacingItemDecoration(2, context.resources.getDimensionPixelSize(R.dimen.marginNormal), false, context.resources.getDimensionPixelSize(R.dimen.marginClose)))
                 return TagsViewHolder(view)
             }
             MediaItem.VIEW_TYPE_THEMES_OPENING, MediaItem.VIEW_TYPE_THEMES_ENDING -> {
                 val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
                 view.listRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 return ThemesViewHolder(view)
-            }
-            MediaItem.VIEW_TYPE_STAFF -> {
-                val view = LayoutHorizontalListBinding.inflate(inflater, parent, false)
-                staffAdapter = MediaStaffRvAdapter(context, listOf(), appSetting, width, listener.mediaStaffListener)
-                view.horizontalListRecyclerView.adapter = staffAdapter
-                view.horizontalListRecyclerView.addItemDecoration(SpaceItemDecoration(right = context.resources.getDimensionPixelSize(R.dimen.marginPageBig)))
-                return StaffViewHolder(view)
             }
             MediaItem.VIEW_TYPE_RELATIONS -> {
                 val view = LayoutHorizontalListBinding.inflate(inflater, parent, false)
@@ -110,6 +88,9 @@ class MediaRvAdapter(
             }
             MediaItem.VIEW_TYPE_RECOMMENDATIONS -> {
                 val view = LayoutHorizontalListBinding.inflate(inflater, parent, false)
+                val params = view.root.layoutParams as? ViewGroup.MarginLayoutParams
+                params?.topMargin = context.resources.getDimensionPixelSize(R.dimen.marginBig)
+                view.root.layoutParams = params
                 recommendationsAdapter = MediaRecommendationsRvAdapter(context, listOf(), appSetting, width, listener.mediaRecommendationsListener)
                 view.horizontalListRecyclerView.adapter = recommendationsAdapter
                 view.horizontalListRecyclerView.addItemDecoration(SpaceItemDecoration(right = context.resources.getDimensionPixelSize(R.dimen.marginPageNormal)))
@@ -122,10 +103,33 @@ class MediaRvAdapter(
                 view.listRecyclerView.layoutManager = FlexboxLayoutManager(context)
                 return LinkViewHolder(view)
             }
-            MediaItem.VIEW_TYPE_EPISODES -> {
+            MediaItem.VIEW_TYPE_STATS -> {
+                val view = LayoutMediaStatsBinding.inflate(inflater, parent, false)
+                return StatsViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_STAFF_ITEM -> {
+                val view = ListCardImageAndTextBinding.inflate(inflater, parent, false)
+                return StaffItemViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_CHARACTER_ITEM -> {
+                val view = ListCardImageAndTextBinding.inflate(inflater, parent, false)
+                return CharacterItemViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_CHARACTER_LANGUAGE -> {
                 val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
-                view.listRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                return EpisodesViewHolder(view)
+                return CharacterLanguageViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_EPISODE_ITEM -> {
+                val view = ListEpisodeBinding.inflate(inflater, parent, false)
+                return EpisodeItemViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_EPISODE_PAGINATION -> {
+                val view = ListEpisodeMoreBinding.inflate(inflater, parent, false)
+                return EpisodePaginationViewHolder(view)
+            }
+            MediaItem.VIEW_TYPE_GENRE -> {
+                val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
+                return GenreViewHolder(view)
             }
             else -> {
                 val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
@@ -149,59 +153,54 @@ class MediaRvAdapter(
         return list[position].viewType
     }
 
-    inner class GenreViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
+    inner class CharacterLanguageViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
-            binding.titleLayout.show(false)
-            binding.listRecyclerView.adapter = GenreRvAdapter(context, item.media.genres, object : GenreRvAdapter.GenreListener {
-                override fun getGenre(genre: Genre) {
-                    listener.mediaGenreListener.navigateToExplore(item.media.type ?: com.doma.alsan.type.MediaType.ANIME, genre)
-                }
-            })
+            binding.titleText.show(false)
+            binding.seeMoreText.text = context.getString(R.string.language_x, selectedLanguage.name.convertFromSnakeCase(true))
+            binding.seeMoreText.show(true)
+            binding.seeMoreText.clicks {
+                listener.mediaCharacterListener.openLanguageDialog()
+            }
+            binding.listRecyclerView.show(false)
+            binding.footnoteText.show(false)
         }
     }
 
-    inner class SynopsisViewHolder(private val binding: LayoutTitleAndTextBinding) : ViewHolder(binding) {
+    inner class CharacterItemViewHolder(private val binding: ListCardImageAndTextBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
+            val edge = item.characterEdge ?: return
             binding.apply {
-                itemTitle.show(true)
-                itemTitle.text = context.getString(R.string.synopsis)
-                MarkdownUtil.applyMarkdown(context, width, itemText, item.media.description)
-
-                if (item.showFullDescription) {
-                    itemGradientLayer.show(false)
-                    ImageUtil.loadImage(context, R.drawable.ic_chevron_up, itemArrowIcon)
-                } else {
-                    itemGradientLayer.show(true)
-                    ImageUtil.loadImage(context, R.drawable.ic_chevron_down, itemArrowIcon)
+                ImageUtil.loadImage(context, edge.node.getImage(appSetting), cardImage)
+                cardText.text = edge.node.name.userPreferred
+                
+                // Find voice actor for the selected language
+                val voiceActorRole = edge.voiceActorRoles.find { 
+                    it.voiceActor.language.replace(" ", "_").equals(selectedLanguage.name, ignoreCase = true)
                 }
+                val voiceActor = voiceActorRole?.voiceActor
+                cardSubtitle.text = voiceActor?.name?.userPreferred ?: edge.role?.name?.convertFromSnakeCase(true) ?: ""
+                cardSubtitle.show(true)
 
-                itemArrowIcon.show(true)
-                itemArrowIcon.clicks {
-                    listener.mediaSynopsisListener.toggleShowMore(!item.showFullDescription)
+                root.clicks { listener.mediaCharacterListener.navigateToCharacter(edge.node) }
+                
+                voiceActor?.let { va ->
+                    cardSubtitle.clicks { listener.mediaCharacterListener.navigateToStaff(va) }
                 }
             }
         }
     }
 
-    inner class CharacterViewHolder(private val binding: LayoutHorizontalListBinding) : ViewHolder(binding) {
+    inner class StaffItemViewHolder(private val binding: ListCardImageAndTextBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
-            characterViewHolderBinding = binding
-            binding.horizontalListTitle.text = context.getString(R.string.characters)
-            binding.horizontalListSeeMore.clicks { listener.mediaCharacterListener.navigateToMediaCharacters(item.media) }
-            
-            // Show language selector only for anime (voice actors)
-            if (item.media.type == com.doma.alsan.type.MediaType.ANIME) {
-                binding.horizontalListLanguageSelector.show(true)
-                binding.horizontalListLanguageSelector.text = selectedLanguage.getString()
-                binding.horizontalListLanguageSelector.clicks {
-                    listener.mediaCharacterListener.openLanguageDialog()
-                }
-            } else {
-                binding.horizontalListLanguageSelector.show(false)
+            val edge = item.staffEdge ?: return
+            binding.apply {
+                ImageUtil.loadImage(context, edge.node.getImage(appSetting), cardImage)
+                cardText.text = edge.node.name.userPreferred
+                cardSubtitle.text = edge.role
+                cardSubtitle.show(true)
+
+                root.clicks { listener.mediaStaffListener.navigateToStaff(edge.node) }
             }
-            
-            characterAdapter?.updateData(item.media.characters.edges)
-            characterAdapter?.updateSelectedLanguage(selectedLanguage)
         }
     }
 
@@ -266,6 +265,9 @@ class MediaRvAdapter(
                         listener.mediaInfoListener.navigateToExplore(item.media.type ?: com.doma.alsan.type.MediaType.ANIME, item.media.season, item.media.seasonYear)
                     }
                 }
+                
+                // Remove redundant Info title if requested (hiding it)
+                mediaInfoTitle.show(false)
 
                 val studios = item.media.studios.edges.filter { it.isMain }.map { it.node.name }
                 val producers = item.media.studios.edges.filter { !it.isMain }.map { it.node.name }
@@ -340,13 +342,6 @@ class MediaRvAdapter(
         }
     }
 
-    inner class StaffViewHolder(private val binding: LayoutHorizontalListBinding) : ViewHolder(binding) {
-        override fun bind(item: MediaItem, index: Int) {
-            binding.horizontalListTitle.text = context.getString(R.string.staff)
-            binding.horizontalListSeeMore.clicks { listener.mediaStaffListener.navigateToMediaStaff(item.media) }
-            staffAdapter?.updateData(item.media.getMainStaff())
-        }
-    }
 
     inner class RelationsViewHolder(private val binding: LayoutHorizontalListBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
@@ -374,56 +369,91 @@ class MediaRvAdapter(
         }
     }
 
-    inner class EpisodesViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
+    inner class EpisodeItemViewHolder(private val binding: ListEpisodeBinding) : ViewHolder(binding) {
         override fun bind(item: MediaItem, index: Int) {
-            binding.titleText.text = context.getString(R.string.episode_guide)
-            val episodes = item.episodes
-            val currentProgress = item.media.mediaListEntry?.progress ?: 0
-            val previewEpisodes = episodes.take(10).toMutableList()
-            if (currentProgress > 10) {
-                episodes.find { it.number == currentProgress }?.let { currentEp ->
-                    if (!previewEpisodes.any { it.number == currentEp.number }) {
-                        previewEpisodes.add(currentEp)
-                    }
+            val episode = item.episode ?: return
+            binding.apply {
+                episodeNumberText.text = episode.number.toString()
+                episodeTitleText.text = episode.title
+                episodeBadgeText.show(episode.filler)
+                episodeBadgeText.text = context.getString(R.string.filler)
+                
+                if (item.isCurrent) {
+                    root.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    episodeNumberText.setTextColor(context.getAttrValue(R.attr.themePrimaryColor))
+                    episodeTitleText.setTextColor(context.getAttrValue(R.attr.themePrimaryColor))
+                    androidx.core.widget.TextViewCompat.setTextAppearance(episodeTitleText, R.style.FontSmallBold)
+                } else {
+                    root.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    episodeNumberText.setTextColor(context.getAttrValue(R.attr.themeSecondaryColor))
+                    episodeTitleText.setTextColor(context.getAttrValue(R.attr.themeContentColor))
+                    androidx.core.widget.TextViewCompat.setTextAppearance(episodeTitleText, R.style.FontSmall)
+                }
+                
+                root.clicks { listener.mediaEpisodesListener.onEpisodeClick(episode) }
+            }
+        }
+    }
+
+    inner class EpisodePaginationViewHolder(private val binding: ListEpisodeMoreBinding) : ViewHolder(binding) {
+        override fun bind(item: MediaItem, index: Int) {
+            val pagination = item.pagination ?: return
+            val malId = item.media.idMal ?: return
+            binding.apply {
+                episodeMoreText.text = "${pagination.currentPage} / ${pagination.lastPage}"
+                
+                episodeMoreText.clicks {
+                    listener.mediaEpisodesListener.onPageSelectorClick(episodeMoreText, malId, pagination.currentPage, pagination.lastPage)
+                }
+                
+                episodePrevButton.show(pagination.currentPage > 1)
+                episodePrevButton.clicks { 
+                    listener.mediaEpisodesListener.onPageClick(malId, pagination.currentPage - 1)
+                }
+                
+                episodeNextButton.show(pagination.currentPage < pagination.lastPage)
+                episodeNextButton.clicks {
+                    listener.mediaEpisodesListener.onPageClick(malId, pagination.currentPage + 1)
                 }
             }
-            val hasMore = episodes.size > 10
+        }
+    }
 
-            binding.seeMoreText.show(false)
+    inner class SynopsisViewHolder(private val binding: LayoutTitleAndTextBinding) : ViewHolder(binding) {
+        override fun bind(item: MediaItem, index: Int) {
+            binding.apply {
+                itemTitle.show(false) 
+                itemText.text = item.media.description
+            }
+        }
+    }
 
-            binding.footnoteText.text = context.getString(R.string.long_press_to_copy_episode_title)
-            binding.footnoteText.show(true)
-
-            if (episodesAdapter == null) {
-                episodesAdapter = MediaEpisodesRvAdapter(
-                    context,
-                    previewEpisodes,
-                    hasMore,
-                    item.media.mediaListEntry?.progress,
-                    1,
-                    1,
-                    false,
-                    object : MediaEpisodesRvAdapter.MediaEpisodesListener {
-                        override fun onEpisodeClick(episode: com.doma.alsan.data.response.Episode) {
-                            listener.mediaEpisodesListener.onEpisodeClick(episode)
-                        }
-                        override fun onEpisodeLongClick(episode: com.doma.alsan.data.response.Episode) {
-                            listener.mediaEpisodesListener.onEpisodeLongClick(episode)
-                        }
-                        override fun onShowMoreClick() {
-                            listener.mediaEpisodesListener.showAllEpisodes()
-                        }
-                        override fun onPageClick(page: Int) {
-                            item.media.idMal?.let { malId ->
-                                listener.mediaEpisodesListener.onPageClick(malId, page)
-                            }
-                        }
+    inner class GenreViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
+        override fun bind(item: MediaItem, index: Int) {
+            binding.apply {
+                titleText.show(false)
+                seeMoreText.show(false)
+                listRecyclerView.layoutManager = com.google.android.flexbox.FlexboxLayoutManager(context).apply {
+                    flexDirection = com.google.android.flexbox.FlexDirection.ROW
+                    justifyContent = com.google.android.flexbox.JustifyContent.FLEX_START
+                    flexWrap = com.google.android.flexbox.FlexWrap.WRAP
+                }
+                listRecyclerView.adapter = GenreRvAdapter(context, item.media.genres, object : GenreRvAdapter.GenreListener {
+                    override fun getGenre(genre: Genre) {
+                        listener.mediaGenreListener.navigateToExplore(item.media.type ?: com.doma.alsan.type.MediaType.ANIME, genre)
                     }
-                )
-                binding.listRecyclerView.adapter = episodesAdapter
-            } else {
-                episodesAdapter?.updateEpisodes(previewEpisodes, 1, 1)
-                episodesAdapter?.setCurrentProgress(item.media.mediaListEntry?.progress ?: 0)
+                })
+            }
+        }
+    }
+
+    inner class StatsViewHolder(private val binding: LayoutMediaStatsBinding) : ViewHolder(binding) {
+        override fun bind(item: MediaItem, index: Int) {
+            binding.apply {
+                mediaStatsAverageScore.text = item.media.averageScore.getNumberFormatting()
+                mediaStatsMeanScore.text = item.media.meanScore.getNumberFormatting()
+                mediaStatsPopularity.text = item.media.popularity.getNumberFormatting()
+                mediaStatsFavorites.text = item.media.favourites.getNumberFormatting()
             }
         }
     }

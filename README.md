@@ -8,10 +8,9 @@
 <p align="center">AL-san is an unofficial fork of AL-chan, an unofficial Android client for AniList, a place where you can track, share, discover, and experience Anime and Manga.</p>
 
 <p align="center">
-  <img src="assets/screens/list_screen.png" width="24%" alt="List">
-  <img src="assets/screens/episodes_screen.png" width="24%" alt="Episodes">
-  <img src="assets/screens/profile_screen.png" width="24%" alt="Profile">
-  <img src="assets/screens/notifications_screen.png" width="24%" alt="Notifications">
+  <img src="assets/screens/list_screen.png" width="32%" alt="List">
+  <img src="assets/screens/profile_screen.png" width="32%" alt="Profile">
+  <img src="assets/screens/notifications_screen.png" width="32%" alt="Notifications">
 </p>
 
 
@@ -27,6 +26,9 @@
 - Robust stats based on your anime and manga lists.
 - View recommendations and read reviews.
 - Interact with the community.
+- Tabbed navigation for media details (Episodes, Characters, Staff, etc.).
+- Integrated anime episode list with pagination.
+- Download media covers and banners.
 - Light and Dark theme.
 
 ## Authors

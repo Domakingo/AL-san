@@ -13,4 +13,7 @@
     <item android:id="@+id/itemDownloadCover"
         android:title="@string/download_cover"
         app:showAsAction="never"/>
+    <item android:id="@+id/itemDownloadBanner"
+        android:title="@string/download_banner"
+        app:showAsAction="never"/>
 </menu>

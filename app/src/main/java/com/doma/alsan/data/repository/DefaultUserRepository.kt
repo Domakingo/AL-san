@@ -232,6 +232,10 @@ class DefaultUserRepository(
         return userManager.appSetting.appTheme
     }
 
+    override fun getFontSize(): com.doma.alsan.helper.enums.AppFontSize {
+        return userManager.appSetting.fontSize
+    }
+
     override fun updateAniListSettings(
         titleLanguage: UserTitleLanguage,
         staffNameLanguage: UserStaffNameLanguage,

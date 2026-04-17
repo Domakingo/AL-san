@@ -24,6 +24,8 @@ import com.doma.alsan.helper.utils.SpaceItemDecoration
 import com.doma.alsan.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
+import com.doma.alsan.helper.pojo.StaffItem
+import com.doma.alsan.ui.staff.StaffViewModel.StaffTab
 
 class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
 
@@ -34,6 +36,8 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
     private var isToolbarExpanded = true
 
     private var staffAdapter: StaffRvAdapter? = null
+    private var isUpdatingTabs = false
+    private var isSynopsisExpanded = false
 
     private var menuViewOnAniList: MenuItem? = null
     private var menuCopyLink: MenuItem? = null
@@ -90,6 +94,41 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
             staffSwipeRefresh.setOnRefreshListener {
                 viewModel.reloadData()
             }
+
+
+            staffHeaderSynopsisLayout.clicks {
+                isSynopsisExpanded = !isSynopsisExpanded
+                updateSynopsisState()
+            }
+        }
+    }
+
+    private fun updateSynopsisState() {
+        binding.apply {
+            staffHeaderSynopsisText.maxLines = if (isSynopsisExpanded) Int.MAX_VALUE else 4
+            staffHeaderSynopsisArrow.rotation = if (isSynopsisExpanded) 180f else 0f
+        }
+    }
+
+    private fun updateRecyclerViewLayout() {
+        binding.staffRecyclerView.apply {
+            for (i in 0 until itemDecorationCount) {
+                removeItemDecorationAt(0)
+            }
+            
+            val spanCount = 3
+            val spacing = resources.getDimensionPixelSize(R.dimen.marginSmall)
+            val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
+            gridLayoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (staffAdapter?.getItemViewType(position)) {
+                        StaffItem.VIEW_TYPE_CHARACTER_GROUP, StaffItem.VIEW_TYPE_MEDIA_GROUP -> spanCount
+                        else -> 1
+                    }
+                }
+            }
+            layoutManager = gridLayoutManager
+            addItemDecoration(com.doma.alsan.helper.utils.GridSpacingItemDecoration(spanCount, spacing, true))
         }
     }
 
@@ -168,17 +207,33 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
             },
             viewModel.staffItemList.subscribe {
                 staffAdapter?.updateData(it, true)
+                updateRecyclerViewLayout()
             },
             viewModel.staffLink.subscribe {
                 navigation.openWebView(it)
             },
             viewModel.staffImageForPreview.subscribe {
                 ImageUtil.showFullScreenImage(requireContext(), it, binding.staffImage)
+            },
+            viewModel.staffMetadata.subscribe { staff ->
+                updateHeaderContent(staff)
             }
         )
 
         arguments?.getInt(STAFF_ID)?.let {
             viewModel.loadData(StaffParam(it))
+        }
+    }
+
+    private fun updateHeaderContent(staff: com.doma.alsan.data.response.anilist.Staff) {
+        binding.apply {
+            com.doma.alsan.helper.utils.MarkdownUtil.applyMarkdown(requireContext(), screenWidth, staffHeaderSynopsisText, staff.description)
+             staffLanguageText.text = if (staff.language.isBlank()) "-" else staff.language
+             staffLanguageLabel.text = "Language"
+             staffAgeText.text = if (staff.age == 0) "-" else staff.age.toString()
+             staffAgeLabel.text = "Age"
+             
+             staffHeaderSynopsisLayout.show(staff.description.isNotBlank())
         }
     }
 
@@ -190,7 +245,7 @@ class StaffFragment : BaseFragment<FragmentStaffBinding, StaffViewModel>() {
     private fun getStaffListener(): StaffListener {
         return object : StaffListener {
             override fun toggleShowMore(shouldShowMore: Boolean) {
-                viewModel.updateShouldShowFullDescription(shouldShowMore)
+                // Now handled in header
             }
 
             override fun navigateToStaffCharacter() {

@@ -36,7 +36,6 @@ class MediaEpisodesRvAdapter(
         private const val VIEW_TYPE_EPISODE = 0
         private const val VIEW_TYPE_MORE = 1
         private const val VIEW_TYPE_PAGINATION = 2
-        private const val VIEW_TYPE_JUMP = 3
     }
 
     interface MediaEpisodesListener {
@@ -51,21 +50,14 @@ class MediaEpisodesRvAdapter(
         var count = list.size
         if (hasMore) count++
         if (totalPages > 1) count += 2 // Top and Bottom
-        if (showJump && currentProgress != null && currentProgress!! > 0) count++ // Jump Button
         return count
     }
 
     override fun getItemViewType(position: Int): Int {
         val listSize = list.size
         val hasPagination = totalPages > 1
-        val hasJump = showJump && currentProgress != null && currentProgress!! > 0
         
         var currentPos = position
-        
-        if (hasJump) {
-            if (currentPos == 0) return VIEW_TYPE_JUMP
-            currentPos--
-        }
         
         if (hasPagination) {
             if (currentPos == 0) return VIEW_TYPE_PAGINATION
@@ -112,9 +104,8 @@ class MediaEpisodesRvAdapter(
     fun scrollToEpisode(episodeNumber: Int) {
         val index = list.indexOfFirst { ep: Episode -> ep.number == episodeNumber }
         if (index != -1) {
-            val hasJump = showJump && currentProgress != null && currentProgress!! > 0
             val hasPagination = totalPages > 1
-            val offset = (if (hasJump) 1 else 0) + (if (hasPagination) 1 else 0)
+            val offset = if (hasPagination) 1 else 0
             recyclerView?.scrollToPosition(index + offset)
         }
     }
@@ -133,17 +124,6 @@ class MediaEpisodesRvAdapter(
                 }
                 PaginationViewHolder(view)
             }
-            VIEW_TYPE_JUMP -> {
-                val view = TextView(context).apply {
-                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    val padding = 32
-                    setPadding(padding, padding, padding, padding)
-                    gravity = Gravity.CENTER
-                    textSize = 16f
-                    setTypeface(null, Typeface.BOLD)
-                }
-                JumpViewHolder(view)
-            }
             else -> {
                 val view = ListEpisodeBinding.inflate(inflater, parent, false)
                 ItemViewHolder(view)
@@ -155,14 +135,12 @@ class MediaEpisodesRvAdapter(
         val viewType = getItemViewType(position)
         when (viewType) {
             VIEW_TYPE_EPISODE -> {
-                val hasJump = showJump && currentProgress != null && currentProgress!! > 0
                 val hasPagination = totalPages > 1
-                val offset = (if (hasJump) 1 else 0) + (if (hasPagination) 1 else 0)
+                val offset = if (hasPagination) 1 else 0
                 holder.bind(list[position - offset], position - offset)
             }
             VIEW_TYPE_MORE -> (holder as MoreViewHolder).bindInternal()
             VIEW_TYPE_PAGINATION -> (holder as PaginationViewHolder).bindInternal()
-            VIEW_TYPE_JUMP -> (holder as JumpViewHolder).bindInternal()
         }
     }
 
@@ -241,39 +219,6 @@ class MediaEpisodesRvAdapter(
         }
     }
 
-    inner class JumpViewHolder(private val textView: TextView) : BaseRecyclerViewAdapter<Episode, ViewBinding>.ViewHolder(object : ViewBinding {
-        override fun getRoot(): View = textView
-    }) {
-        override fun bind(item: Episode, index: Int) {
-            bindInternal()
-        }
-
-        fun bindInternal() {
-            val progress = currentProgress ?: return
-            val targetPage = (progress - 1) / 100 + 1
-            
-            textView.text = if (totalPages > 1) {
-                "Jump to Episode $progress (Page $targetPage)"
-            } else {
-                "Jump to Episode $progress"
-            }
-
-            val secondaryTV = android.util.TypedValue()
-            context.theme.resolveAttribute(com.doma.alsan.R.attr.themeSecondaryColor, secondaryTV, true)
-            val secondaryColor = secondaryTV.data
-
-            val secondaryTransparent20TV = android.util.TypedValue()
-            context.theme.resolveAttribute(com.doma.alsan.R.attr.themeSecondaryTransparent20Color, secondaryTransparent20TV, true)
-            val secondaryTransparent20Color = secondaryTransparent20TV.data
-
-            textView.setTextColor(secondaryColor)
-            textView.setBackgroundColor(secondaryTransparent20Color)
-
-            textView.setOnClickListener {
-                listener.onJumpToProgressClick(targetPage, progress)
-            }
-        }
-    }
 
     inner class PaginationViewHolder(private val scrollView: HorizontalScrollView) : BaseRecyclerViewAdapter<Episode, ViewBinding>.ViewHolder(object : ViewBinding {
         override fun getRoot(): android.view.View = scrollView

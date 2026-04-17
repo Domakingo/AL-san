@@ -86,6 +86,10 @@ class AppSettingsViewModel(
     val useHighestQualityImage: Observable<Boolean>
         get() = _useHighestQualityImage
 
+    private val _fontSize = BehaviorSubject.createDefault(AppFontSize.NORMAL)
+    val fontSize: Observable<AppFontSize>
+        get() = _fontSize
+
     private val _appThemeItems = PublishSubject.create<List<AppThemeItem>>()
     val appThemeItems: Observable<List<AppThemeItem>>
         get() = _appThemeItems
@@ -105,6 +109,10 @@ class AppSettingsViewModel(
     private val _mediaNamingItems = PublishSubject.create<Pair<List<ListItem<MediaNaming>>, Country>>()
     val mediaNamingItems: Observable<Pair<List<ListItem<MediaNaming>>, Country>>
         get() = _mediaNamingItems
+
+    private val _fontSizeItems = PublishSubject.create<List<ListItem<AppFontSize>>>()
+    val fontSizeItems: Observable<List<ListItem<AppFontSize>>>
+        get() = _fontSizeItems
 
     private var viewer: User? = null
     private var currentAppSetting: AppSetting? = null
@@ -142,6 +150,8 @@ class AppSettingsViewModel(
                         updateMergePushNotifications(appSetting.mergePushNotifications)
 
                         updateUseHighestQualityImage(appSetting.useHighestQualityImage)
+
+                        updateFontSize(appSetting.fontSize)
 
                         state = State.LOADED
                     }
@@ -260,6 +270,11 @@ class AppSettingsViewModel(
         _useHighestQualityImage.onNext(shouldUseHighestQualityImage)
     }
 
+    fun updateFontSize(newFontSize: AppFontSize) {
+        currentAppSetting?.fontSize = newFontSize
+        _fontSize.onNext(newFontSize)
+    }
+
     fun loadAppThemeItems() {
         val items = ArrayList<AppThemeItem>()
         
@@ -300,5 +315,13 @@ class AppSettingsViewModel(
         items.add(ListItem(R.string.use_media_romaji_name_format, MediaNaming.ROMAJI))
         items.add(ListItem(R.string.use_media_native_name_format, MediaNaming.NATIVE))
         _mediaNamingItems.onNext(items to country)
+    }
+
+    fun loadFontSizeItems() {
+        val items = ArrayList<ListItem<AppFontSize>>()
+        items.add(ListItem(R.string.small, AppFontSize.SMALL))
+        items.add(ListItem(R.string.normal, AppFontSize.NORMAL))
+        items.add(ListItem(R.string.large, AppFontSize.LARGE))
+        _fontSizeItems.onNext(items)
     }
 }

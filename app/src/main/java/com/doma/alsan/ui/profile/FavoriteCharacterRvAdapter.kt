@@ -29,11 +29,12 @@ class FavoriteCharacterRvAdapter(
             binding.apply {
                 val image = item.getImage(appSetting)
                 ImageUtil.loadImage(context, image, rectangleItemImage)
-                rectangleItemText.show(false)
                 
-                // Show name overlay
-                rectangleItemNameOverlay.show(true)
-                rectangleItemNameText.text = item.name.userPreferred
+                // Show name below image instead of overlay
+                rectangleItemText.show(true)
+                rectangleItemText.text = item.name.userPreferred
+                
+                rectangleItemNameOverlay.show(false)
                 
                 root.clicks { listener.navigateToCharacter(item) }
             }

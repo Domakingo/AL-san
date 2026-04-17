@@ -39,10 +39,8 @@ import com.doma.alsan.ui.landing.LandingFragment
 import com.doma.alsan.ui.login.LoginFragment
 import com.doma.alsan.ui.main.MainFragment
 import com.doma.alsan.ui.media.MediaFragment
-import com.doma.alsan.ui.media.character.MediaCharacterListFragment
 import com.doma.alsan.ui.media.mediasocial.MediaSocialFragment
 import com.doma.alsan.ui.media.mediastats.MediaStatsFragment
-import com.doma.alsan.ui.media.staff.MediaStaffListFragment
 import com.doma.alsan.ui.medialist.MediaListFragment
 import com.doma.alsan.ui.profile.ProfileFragment
 import com.doma.alsan.ui.reorder.ReorderFragment
@@ -238,18 +236,6 @@ class DefaultNavigationManager(
         pushBrowseScreenPage(ReviewFragment.newInstance(media, null))
     }
 
-    override fun navigateToMediaCharacters(
-        id: Int,
-        mediaType: MediaType,
-        selectedLanguage: com.doma.alsan.type.StaffLanguage?,
-        availableLanguages: List<com.doma.alsan.type.StaffLanguage>?
-    ) {
-        pushBrowseScreenPage(MediaCharacterListFragment.newInstance(id, mediaType, selectedLanguage, availableLanguages))
-    }
-
-    override fun navigateToMediaStaff(id: Int) {
-        pushBrowseScreenPage(MediaStaffListFragment.newInstance(id))
-    }
 
     override fun navigateToCharacter(id: Int) {
         pushBrowseScreenPage(CharacterFragment.newInstance(id))

@@ -104,39 +104,8 @@ fun MediaQuery.Data.convert(): Media {
             edges = Media?.characters?.edges?.filterNotNull()?.map { edge ->
                 CharacterEdge(
                     node = Character(
-                        id = edge.node?.id ?: 0,
-                        name = CharacterName(
-                            first = edge.node?.name?.first ?: "",
-                            middle = edge.node?.name?.middle ?: "",
-                            last = edge.node?.name?.last ?: "",
-                            full = edge.node?.name?.full ?: "",
-                            native = edge.node?.name?.native ?: "",
-                            alternative = edge.node?.name?.alternative?.filterNotNull() ?: listOf(),
-                            alternativeSpoiler = edge.node?.name?.alternativeSpoiler?.filterNotNull() ?: listOf(),
-                            userPreferred = edge.node?.name?.userPreferred ?: "",
-                        ),
-                        image = CharacterImage(
-                            large = edge.node?.image?.large ?: "",
-                            medium = edge.node?.image?.medium ?: ""
-                        )
-                    ),
-                    role = edge.role,
-                    voiceActorRoles = edge.voiceActorRoles?.filterNotNull()?.map { role ->
-                        StaffRoleType(
-                            voiceActor = Staff(
-                                id = role.voiceActor?.id ?: 0,
-                                name = StaffName(
-                                    userPreferred = role.voiceActor?.name?.userPreferred ?: ""
-                                ),
-                                image = StaffImage(
-                                    large = role.voiceActor?.image?.large ?: "",
-                                    medium = role.voiceActor?.image?.medium ?: ""
-                                ),
-                                language = role.voiceActor?.languageV2 ?: ""
-                            ),
-                            dubGroup = role.dubGroup ?: ""
-                        )
-                    } ?: listOf()
+                        id = edge.node?.id ?: 0
+                    )
                 )
             } ?: listOf()
         ),
@@ -144,23 +113,8 @@ fun MediaQuery.Data.convert(): Media {
             edges = Media?.staff?.edges?.map {
                 StaffEdge(
                     node = Staff(
-                        id = it?.node?.id ?: 0,
-                        name = StaffName(
-                            first = it?.node?.name?.first ?: "",
-                            middle = it?.node?.name?.middle ?: "",
-                            last = it?.node?.name?.last ?: "",
-                            full = it?.node?.name?.full ?: "",
-                            native = it?.node?.name?.native ?: "",
-                            alternative = it?.node?.name?.alternative?.filterNotNull() ?: listOf(),
-                            userPreferred = it?.node?.name?.userPreferred ?: "",
-                        ),
-                        image = StaffImage(
-                            large = it?.node?.image?.large ?: "",
-                            medium = it?.node?.image?.medium ?: ""
-                        )
-                    ),
-                    id = it?.id ?: 0,
-                    role = it?.role ?: ""
+                        id = it?.node?.id ?: 0
+                    )
                 )
             } ?: listOf()
         ),

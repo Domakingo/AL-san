@@ -97,6 +97,12 @@
     <string name="downloading">Download in corso...</string>
     <string name="failed_to_download">Download fallito</string>
     <string name="download_cover">Scarica copertina</string>
+    <string name="download_banner">Scarica banner</string>
+    <string name="font_size">Dimensione font</string>
+    <string name="selected_font_size">Dimensione font selezionata</string>
+    <string name="small">Piccola</string>
+    <string name="normal">Normale</string>
+    <string name="large">Grande</string>
     <string name="merge_activity_forum_follows_and_relations_push_notifications_into_one">Raggruppa le notifiche push</string>
     <string name="important_to_know_n1_push_notifications_will_show_up_periodically_not_real_time_n2_depending_on_your_rom_and_phone_setting_it_might_not_show_up_at_all_reference_https_dontkillmyapp_com">Importante da sapere:\n1. Le notifiche push appariranno periodicamente, non in tempo reale.\n2. A seconda della ROM e delle impostazioni del telefono, potrebbero non apparire affatto. (riferimento: https://dontkillmyapp.com/)</string>
     <string name="memory_saver">Risparmio memoria</string>
@@ -317,7 +323,10 @@
     <string name="view_detail_statistics">Statistiche dettagliate</string>
     <string name="add_to_list">Aggiungi alla lista</string>
     <string name="synopsis">Trama</string>
+    <string name="details">Dettagli</string>
     <string name="characters">Personaggi</string>
+    <string name="appearances">Apparizioni</string>
+    <string name="language_x">Lingua: %1$s</string>
     <string name="media">Media</string>
     <string name="set_as_favorite">Imposta come preferito</string>
     <string name="link_copied">Link copiato</string>

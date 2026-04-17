@@ -38,6 +38,10 @@ class AppSettingsFragment : BaseFragment<FragmentAppSettingsBinding, AppSettings
                 viewModel.loadAppThemeItems()
             }
 
+            appSettingsSelectedFontSizeLayout.clicks {
+                viewModel.loadFontSizeItems()
+            }
+
             appSettingsCircularAvatarCheckBox.setOnClickListener {
                 viewModel.updateUseCircularAvatarForProfile(appSettingsCircularAvatarCheckBox.isChecked)
             }
@@ -145,6 +149,14 @@ class AppSettingsFragment : BaseFragment<FragmentAppSettingsBinding, AppSettings
             viewModel.appTheme.subscribe {
                 binding.appSettingsSelectedThemeText.text = it.getString()
             },
+            viewModel.fontSize.subscribe {
+                binding.appSettingsSelectedFontSizeText.text = getString(when(it) {
+                    AppFontSize.SMALL -> R.string.small
+                    AppFontSize.NORMAL -> R.string.normal
+                    AppFontSize.LARGE -> R.string.large
+                    else -> R.string.normal
+                })
+            },
             viewModel.useCircularAvatarForProfile.subscribe {
                 binding.appSettingsCircularAvatarCheckBox.isChecked = it
             },
@@ -221,6 +233,11 @@ class AppSettingsFragment : BaseFragment<FragmentAppSettingsBinding, AppSettings
             viewModel.mediaNamingItems.subscribe { (list, country) ->
                 dialog.showListDialog(list) { data, _ ->
                     viewModel.updateMediaNaming(data, country)
+                }
+            },
+            viewModel.fontSizeItems.subscribe {
+                dialog.showListDialog(it) { data, _ ->
+                    viewModel.updateFontSize(data)
                 }
             }
         )

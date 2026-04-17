@@ -19,6 +19,9 @@ import com.doma.alsan.ui.base.BaseViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import androidx.annotation.StringRes
+import com.doma.alsan.helper.pojo.NullableItem
+import com.doma.alsan.type.MediaType
 
 class CharacterViewModel(
     private val browseRepository: BrowseRepository,
@@ -61,6 +64,19 @@ class CharacterViewModel(
     private val _characterItemList = BehaviorSubject.createDefault(listOf<CharacterItem>())
     val characterItemList: Observable<List<CharacterItem>>
         get() = _characterItemList
+
+    enum class CharacterTab(@StringRes val stringRes: Int) {
+        APPEARANCES(R.string.appearances),
+        VOICE_ACTORS(R.string.voice_actors)
+    }
+
+    private val _currentTab = BehaviorSubject.createDefault(CharacterTab.APPEARANCES)
+    val currentTab: Observable<CharacterTab>
+        get() = _currentTab
+
+    private val _characterMetadata = PublishSubject.create<Character>()
+    val characterMetadata: Observable<Character>
+        get() = _characterMetadata
 
     private val _staffMedia = PublishSubject.create<List<ListItem<Media>>>()
     val staffMedia: Observable<List<ListItem<Media>>>
@@ -137,6 +153,7 @@ class CharacterViewModel(
                     { character ->
                         this.character = character
 
+                        _characterMetadata.onNext(character)
                         _characterImage.onNext(character.getImage(appSetting))
                         _characterName.onNext(character.name.userPreferred)
                         _characterNativeName.onNext(character.name.native)
@@ -145,28 +162,7 @@ class CharacterViewModel(
                         _favoritesCount.onNext(character.favourites)
                         _isFavorite.onNext(character.isFavourite)
 
-                        val itemList = ArrayList<CharacterItem>()
-
-                        if (character.description.isNotBlank())
-                            itemList.add(CharacterItem(character = character, viewType = CharacterItem.VIEW_TYPE_BIO))
-
-                        val voiceActors = ArrayList<StaffRoleType>()
-                        character.media.edges.forEach { mediaEdge ->
-                            mediaEdge.voiceActorRoles.forEach { staffRoleType ->
-                                val id = staffRoleType.voiceActor.id
-                                if (voiceActors.find { it.voiceActor.id == id } == null) {
-                                    voiceActors.add(staffRoleType)
-                                }
-                            }
-                        }
-
-                        if (voiceActors.isNotEmpty())
-                            itemList.add(CharacterItem(voiceActors = voiceActors, viewType = CharacterItem.VIEW_TYPE_STAFF))
-
-                        if (character.media.edges.isNotEmpty())
-                            itemList.add(CharacterItem(character = character, viewType = CharacterItem.VIEW_TYPE_MEDIA))
-
-                        _characterItemList.onNext(itemList)
+                        updateCharacterItemList()
                     },
                     {
                         _error.onNext(it.getStringResource())
@@ -225,12 +221,57 @@ class CharacterViewModel(
         )
     }
 
-    fun updateShouldShowFullDescription(shouldShowFullDescription: Boolean) {
-        val currentCharacterListItems = _characterItemList.value ?: return
-        val descriptionSectionIndex = currentCharacterListItems.indexOfFirst { it.viewType == MediaItem.VIEW_TYPE_SYNOPSIS }
-        if (descriptionSectionIndex != -1) {
-            currentCharacterListItems[descriptionSectionIndex].showFullDescription = shouldShowFullDescription
-            _characterItemList.onNext(currentCharacterListItems)
+    fun setTab(tab: CharacterTab) {
+        if (_currentTab.value == tab) return
+        _currentTab.onNext(tab)
+        updateCharacterItemList()
+    }
+
+    private fun updateCharacterItemList() {
+        if (character.id == 0) return
+
+        val itemList = ArrayList<CharacterItem>()
+        when (_currentTab.value) {
+            CharacterTab.APPEARANCES -> {
+                val mediaGroups = character.media.edges.groupBy { it.node.type }
+                
+                mediaGroups[MediaType.ANIME]?.let { edges ->
+                    itemList.add(CharacterItem(title = "Anime", viewType = CharacterItem.VIEW_TYPE_MEDIA_GROUP))
+                    edges.forEach { edge ->
+                        itemList.add(CharacterItem(mediaEdge = edge, viewType = CharacterItem.VIEW_TYPE_MEDIA_ITEM))
+                    }
+                }
+                
+                mediaGroups[MediaType.MANGA]?.let { edges ->
+                    itemList.add(CharacterItem(title = "Manga", viewType = CharacterItem.VIEW_TYPE_MEDIA_GROUP))
+                    edges.forEach { edge ->
+                        itemList.add(CharacterItem(mediaEdge = edge, viewType = CharacterItem.VIEW_TYPE_MEDIA_ITEM))
+                    }
+                }
+                
+                val others = character.media.edges.filter { it.node.type != MediaType.ANIME && it.node.type != MediaType.MANGA }
+                if (others.isNotEmpty()) {
+                    itemList.add(CharacterItem(title = "Others", viewType = CharacterItem.VIEW_TYPE_MEDIA_GROUP))
+                    others.forEach { edge ->
+                        itemList.add(CharacterItem(mediaEdge = edge, viewType = CharacterItem.VIEW_TYPE_MEDIA_ITEM))
+                    }
+                }
+            }
+            CharacterTab.VOICE_ACTORS -> {
+                val addedStaffIds = mutableSetOf<Int>()
+                character.media.edges.forEach { mediaEdge ->
+                    mediaEdge.voiceActorRoles.forEach { staffRoleType ->
+                        val staff = staffRoleType.voiceActor
+                        if (!addedStaffIds.contains(staff.id)) {
+                            itemList.add(CharacterItem(voiceActor = staffRoleType, viewType = CharacterItem.VIEW_TYPE_VOICE_ACTOR_ITEM))
+                            addedStaffIds.add(staff.id)
+                        }
+                    }
+                }
+            }
+            else -> {}
         }
+
+        _characterItemList.onNext(itemList)
     }
 }

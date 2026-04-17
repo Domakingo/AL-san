@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.doma.alsan.R
 import com.doma.alsan.data.entity.AppSetting
-import com.doma.alsan.databinding.LayoutHorizontalListBinding
-import com.doma.alsan.databinding.LayoutTitleAndListBinding
-import com.doma.alsan.databinding.LayoutTitleAndTextBinding
+import com.doma.alsan.databinding.*
 import com.doma.alsan.helper.extensions.clicks
 import com.doma.alsan.helper.extensions.show
 import com.doma.alsan.helper.pojo.CharacterItem
@@ -27,39 +25,30 @@ class CharacterRvAdapter(
     private val listener: CharacterListener
 ) : BaseRecyclerViewAdapter<CharacterItem, ViewBinding>(list) {
 
-    companion object {
-        private const val MEDIA_LIMIT = 9
-    }
-
     private var voiceActorAdapter: CharacterVoiceActorRvAdapter? = null
-    private var characterMediaAdapter: CharacterMediaRvAdapter? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        when (viewType) {
-            CharacterItem.VIEW_TYPE_BIO -> {
-                val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
-                return BioViewHolder(view)
+        return when (viewType) {
+            CharacterItem.VIEW_TYPE_STATS -> {
+                val view = LayoutMediaStatsBinding.inflate(inflater, parent, false)
+                StatsViewHolder(view)
             }
-            CharacterItem.VIEW_TYPE_STAFF -> {
-                val view = LayoutHorizontalListBinding.inflate(inflater, parent, false)
-                voiceActorAdapter = CharacterVoiceActorRvAdapter(context, listOf(), appSetting, width, listener)
-                view.horizontalListRecyclerView.adapter = voiceActorAdapter
-                view.horizontalListRecyclerView.addItemDecoration(SpaceItemDecoration(right = context.resources.getDimensionPixelSize(R.dimen.marginPageNormal)))
-                return VoiceActorViewHolder(view)
-            }
-            CharacterItem.VIEW_TYPE_MEDIA -> {
+            CharacterItem.VIEW_TYPE_MEDIA_GROUP -> {
                 val view = LayoutTitleAndListBinding.inflate(inflater, parent, false)
-                characterMediaAdapter = CharacterMediaRvAdapter(context, listOf(), appSetting, null, listener.characterMediaListener)
-                view.listRecyclerView.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.gridSpan))
-                view.listRecyclerView.adapter = characterMediaAdapter
-                view.listRecyclerView.addItemDecoration(GridSpacingItemDecoration(context.resources.getInteger(R.integer.gridSpan), context.resources.getDimensionPixelSize(R.dimen.marginNormal), false))
-                view.listRecyclerView.isNestedScrollingEnabled = false
-                return MediaViewHolder(view)
+                MediaGroupViewHolder(view)
+            }
+            CharacterItem.VIEW_TYPE_MEDIA_ITEM -> {
+                val view = ListCardImageAndTextBinding.inflate(inflater, parent, false)
+                MediaItemViewHolder(view)
+            }
+            CharacterItem.VIEW_TYPE_VOICE_ACTOR_ITEM -> {
+                val view = ListCardImageAndTextBinding.inflate(inflater, parent, false)
+                VoiceActorItemViewHolder(view)
             }
             else -> {
                 val view = LayoutTitleAndTextBinding.inflate(inflater, parent, false)
-                return BioViewHolder(view)
+                BioViewHolder(view)
             }
         }
     }
@@ -68,48 +57,59 @@ class CharacterRvAdapter(
         return list[position].viewType
     }
 
+    inner class StatsViewHolder(private val binding: LayoutMediaStatsBinding) : ViewHolder(binding) {
+        override fun bind(item: CharacterItem, index: Int) {
+            binding.apply {
+                mediaStatsAverageScore.text = item.character.favourites.toString()
+                mediaStatsMeanScore.show(false)
+                mediaStatsPopularity.text = item.character.media.pageInfo.total.toString()
+                mediaStatsFavorites.text = item.character.bloodType.ifBlank { "-" }
+            }
+        }
+    }
+
     inner class BioViewHolder(private val binding: LayoutTitleAndTextBinding) : ViewHolder(binding) {
         override fun bind(item: CharacterItem, index: Int) {
+            // Deprecated
+        }
+    }
+
+    inner class VoiceActorItemViewHolder(private val binding: ListCardImageAndTextBinding) : ViewHolder(binding) {
+        override fun bind(item: CharacterItem, index: Int) {
+            val voiceActor = item.voiceActor ?: return
             binding.apply {
-                itemTitle.show(item.character.name.alternative.isNotEmpty())
-                itemTitle.text = item.character.name.alternative.joinToString(", ")
-                MarkdownUtil.applyMarkdown(context, width, itemText, item.character.description)
-
-                if (item.showFullDescription) {
-                    itemGradientLayer.show(false)
-                    ImageUtil.loadImage(context, R.drawable.ic_chevron_up, itemArrowIcon)
-                } else {
-                    itemGradientLayer.show(true)
-                    ImageUtil.loadImage(context, R.drawable.ic_chevron_down, itemArrowIcon)
-                }
-
-                itemArrowIcon.show(true)
-                itemArrowIcon.clicks {
-                    listener.toggleShowMore(!item.showFullDescription)
+                ImageUtil.loadImage(context, voiceActor.voiceActor.image.large, cardImage)
+                cardText.text = voiceActor.voiceActor.name.userPreferred
+                cardSubtitle.text = voiceActor.voiceActor.language
+                cardInfoLayout.show(false)
+                root.clicks {
+                    listener.navigateToStaff(voiceActor.voiceActor)
                 }
             }
         }
     }
 
-    inner class VoiceActorViewHolder(private val binding: LayoutHorizontalListBinding) : ViewHolder(binding) {
+    inner class MediaGroupViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
         override fun bind(item: CharacterItem, index: Int) {
             binding.apply {
-                horizontalListTitle.text = context.getString(R.string.voice_actors)
-                horizontalListSeeMore.show(false)
-                horizontalListFootnoteText.show(true)
-                horizontalListFootnoteText.text = context.getString(R.string.long_press_to_view_series_they_feature_in)
-                voiceActorAdapter?.updateData(item.voiceActors)
+                titleText.text = item.title
+                seeMoreText.show(false)
+                listRecyclerView.show(false)
             }
         }
     }
 
-    inner class MediaViewHolder(private val binding: LayoutTitleAndListBinding) : ViewHolder(binding) {
+    inner class MediaItemViewHolder(private val binding: ListCardImageAndTextBinding) : ViewHolder(binding) {
         override fun bind(item: CharacterItem, index: Int) {
+            val mediaEdge = item.mediaEdge ?: return
             binding.apply {
-                titleText.text = context.getString(R.string.series)
-                seeMoreText.show(item.character.media.edges.size > MEDIA_LIMIT)
-                seeMoreText.clicks { listener.navigateToCharacterMedia() }
-                characterMediaAdapter?.updateData(item.character.media.edges.take(MEDIA_LIMIT))
+                ImageUtil.loadImage(context, mediaEdge.node.getCoverImage(appSetting), cardImage)
+                cardText.text = mediaEdge.node.getTitle(appSetting)
+                cardSubtitle.text = mediaEdge.getCharacterRoleString()
+                cardInfoLayout.show(false)
+                root.clicks {
+                    listener.characterMediaListener.navigateToMedia(mediaEdge.node)
+                }
             }
         }
     }

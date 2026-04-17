@@ -24,7 +24,7 @@ class MediaRecommendationsRvAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = ListMediaRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        view.root.layoutParams.width = (width.toDouble() / 1.3).toInt()
+        view.root.layoutParams.width = (width.toDouble() / context.resources.getInteger(R.integer.horizontalListRelationDivider)).toInt()
         return ItemViewHolder(view)
     }
 
@@ -34,17 +34,10 @@ class MediaRecommendationsRvAdapter(
                 item.mediaRecommendation?.let {
                     ImageUtil.loadImage(context, it.getCoverImage(appSetting), recommendationCoverImage)
                     recommendationTitleText.text = it.getTitle(appSetting)
-                    recommendationYearText.text = it.startDate?.year?.toString() ?: "TBA"
-                    recommendationYearText.show(it.startDate?.year != null || it.status == MediaStatus.NOT_YET_RELEASED)
                     recommendationFormatText.text = it.getFormattedMediaFormat(true)
-                    recommendationLengthText.text = it.getLength()?.showUnit(context, if (it.type?.getMediaType() == MediaType.ANIME) R.plurals.episode else R.plurals.chapter)
-                    recommendationLengthText.show(it.getLength() != null && it.getLength() != 0)
-                    recommendationLengthDividerIcon.show(it.getLength() != null && it.getLength() != 0)
-
                     recommendationRatingText.text = item.rating.getNumberFormatting()
-                    recommendationScoreText.text = it.averageScore.getNumberFormatting()
-                    recommendationFavoriteText.text = it.favourites.getNumberFormatting()
-                    recommendationCardBackground.clicks {
+                    
+                    root.clicks {
                         listener.navigateToMedia(it)
                     }
                 }

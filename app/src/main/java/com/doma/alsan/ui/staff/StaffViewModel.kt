@@ -16,6 +16,8 @@ import com.doma.alsan.ui.base.BaseViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import androidx.annotation.StringRes
+import com.doma.alsan.type.MediaType
 
 class StaffViewModel(
     private val browseRepository: BrowseRepository,
@@ -58,6 +60,19 @@ class StaffViewModel(
     private val _staffItemList = BehaviorSubject.createDefault(listOf<StaffItem>())
     val staffItemList: Observable<List<StaffItem>>
         get() = _staffItemList
+
+    enum class StaffTab(@StringRes val stringRes: Int) {
+        CHARACTERS(R.string.characters),
+        MEDIA(R.string.media)
+    }
+
+    private val _currentTab = BehaviorSubject.createDefault(StaffTab.MEDIA)
+    val currentTab: Observable<StaffTab>
+        get() = _currentTab
+
+    private val _staffMetadata = PublishSubject.create<Staff>()
+    val staffMetadata: Observable<Staff>
+        get() = _staffMetadata
 
     private val _staffLink = PublishSubject.create<String>()
     val staffLink: Observable<String>
@@ -130,45 +145,20 @@ class StaffViewModel(
                     { staff ->
                         this.staff = staff
 
+                        _staffMetadata.onNext(staff)
                         _staffImage.onNext(staff.getImage(appSetting))
                         _staffName.onNext(staff.name.userPreferred)
                         _favoritesCount.onNext(staff.favourites)
                         _isFavorite.onNext(staff.isFavourite)
 
-                        val itemList = ArrayList<StaffItem>()
-
-                        if (staff.description.isNotBlank())
-                            itemList.add(StaffItem(staff = staff, viewType = StaffItem.VIEW_TYPE_BIO))
-
-                        if (staff.characters.edges.isNotEmpty())
-                            itemList.add(StaffItem(staff = staff, viewType = StaffItem.VIEW_TYPE_CHARACTER))
-
-                        if (staff.staffMedia.edges.isNotEmpty()) {
-                            val media = ArrayList<MediaEdge>()
-                            staff.staffMedia.edges.forEach { mediaEdge ->
-                                if (media.size == 9)
-                                    return@forEach
-
-                                if (media.find { it.node.getId() == mediaEdge.node.getId() } == null) {
-                                    media.add(mediaEdge)
-                                }
-                            }
-                            itemList.add(StaffItem(staff = staff, media = media, viewType = StaffItem.VIEW_TYPE_MEDIA))
-                        }
-
-                        val mediaCount = staff.staffMedia.pageInfo.total
+                        val mediaCount = staff.staffMedia.pageInfo.total + staff.characterMedia.pageInfo.total
                         val characterCount = staff.characters.pageInfo.total
-                        if (mediaCount > characterCount) {
-                            _mediaOrCharacterCount.onNext(mediaCount)
-                            _mediaOrCharacterText.onNext(R.string.media)
-                            _mediaOrCharacterCountVisibility.onNext(!staff.staffMedia.pageInfo.hasNextPage)
-                        } else {
-                            _mediaOrCharacterCount.onNext(characterCount)
-                            _mediaOrCharacterText.onNext(R.string.roles)
-                            _mediaOrCharacterCountVisibility.onNext(!staff.characters.pageInfo.hasNextPage)
-                        }
+                        
+                        _mediaOrCharacterCount.onNext(mediaCount + characterCount)
+                        _mediaOrCharacterText.onNext(R.string.media)
+                        _mediaOrCharacterCountVisibility.onNext(true)
 
-                        _staffItemList.onNext(itemList)
+                        updateStaffItemList()
                     },
                     {
                         _error.onNext(it.getStringResource())
@@ -222,12 +212,74 @@ class StaffViewModel(
         )
     }
 
-    fun updateShouldShowFullDescription(shouldShowFullDescription: Boolean) {
-        val currentStaffListItems = _staffItemList.value ?: return
-        val descriptionSectionIndex = currentStaffListItems.indexOfFirst { it.viewType == MediaItem.VIEW_TYPE_SYNOPSIS }
-        if (descriptionSectionIndex != -1) {
-            currentStaffListItems[descriptionSectionIndex].showFullDescription = shouldShowFullDescription
-            _staffItemList.onNext(currentStaffListItems)
-        }
+    fun setTab(tab: StaffTab) {
+        if (_currentTab.value == tab) return
+        _currentTab.onNext(tab)
+        updateStaffItemList()
     }
-}
+
+    private fun updateStaffItemList() {
+        if (staff.id == 0) return
+
+        val itemList = ArrayList<StaffItem>()
+        
+        // Characters section (Voice Roles)
+        if (staff.characters.edges.isNotEmpty()) {
+            itemList.add(StaffItem(title = "Characters", viewType = StaffItem.VIEW_TYPE_CHARACTER_GROUP))
+            staff.characters.edges.forEach { edge ->
+                itemList.add(StaffItem(characterEdge = edge, viewType = StaffItem.VIEW_TYPE_CHARACTER_ITEM))
+            }
+        }
+
+        // Media section (Production + Voice Roles)
+        val mergedEdges = (staff.staffMedia.edges + staff.characterMedia.edges)
+            .groupBy { it.node.getId() }
+            .map { (id, edges) ->
+                if (edges.size > 1) {
+                    // Merge roles
+                    val first = edges.find { it.staffRole.isNotBlank() } ?: edges.first()
+                    val staffRoles = edges.mapNotNull { if (it.staffRole.isNotBlank()) it.staffRole else null }.distinct().joinToString(", ")
+                    val characterRoles = edges.mapNotNull { if (it.characterName.isNotBlank()) "${it.characterName} (${it.getCharacterRoleString()})" else null }.distinct().joinToString(", ")
+                    
+                    first.copy(
+                        staffRole = if (staffRoles.isNotBlank() && characterRoles.isNotBlank()) "$staffRoles | $characterRoles" else staffRoles.ifBlank { characterRoles }
+                    )
+                } else {
+                    val edge = edges.first()
+                    if (edge.staffRole.isBlank() && edge.characterName.isNotBlank()) {
+                        edge.copy(staffRole = "${edge.characterName} (${edge.getCharacterRoleString()})")
+                    } else {
+                        edge
+                    }
+                }
+            }
+
+        if (mergedEdges.isNotEmpty()) {
+            val mediaGroups = mergedEdges.groupBy { it.node.type }
+            
+            mediaGroups[MediaType.ANIME]?.let { edges ->
+                itemList.add(StaffItem(title = "Anime", viewType = StaffItem.VIEW_TYPE_MEDIA_GROUP))
+                edges.sortedByDescending { it.node.popularity }.forEach { edge ->
+                    itemList.add(StaffItem(mediaEdge = edge, viewType = StaffItem.VIEW_TYPE_MEDIA_ITEM))
+                }
+            }
+            
+            mediaGroups[MediaType.MANGA]?.let { edges ->
+                itemList.add(StaffItem(title = "Manga", viewType = StaffItem.VIEW_TYPE_MEDIA_GROUP))
+                edges.sortedByDescending { it.node.popularity }.forEach { edge ->
+                    itemList.add(StaffItem(mediaEdge = edge, viewType = StaffItem.VIEW_TYPE_MEDIA_ITEM))
+                }
+            }
+            
+            val others = mergedEdges.filter { it.node.type != MediaType.ANIME && it.node.type != MediaType.MANGA }
+            if (others.isNotEmpty()) {
+                itemList.add(StaffItem(title = "Others", viewType = StaffItem.VIEW_TYPE_MEDIA_GROUP))
+                others.sortedByDescending { it.node.popularity }.forEach { edge ->
+                    itemList.add(StaffItem(mediaEdge = edge, viewType = StaffItem.VIEW_TYPE_MEDIA_ITEM))
+                }
+            }
+        }
+
+        _staffItemList.onNext(itemList)
+    }
+}

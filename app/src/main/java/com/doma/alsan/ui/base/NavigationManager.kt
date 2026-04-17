@@ -53,13 +53,6 @@ interface NavigationManager {
     fun navigateToMediaStats(media: Media) {}
     fun navigateToMediaSocial(media: Media) {}
     fun navigateToMediaReview(media: Media) {}
-    fun navigateToMediaCharacters(
-        id: Int,
-        mediaType: MediaType,
-        selectedLanguage: com.doma.alsan.type.StaffLanguage? = null,
-        availableLanguages: List<com.doma.alsan.type.StaffLanguage>? = null
-    ) {}
-    fun navigateToMediaStaff(id: Int) {}
     fun navigateToCharacter(id: Int) {}
     fun navigateToCharacterMedia(id: Int) {}
     fun navigateToStaff(id: Int) {}

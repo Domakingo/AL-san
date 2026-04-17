@@ -14,10 +14,15 @@ import com.doma.alsan.helper.utils.DeepLink
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
+import android.content.Context
+import android.content.res.Configuration
+import com.doma.alsan.data.repository.UserRepository
 
 abstract class BaseActivity<T: ViewBinding> : AppCompatActivity(), ViewContract {
 
     private val viewModel by viewModel<BaseActivityViewModel>()
+    private val userRepository: UserRepository by inject()
 
     abstract var navigationManager: NavigationManager
         protected set
@@ -34,6 +39,13 @@ abstract class BaseActivity<T: ViewBinding> : AppCompatActivity(), ViewContract 
         get() = _binding!!
 
     abstract fun generateViewBinding(): T
+
+    override fun attachBaseContext(newBase: Context) {
+        val configuration = Configuration(newBase.resources.configuration)
+        configuration.fontScale = userRepository.getFontSize().value
+        val context = newBase.createConfigurationContext(configuration)
+        super.attachBaseContext(context)
+    }
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {

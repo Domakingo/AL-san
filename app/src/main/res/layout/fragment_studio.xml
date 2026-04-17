@@ -28,7 +28,8 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/studioCollapsingToolbar"
                     app:toolbarId="@id/studioToolbar"
-                    app:layout_scrollFlags="scroll"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:contentScrim="?themeBackgroundColor"
                     app:titleEnabled="false"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_width="match_parent"
@@ -205,14 +206,21 @@
                         android:layout_height="@dimen/lineWidth"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+                    
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/studioToolbar"
+                        app:layout_collapseMode="pin"
+                        android:elevation="0dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:minHeight="?attr/actionBarSize"
+                        android:paddingTop="@dimen/statusBarHeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <!-- Stats card removed - now inside CollapsingToolbarLayout -->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/studioRecyclerView"
@@ -227,14 +235,5 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/studioToolbar"
-        android:layout_marginTop="@dimen/statusBarHeight"
-        android:layout_gravity="top"
-        android:elevation="0dp"
-        android:backgroundTint="@android:color/transparent"
-        android:minHeight="@dimen/toolbarBigHeight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

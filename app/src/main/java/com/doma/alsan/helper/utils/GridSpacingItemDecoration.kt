@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 class GridSpacingItemDecoration(
     private val spanCount: Int,
     private val spacing: Int,
-    private val includeEdge: Boolean
+    private val includeEdge: Boolean,
+    private val vSpacing: Int = spacing
 ) : ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
@@ -17,23 +18,34 @@ class GridSpacingItemDecoration(
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val position = parent.getChildAdapterPosition(view) // item position
-        val column = position % spanCount // item column
+        val position = parent.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION) return
+
+        val layoutManager = parent.layoutManager as? androidx.recyclerview.widget.GridLayoutManager
+        val spanSizeLookup = layoutManager?.spanSizeLookup
+        val column = spanSizeLookup?.getSpanIndex(position, spanCount) ?: (position % spanCount)
+        val spanSize = spanSizeLookup?.getSpanSize(position) ?: 1
+
         if (includeEdge) {
-            outRect.left =
-                spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
-            outRect.right =
-                (column + 1) * spacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
-            if (position < spanCount) { // top edge
-                outRect.top = spacing
+            outRect.left = spacing - column * spacing / spanCount
+            outRect.right = (column + spanSize) * spacing / spanCount
+
+            val rowIndex = spanSizeLookup?.getSpanGroupIndex(position, spanCount) ?: 0
+            val isFullWidth = spanSize == spanCount
+
+            if (rowIndex == 0) {
+                outRect.top = vSpacing
             }
-            outRect.bottom = spacing // item bottom
+            outRect.bottom = if (isFullWidth) 0 else vSpacing
         } else {
-            outRect.left = column * spacing / spanCount // column * ((1f / spanCount) * spacing)
-            outRect.right =
-                spacing - (column + 1) * spacing / spanCount // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-            if (position >= spanCount) {
-                outRect.top = spacing // item top
+            outRect.left = column * spacing / spanCount
+            outRect.right = spacing - (column + spanSize) * spacing / spanCount
+
+            val rowIndex = spanSizeLookup?.getSpanGroupIndex(position, spanCount) ?: 0
+            val isFullWidth = spanSize == spanCount
+
+            if (rowIndex > 0) {
+                outRect.top = if (isFullWidth) 0 else vSpacing
             }
         }
     }

@@ -10,6 +10,7 @@ import com.doma.alsan.data.response.Manga
 import com.doma.alsan.data.response.anilist.AiringSchedule
 import com.doma.alsan.data.response.anilist.Media
 import com.doma.alsan.data.response.anilist.MediaExternalLink
+import com.doma.alsan.data.response.anilist.PageInfo
 import com.doma.alsan.helper.enums.MediaType
 import com.doma.alsan.helper.enums.Source
 import com.doma.alsan.helper.extensions.applyScheduler
@@ -114,6 +115,10 @@ class MediaViewModel(
     val pagedEpisodes: Observable<Triple<List<Episode>, Int, Int>>
         get() = _pagedEpisodes
 
+    private val _mediaMetadata = BehaviorSubject.create<Media>()
+    val mediaMetadata: Observable<Media>
+        get() = _mediaMetadata
+
     private val _currentProgress = BehaviorSubject.createDefault(0)
     val currentProgress: Observable<Int>
         get() = _currentProgress
@@ -138,10 +143,28 @@ class MediaViewModel(
     val episodeTotalPagesValue: Int
         get() = _episodeTotalPages.value ?: 1
 
+    enum class MediaTab(val stringRes: Int) {
+        DETAILS(R.string.details),
+        CHARACTERS(R.string.characters),
+        EPISODES(R.string.episodes),
+        STAFF(R.string.staff),
+        RECOMMENDATIONS(R.string.recommendations)
+    }
+
+    private val _currentTab = BehaviorSubject.createDefault(MediaTab.DETAILS)
+    val currentTab: Observable<MediaTab>
+        get() = _currentTab
+
+    private var currentMediaTabList = listOf<MediaTab>()
+
     private var mediaId = 0
 
     private var media = Media()
     private var appSetting = AppSetting()
+
+    private var isCharactersLoaded = false
+    private var isStaffLoaded = false
+    private var isEpisodesLoaded = false
 
     private val mediaRelationPriority = mapOf(
         Pair(MediaRelation.SOURCE, 0),
@@ -256,7 +279,12 @@ class MediaViewModel(
                         _episodeTotalPages.onNext(totalPages)
                         
                         if (episodesPair.first.isNotEmpty()) {
+                            // Update local media object to reflect new episodes
+                            media = media.copy(episodeList = episodesPair.first)
+                            isEpisodesLoaded = true
+                            
                             _pagedEpisodes.onNext(Triple(episodesPair.first, page, totalPages))
+                            updateMediaItemList()
                         }
                     },
                     {
@@ -277,21 +305,10 @@ class MediaViewModel(
 
                     return@flatMap when (media.type) {
                         com.doma.alsan.type.MediaType.ANIME -> {
-                            Observable.zip(
-                                browseRepository.getAnimeDetails(media.idMal).onErrorReturnItem(Anime()),
-                                browseRepository.getAnimeEpisodes(media.idMal, fetchAll = false).onErrorReturnItem(listOf<Episode>() to 1)
-                            ) { anime, episodesPair ->
-                                 val animeTotalEpisodes = media.episodes ?: (media.nextAiringEpisode?.episode?.minus(1)) ?: 0
-                                 val totalPages = if (episodesPair.second == 1 && (animeTotalEpisodes > 100 || episodesPair.first.size >= 100)) {
-                                     val countToUse = if (animeTotalEpisodes > 100) animeTotalEpisodes else 100
-                                     (countToUse + 99) / 100
-                                 } else episodesPair.second
-                                 
-                                 _episodeTotalPages.onNext(totalPages)
+                            browseRepository.getAnimeDetails(media.idMal).onErrorReturn { Anime() }.map { anime ->
                                 media.copy(
                                     openings = anime.openings,
-                                    endings = anime.endings,
-                                    episodeList = episodesPair.first
+                                    endings = anime.endings
                                 )
                             }
                         }
@@ -306,82 +323,212 @@ class MediaViewModel(
                     }
                 }
                 .applyScheduler()
+                .doOnNext { media ->
+                    // Emit basic info immediately for UI responsiveness
+                    this.media = media
+                    _mediaMetadata.onNext(media)
+                    _bannerImage.onNext(media.bannerImage)
+                    _coverImage.onNext(media.getCoverImage(appSetting))
+                    _mediaTitle.onNext(media.getTitle(appSetting))
+                    _mediaYear.onNext(media.startDate?.year?.toString() ?: "TBA")
+                    _mediaYearVisibility.onNext(media.startDate?.year != null || media.status == MediaStatus.NOT_YET_RELEASED)
+                    _mediaFormat.onNext(NullableItem(media.format))
+                    
+                    // Trigger pre-fetching in background
+                    loadCharacters(false)
+                    loadStaff(false)
+                    if (media.idMal != null && media.type == com.doma.alsan.type.MediaType.ANIME) {
+                        fetchEpisodes(media.idMal!!, 1, false)
+                    }
+                }
                 .doFinally { _loading.onNext(false) }
                 .map { media ->
                     media.relations.edges = media.relations.edges.sortedBy { mediaRelationPriority[it.relationType] ?: mediaRelationPriority.size }
                     
                     val mediaItemList = ArrayList<MediaItem>()
 
-                    if (media.genres.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_GENRE))
-
-                    if (media.description.isNotBlank())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_SYNOPSIS))
-
-                    if (media.episodeList?.isNotEmpty() == true) {
-                        val totalPages = episodeTotalPagesValue
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_EPISODES, episodes = media.episodeList ?: emptyList(), totalPages = totalPages, currentPage = episodeCurrentPageValue))
-                    }
-
-                    if (media.characters.edges.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_CHARACTERS))
-
-                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_INFO))
-
-                    if (media.tags.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_TAGS))
-
-                    if (media.openings?.isNotEmpty() == true)
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_OPENING, themeGroup = media.openings.firstOrNull()?.group ?: ""))
-
-                    if (media.endings?.isNotEmpty() == true)
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_ENDING, themeGroup = media.endings.firstOrNull()?.group ?: ""))
-
-                    if (media.staff.edges.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_STAFF))
-
-                    if (media.relations.edges.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RELATIONS))
-
-                    if (media.recommendations.nodes.isNotEmpty())
-                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RECOMMENDATIONS))
-
-                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_LINKS))
-                    
                     media to mediaItemList
                 }
+                .applyScheduler()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { (media, mediaItemList) ->
+                    { (media, _) ->
                         this.media = media
-
-                        checkMediaList()
-
-                        _bannerImage.onNext(media.bannerImage)
-                        _coverImage.onNext(media.getCoverImage(appSetting))
-                        _mediaTitle.onNext(media.getTitle(appSetting))
-                        _mediaYear.onNext(media.startDate?.year?.toString() ?: "TBA")
-                        _mediaYearVisibility.onNext(media.startDate?.year != null || media.status == MediaStatus.NOT_YET_RELEASED)
-                        _mediaFormat.onNext(NullableItem(media.format))
-                        _mediaLength.onNext((media.getLength() ?: 0) to (media.type?.getMediaType() ?: MediaType.ANIME))
-                        _mediaLengthVisibility.onNext(media.getLength() != null && media.getLength() != 0)
-                        _airingSchedule.onNext(NullableItem(media.nextAiringEpisode))
-
-                        _averageScore.onNext(media.averageScore)
-                        _favorites.onNext(media.favourites)
+                        _mediaMetadata.onNext(media)
                         
-                        // Pre-calculate available languages for characters
+                        checkMediaList()
                         if (media.type == com.doma.alsan.type.MediaType.ANIME) {
                             calculateVoiceActorLanguages()
                         }
-
-                        _mediaItemList.onNext(mediaItemList)
+                        
+                        updateMediaItemList()
                     },
-                    {
-                        _error.onNext(it.getStringResource())
+                    { error ->
+                        _loading.onNext(false)
+                        error.printStackTrace()
                     }
                 )
         )
+    }
+
+    fun setTab(tab: MediaTab) {
+        if (_currentTab.value == tab) return
+        _currentTab.onNext(tab)
+        
+        when (tab) {
+            MediaTab.CHARACTERS -> if (!isCharactersLoaded) loadCharacters() else updateMediaItemList()
+            MediaTab.STAFF -> if (!isStaffLoaded) loadStaff() else updateMediaItemList()
+            MediaTab.EPISODES -> if (!isEpisodesLoaded) fetchEpisodes(media.idMal ?: 0, 1) else updateMediaItemList()
+            else -> updateMediaItemList()
+        }
+    }
+
+    private fun loadCharacters(updateUi: Boolean = true) {
+        if (updateUi) _loading.onNext(true)
+        disposables.add(
+            browseRepository.getMediaCharacters(mediaId, 1, null)
+                .applyScheduler()
+                .doFinally { if (updateUi) _loading.onNext(false) }
+                .subscribe(
+                    { pagePair ->
+                        media = media.copy(characters = media.characters.copy(edges = pagePair.second))
+                        isCharactersLoaded = true
+                        calculateVoiceActorLanguages()
+                        if (updateUi || _currentTab.value == MediaTab.CHARACTERS) updateMediaItemList()
+                    },
+                    { it.printStackTrace() }
+                )
+        )
+    }
+
+    private fun loadStaff(updateUi: Boolean = true) {
+        if (updateUi) _loading.onNext(true)
+        disposables.add(
+            browseRepository.getMediaStaff(mediaId, 1)
+                .applyScheduler()
+                .doFinally { if (updateUi) _loading.onNext(false) }
+                .subscribe(
+                    { pagePair ->
+                        media = media.copy(staff = media.staff.copy(edges = pagePair.second))
+                        isStaffLoaded = true
+                        if (updateUi || _currentTab.value == MediaTab.STAFF) updateMediaItemList()
+                    },
+                    { it.printStackTrace() }
+                )
+        )
+    }
+
+    fun fetchEpisodes(malId: Int, page: Int, updateUi: Boolean = true) {
+        if (updateUi) _loading.onNext(true)
+        disposables.add(
+            browseRepository.getAnimeEpisodes(malId, page)
+                .applyScheduler()
+                .doFinally { if (updateUi) _loading.onNext(false) }
+                .subscribe(
+                    { result ->
+                        val episodesList = result.first
+                        media = media.copy(episodeList = episodesList)
+                        _episodeCurrentPage.onNext(page)
+                        _episodeTotalPages.onNext(result.second)
+                        isEpisodesLoaded = true
+                        if (updateUi || _currentTab.value == MediaTab.EPISODES) updateMediaItemList()
+                    },
+                    { it.printStackTrace() }
+                )
+        )
+    }
+
+    fun updateMediaItemList() {
+        val tab = _currentTab.value ?: return
+        val mediaItemList = ArrayList<MediaItem>()
+
+        when (tab) {
+            MediaTab.EPISODES -> {
+                if (media.episodeList?.isNotEmpty() == true) {
+                    val episodes = media.episodeList!!.toMutableList()
+                    // Move last watched episode to the top if possible
+                    val currentProgress = _currentProgress.value ?: 0
+                    if (currentProgress > 0) {
+                        val lastWatchedIndex = episodes.indexOfFirst { it.number == currentProgress }
+                        if (lastWatchedIndex != -1) {
+                            val lastWatched = episodes.removeAt(lastWatchedIndex)
+                            episodes.add(0, lastWatched)
+                        }
+                    }
+                    
+                    episodes.forEach { ep ->
+                        mediaItemList.add(MediaItem(viewType = MediaItem.VIEW_TYPE_EPISODE_ITEM, episode = ep, isCurrent = ep.number == currentProgress))
+                    }
+                    
+                    // Add pagination item at the end
+                    val pagination = PageInfo(
+                        total = 0,
+                        perPage = 100,
+                        currentPage = episodeCurrentPageValue,
+                        lastPage = episodeTotalPagesValue,
+                        hasNextPage = episodeCurrentPageValue < episodeTotalPagesValue
+                    )
+                    if (episodeTotalPagesValue > 1) {
+                        mediaItemList.add(
+                            MediaItem(
+                                media = media,
+                                viewType = MediaItem.VIEW_TYPE_EPISODE_PAGINATION,
+                                pagination = pagination
+                            )
+                        )
+                    }
+                } else if (media.idMal != null && media.type == com.doma.alsan.type.MediaType.ANIME) {
+                    fetchEpisodes(media.idMal!!, 1)
+                }
+            }
+            MediaTab.CHARACTERS -> {
+                if (media.type == com.doma.alsan.type.MediaType.ANIME) {
+                    mediaItemList.add(MediaItem(viewType = MediaItem.VIEW_TYPE_CHARACTER_LANGUAGE))
+                }
+                media.characters.edges.forEach { edge ->
+                    mediaItemList.add(MediaItem(viewType = MediaItem.VIEW_TYPE_CHARACTER_ITEM, characterEdge = edge))
+                }
+            }
+            MediaTab.DETAILS -> {
+                mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_INFO))
+
+                if (media.genres.isNotEmpty()) {
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_GENRE))
+                }
+
+                if (media.tags.isNotEmpty()) {
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_TAGS))
+                }
+
+                media.openings?.let { openings ->
+                    if (openings.isNotEmpty()) {
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_OPENING, themeGroup = openings.firstOrNull()?.group ?: ""))
+                    }
+                }
+
+                media.endings?.let { endings ->
+                    if (endings.isNotEmpty()) {
+                        mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_THEMES_ENDING, themeGroup = endings.firstOrNull()?.group ?: ""))
+                    }
+                }
+                
+                mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_LINKS))
+            }
+            MediaTab.STAFF -> {
+                media.staff.edges.forEach { edge ->
+                    mediaItemList.add(MediaItem(viewType = MediaItem.VIEW_TYPE_STAFF_ITEM, staffEdge = edge))
+                }
+            }
+            MediaTab.RECOMMENDATIONS -> {
+                if (media.relations.edges.isNotEmpty())
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RELATIONS))
+
+                if (media.recommendations.nodes.isNotEmpty())
+                    mediaItemList.add(MediaItem(media, MediaItem.VIEW_TYPE_RECOMMENDATIONS))
+            }
+        }
+
+        _mediaItemList.onNext(mediaItemList)
     }
 
     fun loadCoverImage() {
@@ -394,14 +541,6 @@ class MediaViewModel(
             _bannerImageUrlForPreview.onNext(media.bannerImage)
     }
 
-    fun updateShouldShowFullDescription(shouldShowFullDescription: Boolean) {
-        val currentMediaListItems = _mediaItemList.value ?: return
-        val descriptionSectionIndex = currentMediaListItems.indexOfFirst { it.viewType == MediaItem.VIEW_TYPE_SYNOPSIS }
-        if (descriptionSectionIndex != -1) {
-            currentMediaListItems[descriptionSectionIndex].showFullDescription = shouldShowFullDescription
-            _mediaItemList.onNext(currentMediaListItems)
-        }
-    }
 
     fun updateShouldShowSpoilerTags(shouldShowSpoiler: Boolean) {
         val currentMediaListItems = _mediaItemList.value ?: return
@@ -459,7 +598,7 @@ class MediaViewModel(
                     .mapNotNull { it.voiceActor.language.ifBlank { null } }
                     .distinct()
                     .mapNotNull { language ->
-                        StaffLanguage.values().find { 
+                        getNonUnknownValues<StaffLanguage>().find { 
                             it.name.equals(language.replace(" ", "_"), ignoreCase = true) 
                         }
                     }
@@ -496,4 +635,4 @@ class MediaViewModel(
     fun getAvailableLanguages(): List<StaffLanguage> {
         return availableLanguagesList ?: listOf()
     }
-}
+}

@@ -10,9 +10,6 @@ import com.doma.alsan.type.MediaType
 
 interface MediaListener {
 
-    interface MediaSynopsisListener {
-        fun toggleShowMore(shouldShowMore: Boolean)
-    }
 
     interface MediaInfoListener {
         fun copyTitle(title: String)
@@ -24,7 +21,6 @@ interface MediaListener {
     }
 
     interface MediaCharacterListener {
-        fun navigateToMediaCharacters(media: Media)
         fun navigateToCharacter(character: Character)
         fun navigateToStaff(staff: Staff)
         fun openLanguageDialog()
@@ -46,7 +42,6 @@ interface MediaListener {
     }
 
     interface MediaStaffListener {
-        fun navigateToMediaStaff(media: Media)
         fun navigateToStaff(staff: Staff)
     }
 
@@ -66,11 +61,10 @@ interface MediaListener {
     interface MediaEpisodesListener {
         fun onEpisodeClick(episode: Episode)
         fun onEpisodeLongClick(episode: Episode)
-        fun showAllEpisodes()
         fun onPageClick(malId: Int, page: Int)
+        fun onPageSelectorClick(view: android.view.View, malId: Int, currentPage: Int, totalPages: Int)
     }
 
-    val mediaSynopsisListener: MediaSynopsisListener
     val mediaInfoListener: MediaInfoListener
     val mediaGenreListener: MediaGenreListener
     val mediaCharacterListener: MediaCharacterListener

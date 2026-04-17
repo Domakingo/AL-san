@@ -119,10 +119,18 @@ Each repository talks to one or more DataSources that make the actual API calls.
 Feature modules, each with its own screens:
 
 **Main stuff:** Home, Login, Splash, Landing
-**Content:** Media details, Lists (with filter and reordering), Search, Seasonal charts, Calendar, Reviews & Reader, Characters, Staff, Studios
+**Content:** Lists (with filter and reordering), Search, Seasonal charts, Calendar, Reviews & Reader, Characters, Staff, Studios
 **Social:** Activity feed, Notifications, Following, Media Social
 **Profile:** Stats (User & Media), Favorites
 **Settings:** App settings, List customization, Filters, Account settings, AniList settings
+
+### Media Details Structure
+The media details page utilizes a **Tabbed Layout** to organize information efficiently:
+- **Details**: General overview, genres, and synopsis.
+- **Characters**: Grid of characters and their related voice actors.
+- **Episodes**: Paginated list of anime episodes with external links support.
+- **Staff**: List of production staff and their specific roles.
+- **Recommendations**: Titles suggested based on similarity.
 
 Every Fragment inherits from `BaseFragment`, which handles ViewBinding, RxJava disposal, and navigation helpers.
 
@@ -130,12 +138,11 @@ Every Fragment inherits from `BaseFragment`, which handles ViewBinding, RxJava d
 
 ## Theming
 
-Users can pick from two different themes:
+Users can customize the app's appearance:
 
-- **Light**
-- **Dark**
-
-Each theme has color variants: Yellow, Blue, Green, Pink, Purple.
+- **Themes**: Light and Dark modes.
+- **Accents**: Yellow, Blue, Green, Pink, Purple.
+- **Font Size**: Adjustable scale (Small, Normal, Large) applied globally.
 
 ---
 

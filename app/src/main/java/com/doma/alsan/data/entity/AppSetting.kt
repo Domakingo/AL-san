@@ -1,5 +1,6 @@
 package com.doma.alsan.data.entity
 
+import com.doma.alsan.helper.enums.AppFontSize
 import com.doma.alsan.helper.enums.AppTheme
 import com.doma.alsan.helper.enums.MediaNaming
 import com.doma.alsan.helper.enums.StaffNaming
@@ -27,4 +28,5 @@ data class AppSetting(
     var enableSocialFeature: Boolean = true, // not used anymore
     var showBioAutomatically: Boolean = true, // not used anymore
     var showStatsChartAutomatically: Boolean = true, // not used anymore
+    var fontSize: AppFontSize = AppFontSize.NORMAL,
 )

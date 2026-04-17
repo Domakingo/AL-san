@@ -60,6 +60,7 @@ interface UserRepository {
     fun setCalendarSetting(newCalendarSetting: CalendarSetting): Observable<Unit>
 
     fun getAppTheme(): AppTheme
+    fun getFontSize(): com.doma.alsan.helper.enums.AppFontSize
 
     fun updateAniListSettings(
         titleLanguage: UserTitleLanguage,

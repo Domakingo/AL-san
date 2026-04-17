@@ -28,7 +28,8 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/mediaCollapsingToolbar"
                     app:toolbarId="@id/mediaToolbar"
-                    app:layout_scrollFlags="scroll"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:contentScrim="?themeBackgroundColor"
                     app:titleEnabled="false"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_width="match_parent"
@@ -38,26 +39,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <FrameLayout
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="@+id/mediaBannerContentLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp">
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/mediaBannerImage"
-                                android:scaleType="centerCrop"
-                                android:adjustViewBounds="true"
-                                android:background="?themeSecondaryColor"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
-
-                            <View
-                                android:background="@drawable/background_gradient_three"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
-
-                        </FrameLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/mediaBannerContentLayout"
@@ -67,6 +48,27 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
+
+                            <FrameLayout
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="@+id/mediaCoverImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp">
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/mediaBannerImage"
+                                    android:scaleType="centerCrop"
+                                    android:adjustViewBounds="true"
+                                    android:background="?themeSecondaryColor"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"/>
+
+                                <View
+                                    android:background="@drawable/background_gradient_three"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"/>
+
+                            </FrameLayout>
 
                             <View
                                 android:id="@+id/mediaHeaderGap"
@@ -173,8 +175,8 @@
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
 
-                            <!-- Stats Card - now inside banner content so it scrolls with it -->
                             <com.google.android.material.card.MaterialCardView
+                                android:visibility="gone"
                                 android:id="@+id/mediaStatsCard"
                                 app:cardBackgroundColor="?themeCardColor"
                                 app:cardCornerRadius="@dimen/cornerMedium"
@@ -274,6 +276,71 @@
 
                             </com.google.android.material.card.MaterialCardView>
 
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:visibility="gone"
+                                android:id="@+id/mediaHeaderGenreRecyclerView"
+                                app:layout_constraintTop_toBottomOf="@id/mediaStatsCard"
+                                android:layout_marginTop="@dimen/marginNormal"
+                                android:layout_marginHorizontal="@dimen/marginPageBig"
+                                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/mediaHeaderSynopsisLayout"
+                                app:layout_constraintTop_toBottomOf="@id/mediaHeaderGenreRecyclerView"
+                                android:layout_marginTop="@dimen/marginNormal"
+                                android:paddingHorizontal="@dimen/marginPageBig"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/mediaHeaderSynopsisTitle"
+                                    style="?themeSmallBoldFont"
+                                    android:text="@string/synopsis"
+                                    android:textColor="?themeSecondaryColor"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+                                <FrameLayout
+                                    android:id="@+id/mediaHeaderSynopsisContainer"
+                                    app:layout_constraintTop_toBottomOf="@id/mediaHeaderSynopsisTitle"
+                                    android:layout_marginTop="@dimen/marginSmall"
+                                    android:background="?themeBackgroundTransparent50Color"
+                                    android:padding="@dimen/marginSmall"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/mediaHeaderSynopsisText"
+                                        style="?themeSmallFont"
+                                        android:ellipsize="end"
+                                        android:maxLines="4"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"/>
+
+                                    <View
+                                        android:id="@+id/mediaHeaderSynopsisGradient"
+                                        android:background="@drawable/background_gradient_two"
+                                        android:layout_gravity="bottom"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="40dp"/>
+                                </FrameLayout>
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/mediaHeaderSynopsisArrow"
+                                    app:layout_constraintTop_toBottomOf="@id/mediaHeaderSynopsisContainer"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:srcCompat="@drawable/ic_chevron_down"
+                                    app:tint="?themeContentColor"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"/>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
@@ -283,10 +350,38 @@
                         android:layout_height="@dimen/lineWidth"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+                    
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/mediaToolbar"
+                        app:layout_collapseMode="pin"
+                        android:elevation="0dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:minHeight="?attr/actionBarSize"
+                        android:paddingTop="@dimen/statusBarHeight"
+                        app:popupTheme="@style/PopupTheme"
+                        app:menu="@menu/menu_media"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/mediaTabLayout"
+                    android:background="?themeBackgroundColor"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="?themePrimaryColor"
+                    app:tabTextColor="?themeContentColor"
+                    app:tabIndicatorColor="?themePrimaryColor"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabTextAppearance="@style/TabTextAppearance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:background="?themeDividerColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/lineWidth"/>
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -305,16 +400,5 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/mediaToolbar"
-        android:layout_marginTop="@dimen/statusBarHeight"
-        android:layout_gravity="top"
-        android:elevation="0dp"
-        android:backgroundTint="@android:color/transparent"
-        android:minHeight="@dimen/toolbarBigHeight"
-        app:popupTheme="@style/PopupTheme"
-        app:menu="@menu/menu_media"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -67,11 +67,13 @@ object ImageUtil {
         imageView.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.transparent))
         imageView.load(url)
     }
-
     fun showFullScreenImage(context: Context, url: String, imageView: AppCompatImageView) {
         StfalconImageViewer.Builder<String>(context, arrayOf(url)) { view, image ->
             view.load(image)
-        }.withTransitionFrom(imageView).withHiddenStatusBar(false).show(true)
+        }.withTransitionFrom(imageView)
+            .withHiddenStatusBar(false)
+            .withDismissListener { imageView.visibility = android.view.View.VISIBLE }
+            .show(true)
     }
 
     fun loadImagesIntoOverlapImageListView(context: Context, urls: List<String>, overlapImageListView: OverlapImageListView) {

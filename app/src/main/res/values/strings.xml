@@ -97,6 +97,12 @@
     <string name="downloading">Downloading...</string>
     <string name="failed_to_download">Failed to download</string>
     <string name="download_cover">Download Cover</string>
+    <string name="download_banner">Download Banner</string>
+    <string name="font_size">Font Size</string>
+    <string name="selected_font_size">Selected Font Size</string>
+    <string name="small">Small</string>
+    <string name="normal">Normal</string>
+    <string name="large">Large</string>
     <string name="merge_activity_forum_follows_and_relations_push_notifications_into_one">Merge Activity, Forum, Follows, and Media push notifications into one</string>
     <string name="important_to_know_n1_push_notifications_will_show_up_periodically_not_real_time_n2_depending_on_your_rom_and_phone_setting_it_might_not_show_up_at_all_reference_https_dontkillmyapp_com">Important to know:\n1. Push notifications will show up periodically, not real time.\n2. Depending on your ROM and phone setting, it might not show up at all. (reference: https://dontkillmyapp.com/)</string>
     <string name="memory_saver">Memory Saver</string>
@@ -111,6 +117,7 @@
     <string name="plus_one_ch">+1 CH</string>
     <string name="plus_one_ep">+1 EP</string>
     <string name="plus_one_vo">+1 VO</string>
+    <string name="filler">Filler</string>
     <string name="ep_x_on_y">Ep. %1$d on %2$s.</string>
     <string name="ep_x_in_y">Ep. %1$d in %2$s.</string>
     <string name="you_are_x_behind">You are %1$s behind.</string>
@@ -306,6 +313,8 @@
     <string name="favorite_staff">Favorite Staff</string>
     <string name="favorite_studios">Favorite Studios</string>
     <string name="info">Info</string>
+    <string name="details">Details</string>
+    <string name="language_x">Language: %1$s</string>
     <string name="total_anime">Total Anime</string>
     <string name="total_manga">Total Manga</string>
     <string name="episodes_watched">Episodes Watched</string>
@@ -318,6 +327,7 @@
     <string name="add_to_list">Add to List</string>
     <string name="synopsis">Synopsis</string>
     <string name="characters">Characters</string>
+    <string name="appearances">Appearances</string>
     <string name="media">Media</string>
     <string name="set_as_favorite">Set as Favorite</string>
     <string name="link_copied">Link copied</string>
