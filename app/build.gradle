@@ -90,19 +90,19 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.core:core-ktx:1.18.0'
+    implementation 'androidx.core:core-ktx:1.19.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'androidx.browser:browser:1.9.0'
+    implementation 'androidx.browser:browser:1.10.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.window:window:1.5.1"
 
     // Security: DataStore + Google Tink
     implementation "androidx.datastore:datastore-preferences:1.2.1"
-    implementation "com.google.crypto.tink:tink-android:1.20.0"
+    implementation "com.google.crypto.tink:tink-android:1.22.0"
 
     // Google Material
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     // JUnit4 for Instrumentation Test
@@ -117,7 +117,7 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // JUnit5 for Local Unit Test
-    def junit_jupiter_version = "6.0.3"
+    def junit_jupiter_version = "6.1.0"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
@@ -131,13 +131,13 @@ dependencies {
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
 
     // LiveData and ViewModel
-    def lifecycle_version = "2.10.0"
+    def lifecycle_version = "2.11.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.13.2'
+    implementation 'com.google.code.gson:gson:2.14.0'
 
     // Coil (updated for security and performance)
     def coil_version = "2.7.0"
@@ -151,7 +151,7 @@ dependencies {
 
 
     // OkHttp (CVE-2023-3635 fix in OkIo dependency)
-    def okhttp_version = "5.3.2"
+    def okhttp_version = "5.4.0"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
@@ -162,14 +162,14 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
 
     // Koin DI (updated for stability)
-    def koin_version = "4.2.0"
+    def koin_version = "4.2.2"
     implementation "io.insert-koin:koin-android:$koin_version"
 
     // Others
     implementation 'com.jaredrummler:colorpicker:1.1.0'
     implementation 'com.github.stfalcon-studio:StfalconImageViewer:1.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.31'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.32'
     implementation 'com.github.zend10:OverlapImageListView:v1.0.1'
 
     def markwon_version = "4.6.2"
@@ -179,7 +179,7 @@ dependencies {
     implementation "io.noties.markwon:ext-strikethrough:$markwon_version"
     implementation "io.noties.markwon:inline-parser:$markwon_version"
 
-    def work_version = "2.11.1"
+    def work_version = "2.11.2"
     implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation "androidx.work:work-rxjava3:$work_version"
 
